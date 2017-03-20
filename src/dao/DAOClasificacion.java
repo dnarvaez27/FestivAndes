@@ -1,6 +1,6 @@
 package dao;
 
-import vos.Accesibilidad;
+import vos.Clasificacion;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,37 +8,37 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class DAOAccesibilidad extends DAO
+public class DAOClasificacion extends DAO
 {
-	public DAOAccesibilidad( )
+	public DAOClasificacion( )
 	{
 		super( );
 	}
 	
-	public Accesibilidad createAccesibilidad( Accesibilidad accesibilidad ) throws SQLException
+	public Clasificacion createClasificacion( Clasificacion object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "INSERT INTO ACCESIBILIDADES " );
+		sql.append( "INSERT INTO CLASIFICACIONES " );
 		sql.append( "( id, nombre ) " );
 		sql.append( "VALUES " );
 		sql.append( "( " );
-		sql.append( String.format( "%s, ", accesibilidad.getId( ) ) );
-		sql.append( String.format( "%s ", accesibilidad.getNombre( ) ) );
+		sql.append( String.format( "%s, ", object.getId() ) );
+		sql.append( String.format( "%s ", object.getNommbre() ) );
 		sql.append( ")" );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		s.execute( );
 		s.close( );
-		return accesibilidad;
+		return object;
 	}
 	
-	public List<Accesibilidad> getAccesibilidades( ) throws SQLException
+	public List<Clasificacion> getClasificaciones( ) throws SQLException
 	{
-		List<Accesibilidad> list = new LinkedList<>( );
+		List<Clasificacion> list = new LinkedList<>( );
 		
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELECT * FROM ACCESIBILIDADES" );
+		sql.append( "SELECT * FROM CLASIFICACIONES" );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -52,13 +52,13 @@ public class DAOAccesibilidad extends DAO
 		return list;
 	}
 	
-	public Accesibilidad getAccesibilidad( Long id ) throws SQLException
+	public Clasificacion getClasificacion( Long id ) throws SQLException
 	{
-		Accesibilidad accesibilidad = null;
+		Clasificacion object = null;
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM ACCESIBILIDADES " );
+		sql.append( "FROM CLASIFICACIONES " );
 		sql.append( String.format( "WHERE id = %s", id ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
@@ -66,30 +66,29 @@ public class DAOAccesibilidad extends DAO
 		ResultSet rs = s.executeQuery( );
 		if( rs.next( ) )
 		{
-			accesibilidad = restultToAccesibildiad( rs );
+			object = restultToAccesibildiad( rs );
 		}
 		s.close( );
-		return accesibilidad;
+		return object;
 	}
 	
-	public Accesibilidad updateAccesibilidad( Accesibilidad accesibilidad ) throws SQLException
+	public Clasificacion updateClasificacion( Clasificacion object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "UPDATE ACCESIBILIDADES " );
-		sql.append( String.format( "SET nombre = %s ", accesibilidad.getNombre( ) ) );
-		sql.append( String.format( "WHERE id = %s", accesibilidad.getId( ) ) );
+		sql.append( "UPDATE CLASIFICACIONES " );
+		sql.append( String.format( "WHERE id = %s", object.getId( ) ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		s.execute( );
 		s.clearParameters( );
-		return accesibilidad;
+		return object;
 	}
 	
-	public void deleteAccesibilidad( Long id ) throws SQLException
+	public void deleteClasificacion( Long id ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "DELETE FROM ACCESIBILIDADES " );
+		sql.append( "DELETE FROM CLASIFICACIONES " );
 		sql.append( String.format( "WHERE id = %s", id ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
@@ -98,11 +97,10 @@ public class DAOAccesibilidad extends DAO
 		s.close( );
 	}
 	
-	private Accesibilidad restultToAccesibildiad( ResultSet rs ) throws SQLException
+	private Clasificacion restultToAccesibildiad( ResultSet rs ) throws SQLException
 	{
-		Accesibilidad a = new Accesibilidad( );
-		a.setId( rs.getLong( "ID" ) );
-		a.setNombre( rs.getString( "NOMBRE" ) );
+		Clasificacion a = new Clasificacion( );
+		
 		return a;
 	}
 }

@@ -9,7 +9,7 @@ public abstract class DAO
 {
 	protected List<Object> recursos;
 	
-	protected Connection conn;
+	protected Connection connection;
 	
 	public DAO( )
 	{
@@ -36,6 +36,6 @@ public abstract class DAO
 	
 	public void setConnection( Connection con )
 	{
-		this.conn = con;
+		this.connection = con;
 	}
 }
