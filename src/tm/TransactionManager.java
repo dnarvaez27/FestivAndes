@@ -9,9 +9,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-/**
- * Created by Dave on 19/03/2017.
- */
 public abstract class TransactionManager
 {
 	/**
