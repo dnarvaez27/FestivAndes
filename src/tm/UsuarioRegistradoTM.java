@@ -1,27 +1,27 @@
 package tm;
 
-import dao.DAOAccesibilidad;
-import vos.Accesibilidad;
+import dao.DAOUsuarioRegistrado;
+import vos.UsuarioRegistrado;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public class AccesibilidadTM extends TransactionManager
+public class UsuarioRegistradoTM extends TransactionManager
 {
-	public AccesibilidadTM( String contextPathP )
+	public UsuarioRegistradoTM( String contextPathP )
 	{
 		super( contextPathP );
 	}
 	
-	public Accesibilidad createAccesibilidad( Accesibilidad accesibilidad ) throws SQLException
+	public UsuarioRegistrado createUsuarioRegistrado( UsuarioRegistrado accesibilidad ) throws SQLException
 	{
-		Accesibilidad ac;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		UsuarioRegistrado ur;
+		DAOUsuarioRegistrado dao = new DAOUsuarioRegistrado( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.createAccesibilidad( accesibilidad );
+			ur = dao.createUsuarioRegistrado( accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -40,18 +40,18 @@ public class AccesibilidadTM extends TransactionManager
 		{
 			closeDAO( dao );
 		}
-		return ac;
+		return ur;
 	}
 	
-	public List<Accesibilidad> getAccesibilidades( ) throws SQLException
+	public List<UsuarioRegistrado> getUsuarioRegistrados( ) throws SQLException
 	{
-		List<Accesibilidad> list;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		List<UsuarioRegistrado> list;
+		DAOUsuarioRegistrado dao = new DAOUsuarioRegistrado( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			list = dao.getAccesibilidades( );
+			list = dao.getUsuarioRegistrados( );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -73,15 +73,15 @@ public class AccesibilidadTM extends TransactionManager
 		return list;
 	}
 	
-	public Accesibilidad getAccesibilidad( Long id ) throws SQLException
+	public UsuarioRegistrado getUsuarioRegistrado( Long id ) throws SQLException
 	{
-		Accesibilidad ac;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		UsuarioRegistrado ur;
+		DAOUsuarioRegistrado dao = new DAOUsuarioRegistrado( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.getAccesibilidad( id );
+			ur = dao.getUsuarioRegistrado( id );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -100,18 +100,18 @@ public class AccesibilidadTM extends TransactionManager
 		{
 			closeDAO( dao );
 		}
-		return ac;
+		return ur;
 	}
 	
-	public Accesibilidad updateAccesibilidad( Long id, Accesibilidad accesibilidad ) throws SQLException
+	public UsuarioRegistrado updateUsuarioRegistrado( Long id, UsuarioRegistrado accesibilidad ) throws SQLException
 	{
-		Accesibilidad ac;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		UsuarioRegistrado ur;
+		DAOUsuarioRegistrado dao = new DAOUsuarioRegistrado( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.updateAccesibilidad( id, accesibilidad );
+			ur = dao.updateUsuarioRegistrado( id, accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -130,17 +130,17 @@ public class AccesibilidadTM extends TransactionManager
 		{
 			closeDAO( dao );
 		}
-		return ac;
+		return ur;
 	}
 	
-	public void deleteAccesibilidad( Long id ) throws SQLException
+	public void deleteUsuarioRegistrado( Long id ) throws SQLException
 	{
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		DAOUsuarioRegistrado dao = new DAOUsuarioRegistrado( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.deleteAccesibilidad( id );
+			dao.deleteUsuarioRegistrado( id );
 		}
 		catch( SQLException e )
 		{

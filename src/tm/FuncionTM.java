@@ -1,27 +1,28 @@
 package tm;
 
-import dao.DAOAccesibilidad;
-import vos.Accesibilidad;
+import dao.DAOFuncion;
+import vos.Funcion;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
-public class AccesibilidadTM extends TransactionManager
+public class FuncionTM extends TransactionManager
 {
-	public AccesibilidadTM( String contextPathP )
+	public FuncionTM( String contextPathP )
 	{
 		super( contextPathP );
 	}
 	
-	public Accesibilidad createAccesibilidad( Accesibilidad accesibilidad ) throws SQLException
+	public Funcion createFuncion( Funcion accesibilidad ) throws SQLException
 	{
-		Accesibilidad ac;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		Funcion ac;
+		DAOFuncion dao = new DAOFuncion( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.createAccesibilidad( accesibilidad );
+			ac = dao.createFuncion( accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -43,15 +44,15 @@ public class AccesibilidadTM extends TransactionManager
 		return ac;
 	}
 	
-	public List<Accesibilidad> getAccesibilidades( ) throws SQLException
+	public List<Funcion> getFunciones( ) throws SQLException
 	{
-		List<Accesibilidad> list;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		List<Funcion> list;
+		DAOFuncion dao = new DAOFuncion( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			list = dao.getAccesibilidades( );
+			list = dao.getFunciones( );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -73,15 +74,15 @@ public class AccesibilidadTM extends TransactionManager
 		return list;
 	}
 	
-	public Accesibilidad getAccesibilidad( Long id ) throws SQLException
+	public Funcion getFuncion( Date fecha, Long idLugar ) throws SQLException
 	{
-		Accesibilidad ac;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		Funcion ac;
+		DAOFuncion dao = new DAOFuncion( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.getAccesibilidad( id );
+			ac = dao.getFuncion( fecha, idLugar );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -103,15 +104,15 @@ public class AccesibilidadTM extends TransactionManager
 		return ac;
 	}
 	
-	public Accesibilidad updateAccesibilidad( Long id, Accesibilidad accesibilidad ) throws SQLException
+	public Funcion updateFuncion( Date fecha, Long idLugar, Funcion accesibilidad ) throws SQLException
 	{
-		Accesibilidad ac;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		Funcion ac;
+		DAOFuncion dao = new DAOFuncion( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.updateAccesibilidad( id, accesibilidad );
+			ac = dao.updateFuncion( fecha, idLugar, accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -133,14 +134,14 @@ public class AccesibilidadTM extends TransactionManager
 		return ac;
 	}
 	
-	public void deleteAccesibilidad( Long id ) throws SQLException
+	public void deleteFuncion( Date fecha, Long idLugar ) throws SQLException
 	{
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		DAOFuncion dao = new DAOFuncion( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.deleteAccesibilidad( id );
+			dao.deleteFuncion( fecha, idLugar );
 		}
 		catch( SQLException e )
 		{

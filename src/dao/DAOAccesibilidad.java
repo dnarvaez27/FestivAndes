@@ -23,7 +23,7 @@ public class DAOAccesibilidad extends DAO
 		sql.append( "VALUES " );
 		sql.append( "( " );
 		sql.append( String.format( "%s, ", accesibilidad.getId( ) ) );
-		sql.append( String.format( "%s ", accesibilidad.getNombre( ) ) );
+		sql.append( String.format( "'%s' ", accesibilidad.getNombre( ) ) );
 		sql.append( ")" );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
@@ -45,7 +45,7 @@ public class DAOAccesibilidad extends DAO
 		ResultSet rs = s.executeQuery( );
 		while( rs.next( ) )
 		{
-			list.add( restultToAccesibildiad( rs ) );
+			list.add( resultToAccesibilidad( rs ) );
 		}
 		
 		s.close( );
@@ -66,18 +66,18 @@ public class DAOAccesibilidad extends DAO
 		ResultSet rs = s.executeQuery( );
 		if( rs.next( ) )
 		{
-			accesibilidad = restultToAccesibildiad( rs );
+			accesibilidad = resultToAccesibilidad( rs );
 		}
 		s.close( );
 		return accesibilidad;
 	}
 	
-	public Accesibilidad updateAccesibilidad( Accesibilidad accesibilidad ) throws SQLException
+	public Accesibilidad updateAccesibilidad( Long id, Accesibilidad accesibilidad ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE ACCESIBILIDADES " );
-		sql.append( String.format( "SET nombre = %s ", accesibilidad.getNombre( ) ) );
-		sql.append( String.format( "WHERE id = %s", accesibilidad.getId( ) ) );
+		sql.append( String.format( "SET nombre = '%s' ", accesibilidad.getNombre( ) ) );
+		sql.append( String.format( "WHERE id = %s", id ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -98,7 +98,7 @@ public class DAOAccesibilidad extends DAO
 		s.close( );
 	}
 	
-	private Accesibilidad restultToAccesibildiad( ResultSet rs ) throws SQLException
+	private Accesibilidad resultToAccesibilidad( ResultSet rs ) throws SQLException
 	{
 		Accesibilidad a = new Accesibilidad( );
 		a.setId( rs.getLong( "ID" ) );

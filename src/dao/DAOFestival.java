@@ -1,6 +1,6 @@
 package dao;
 
-import vos.Clasificacion;
+import vos.Festival;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,22 +8,24 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class DAOClasificacion extends DAO
+public class DAOFestival extends DAO
 {
-	public DAOClasificacion( )
+	public DAOFestival( )
 	{
 		super( );
 	}
 	
-	public Clasificacion createClasificacion( Clasificacion object ) throws SQLException
+	public Festival createFestival( Festival object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "INSERT INTO CLASIFICACIONES " );
+		sql.append( "INSERT INTO FESTIVALES " );
 		sql.append( "( id, nombre ) " );
 		sql.append( "VALUES " );
 		sql.append( "( " );
 		sql.append( String.format( "%s, ", object.getId( ) ) );
-		sql.append( String.format( "'%s' ", object.getNombre( ) ) );
+		sql.append( String.format( "%s, ", object.getFechaInicio( ) ) );
+		sql.append( String.format( "%s, ", object.getFechaFin( ) ) );
+		sql.append( String.format( "%s ", object.getCiudad( ) ) );
 		sql.append( ")" );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
@@ -33,32 +35,32 @@ public class DAOClasificacion extends DAO
 		return object;
 	}
 	
-	public List<Clasificacion> getClasificaciones( ) throws SQLException
+	public List<Festival> getFestivales( ) throws SQLException
 	{
-		List<Clasificacion> list = new LinkedList<>( );
+		List<Festival> list = new LinkedList<>( );
 		
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELECT * FROM CLASIFICACIONES" );
+		sql.append( "SELECT * FROM FESTIVALES" );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		ResultSet rs = s.executeQuery( );
 		while( rs.next( ) )
 		{
-			list.add( restultToAccesibildiad( rs ) );
+			list.add( resultToFestival( rs ) );
 		}
 		
 		s.close( );
 		return list;
 	}
 	
-	public Clasificacion getClasificacion( Long id ) throws SQLException
+	public Festival getFestival( Long id ) throws SQLException
 	{
-		Clasificacion object = null;
+		Festival object = null;
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM CLASIFICACIONES " );
+		sql.append( "FROM FESTIVALES " );
 		sql.append( String.format( "WHERE id = %s", id ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
@@ -66,17 +68,20 @@ public class DAOClasificacion extends DAO
 		ResultSet rs = s.executeQuery( );
 		if( rs.next( ) )
 		{
-			object = restultToAccesibildiad( rs );
+			object = resultToFestival( rs );
 		}
 		s.close( );
 		return object;
 	}
 	
-	public Clasificacion updateClasificacion( Long id, Clasificacion object ) throws SQLException
+	public Festival updateFestival( Long id, Festival object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "UPDATE CLASIFICACIONES " );
-		sql.append( String.format( "SET nombre = '%s'", object.getNombre( ) ) );
+		sql.append( "UPDATE FESTIVALES " );
+		sql.append( "SET " );
+		sql.append( String.format( "fecha_inicio = '%s', ", object.getFechaInicio( ) ) );
+		sql.append( String.format( "fecha_fin = %s, ", object.getFechaFin( ) ) );
+		sql.append( String.format( "ciudad = %s ", object.getCiudad( ) ) );
 		sql.append( String.format( "WHERE id = %s", id ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
@@ -86,10 +91,10 @@ public class DAOClasificacion extends DAO
 		return object;
 	}
 	
-	public void deleteClasificacion( Long id ) throws SQLException
+	public void deleteFestival( Long id ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "DELETE FROM CLASIFICACIONES " );
+		sql.append( "DELETE FROM FESTIVALES " );
 		sql.append( String.format( "WHERE id = %s", id ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
@@ -98,11 +103,13 @@ public class DAOClasificacion extends DAO
 		s.close( );
 	}
 	
-	private Clasificacion restultToAccesibildiad( ResultSet rs ) throws SQLException
+	private Festival resultToFestival( ResultSet rs ) throws SQLException
 	{
-		Clasificacion clasificacion = new Clasificacion( );
-		clasificacion.setNombre( rs.getString( "NOMBRE" ) );
-		clasificacion.setId( rs.getLong( "ID" ) );
-		return clasificacion;
+		Festival object = new Festival( );
+		object.setFechaInicio( rs.getDate( "fecha_inicio" ) );
+		object.setFechaFin( rs.getDate( "fecha_fin" ) );
+		object.setCiudad( rs.getString( "ciudad" ) );
+		object.setId( rs.getLong( "id" ) );
+		return object;
 	}
 }

@@ -1,27 +1,27 @@
 package tm;
 
-import dao.DAOAccesibilidad;
-import vos.Accesibilidad;
+import dao.DAOBoleta;
+import vos.Boleta;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public class AccesibilidadTM extends TransactionManager
+public class BoletaTM extends TransactionManager
 {
-	public AccesibilidadTM( String contextPathP )
+	public BoletaTM( String contextPathP )
 	{
 		super( contextPathP );
 	}
 	
-	public Accesibilidad createAccesibilidad( Accesibilidad accesibilidad ) throws SQLException
+	public Boleta createBoleta( Boleta accesibilidad ) throws SQLException
 	{
-		Accesibilidad ac;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		Boleta ac;
+		DAOBoleta dao = new DAOBoleta( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.createAccesibilidad( accesibilidad );
+			ac = dao.createBoleta( accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -43,15 +43,15 @@ public class AccesibilidadTM extends TransactionManager
 		return ac;
 	}
 	
-	public List<Accesibilidad> getAccesibilidades( ) throws SQLException
+	public List<Boleta> getBoletas( ) throws SQLException
 	{
-		List<Accesibilidad> list;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		List<Boleta> list;
+		DAOBoleta dao = new DAOBoleta( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			list = dao.getAccesibilidades( );
+			list = dao.getBoletas( );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -73,15 +73,15 @@ public class AccesibilidadTM extends TransactionManager
 		return list;
 	}
 	
-	public Accesibilidad getAccesibilidad( Long id ) throws SQLException
+	public Boleta getBoleta( Long id ) throws SQLException
 	{
-		Accesibilidad ac;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		Boleta ac;
+		DAOBoleta dao = new DAOBoleta( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.getAccesibilidad( id );
+			ac = dao.getBoleta( id );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -103,15 +103,15 @@ public class AccesibilidadTM extends TransactionManager
 		return ac;
 	}
 	
-	public Accesibilidad updateAccesibilidad( Long id, Accesibilidad accesibilidad ) throws SQLException
+	public Boleta updateBoleta( Long numBoleta, Boleta accesibilidad ) throws SQLException
 	{
-		Accesibilidad ac;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		Boleta ac;
+		DAOBoleta dao = new DAOBoleta( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.updateAccesibilidad( id, accesibilidad );
+			ac = dao.updateBoleta( numBoleta, accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -133,14 +133,14 @@ public class AccesibilidadTM extends TransactionManager
 		return ac;
 	}
 	
-	public void deleteAccesibilidad( Long id ) throws SQLException
+	public void deleteBoleta( Long id ) throws SQLException
 	{
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		DAOBoleta dao = new DAOBoleta( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.deleteAccesibilidad( id );
+			dao.deleteBoleta( id );
 		}
 		catch( SQLException e )
 		{

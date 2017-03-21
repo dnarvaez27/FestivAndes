@@ -11,7 +11,7 @@ public class Clasificacion
 	private Long id;
 	
 	@JsonProperty( value = "nombre" )
-	private String nommbre;
+	private String nombre;
 	
 	public Clasificacion( )
 	{
@@ -38,22 +38,22 @@ public class Clasificacion
 	}
 	
 	/**
-	 * Retrieves the nommbre of the Clasificacion
+	 * Retrieves the nombre of the Clasificacion
 	 *
-	 * @return The nommbre of the Clasificacion
+	 * @return The nombre of the Clasificacion
 	 */
-	public String getNommbre( )
+	public String getNombre( )
 	{
-		return nommbre;
+		return nombre;
 	}
 	
 	/**
-	 * Updates the nommbre of the Clasificacion by the one given by parameter
+	 * Updates the nombre of the Clasificacion by the one given by parameter
 	 *
-	 * @param nommbre The new nommbre of the Clasificacion
+	 * @param nombre The new nombre of the Clasificacion
 	 */
-	public void setNommbre( String nommbre )
+	public void setNombre( String nombre )
 	{
-		this.nommbre = nommbre;
+		this.nombre = nombre;
 	}
 }

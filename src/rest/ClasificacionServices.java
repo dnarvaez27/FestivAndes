@@ -1,23 +1,23 @@
 package rest;
 
-import tm.AccesibilidadTM;
-import vos.Accesibilidad;
+import tm.ClasificacionTM;
+import vos.Clasificacion;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.List;
 
-@Path( "accesibilidades" )
-public class AccesibilidadServices extends Services
+@Path( "clasificaciones" )
+public class ClasificacionServices extends Services
 {
 	@POST
-	public Response createAccesibilidad( Accesibilidad accesibilidad )
+	public Response createClasificacion( Clasificacion accesibilidad )
 	{
-		AccesibilidadTM tm = new AccesibilidadTM( getPath( ) );
+		ClasificacionTM tm = new ClasificacionTM( getPath( ) );
 		try
 		{
-			accesibilidad = tm.createAccesibilidad( accesibilidad );
+			accesibilidad = tm.createClasificacion( accesibilidad );
 		}
 		catch( SQLException e )
 		{
@@ -27,13 +27,13 @@ public class AccesibilidadServices extends Services
 	}
 	
 	@GET
-	public Response getAccesibilidades( )
+	public Response getClasificacions( )
 	{
-		List<Accesibilidad> list;
-		AccesibilidadTM tm = new AccesibilidadTM( getPath( ) );
+		List<Clasificacion> list;
+		ClasificacionTM tm = new ClasificacionTM( getPath( ) );
 		try
 		{
-			list = tm.getAccesibilidades( );
+			list = tm.getClasificaciones( );
 		}
 		catch( SQLException e )
 		{
@@ -44,13 +44,13 @@ public class AccesibilidadServices extends Services
 	
 	@GET
 	@Path( "{id}" )
-	public Response getAccesibilidad( @PathParam( "id" ) Long id )
+	public Response getClasificacion( @PathParam( "id" ) Long id )
 	{
-		Accesibilidad ac;
-		AccesibilidadTM tm = new AccesibilidadTM( getPath( ) );
+		Clasificacion ac;
+		ClasificacionTM tm = new ClasificacionTM( getPath( ) );
 		try
 		{
-			ac = tm.getAccesibilidad( id );
+			ac = tm.getClasificacion( id );
 		}
 		catch( SQLException e )
 		{
@@ -61,13 +61,13 @@ public class AccesibilidadServices extends Services
 	
 	@PUT
 	@Path( "{id}" )
-	public Response updateAccesibilidad( @PathParam( "id" ) Long id, Accesibilidad accesibilidad )
+	public Response updateClasificacion( @PathParam( "id" ) Long id, Clasificacion accesibilidad )
 	{
-		Accesibilidad ac;
-		AccesibilidadTM tm = new AccesibilidadTM( getPath( ) );
+		Clasificacion ac;
+		ClasificacionTM tm = new ClasificacionTM( getPath( ) );
 		try
 		{
-			ac = tm.updateAccesibilidad( id, accesibilidad );
+			ac = tm.updateClasificacion( id, accesibilidad );
 		}
 		catch( SQLException e )
 		{
@@ -78,12 +78,12 @@ public class AccesibilidadServices extends Services
 	
 	@DELETE
 	@Path( "{id}" )
-	public Response deleteAccesibilidad( @PathParam( "id" ) Long id )
+	public Response deleteClasificacion( Long id )
 	{
-		AccesibilidadTM tm = new AccesibilidadTM( getPath( ) );
+		ClasificacionTM tm = new ClasificacionTM( getPath( ) );
 		try
 		{
-			tm.deleteAccesibilidad( id );
+			tm.deleteClasificacion( id );
 		}
 		catch( SQLException e )
 		{

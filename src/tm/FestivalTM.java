@@ -1,27 +1,27 @@
 package tm;
 
-import dao.DAOAccesibilidad;
-import vos.Accesibilidad;
+import dao.DAOFestival;
+import vos.Festival;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public class AccesibilidadTM extends TransactionManager
+public class FestivalTM extends TransactionManager
 {
-	public AccesibilidadTM( String contextPathP )
+	public FestivalTM( String contextPathP )
 	{
 		super( contextPathP );
 	}
 	
-	public Accesibilidad createAccesibilidad( Accesibilidad accesibilidad ) throws SQLException
+	public Festival createFestival( Festival accesibilidad ) throws SQLException
 	{
-		Accesibilidad ac;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		Festival ac;
+		DAOFestival dao = new DAOFestival( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.createAccesibilidad( accesibilidad );
+			ac = dao.createFestival( accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -43,15 +43,15 @@ public class AccesibilidadTM extends TransactionManager
 		return ac;
 	}
 	
-	public List<Accesibilidad> getAccesibilidades( ) throws SQLException
+	public List<Festival> getFestivals( ) throws SQLException
 	{
-		List<Accesibilidad> list;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		List<Festival> list;
+		DAOFestival dao = new DAOFestival( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			list = dao.getAccesibilidades( );
+			list = dao.getFestivales( );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -73,15 +73,15 @@ public class AccesibilidadTM extends TransactionManager
 		return list;
 	}
 	
-	public Accesibilidad getAccesibilidad( Long id ) throws SQLException
+	public Festival getFestival( Long id ) throws SQLException
 	{
-		Accesibilidad ac;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		Festival ac;
+		DAOFestival dao = new DAOFestival( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.getAccesibilidad( id );
+			ac = dao.getFestival( id );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -103,15 +103,15 @@ public class AccesibilidadTM extends TransactionManager
 		return ac;
 	}
 	
-	public Accesibilidad updateAccesibilidad( Long id, Accesibilidad accesibilidad ) throws SQLException
+	public Festival updateFestival( Long id, Festival accesibilidad ) throws SQLException
 	{
-		Accesibilidad ac;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		Festival ac;
+		DAOFestival dao = new DAOFestival( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.updateAccesibilidad( id, accesibilidad );
+			ac = dao.updateFestival( id, accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -133,14 +133,14 @@ public class AccesibilidadTM extends TransactionManager
 		return ac;
 	}
 	
-	public void deleteAccesibilidad( Long id ) throws SQLException
+	public void deleteFestival( Long id ) throws SQLException
 	{
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		DAOFestival dao = new DAOFestival( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.deleteAccesibilidad( id );
+			dao.deleteFestival( id );
 		}
 		catch( SQLException e )
 		{

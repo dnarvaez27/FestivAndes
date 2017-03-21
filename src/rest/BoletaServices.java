@@ -1,23 +1,23 @@
 package rest;
 
-import tm.AccesibilidadTM;
-import vos.Accesibilidad;
+import tm.BoletaTM;
+import vos.Boleta;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.List;
 
-@Path( "accesibilidades" )
-public class AccesibilidadServices extends Services
+@Path( "boletas" )
+public class BoletaServices extends Services
 {
 	@POST
-	public Response createAccesibilidad( Accesibilidad accesibilidad )
+	public Response createBoleta( Boleta accesibilidad )
 	{
-		AccesibilidadTM tm = new AccesibilidadTM( getPath( ) );
+		BoletaTM tm = new BoletaTM( getPath( ) );
 		try
 		{
-			accesibilidad = tm.createAccesibilidad( accesibilidad );
+			accesibilidad = tm.createBoleta( accesibilidad );
 		}
 		catch( SQLException e )
 		{
@@ -27,13 +27,13 @@ public class AccesibilidadServices extends Services
 	}
 	
 	@GET
-	public Response getAccesibilidades( )
+	public Response getBoletas( )
 	{
-		List<Accesibilidad> list;
-		AccesibilidadTM tm = new AccesibilidadTM( getPath( ) );
+		List<Boleta> list;
+		BoletaTM tm = new BoletaTM( getPath( ) );
 		try
 		{
-			list = tm.getAccesibilidades( );
+			list = tm.getBoletas( );
 		}
 		catch( SQLException e )
 		{
@@ -44,13 +44,13 @@ public class AccesibilidadServices extends Services
 	
 	@GET
 	@Path( "{id}" )
-	public Response getAccesibilidad( @PathParam( "id" ) Long id )
+	public Response getBoleta( @PathParam( "id" ) Long id )
 	{
-		Accesibilidad ac;
-		AccesibilidadTM tm = new AccesibilidadTM( getPath( ) );
+		Boleta ac;
+		BoletaTM tm = new BoletaTM( getPath( ) );
 		try
 		{
-			ac = tm.getAccesibilidad( id );
+			ac = tm.getBoleta( id );
 		}
 		catch( SQLException e )
 		{
@@ -61,13 +61,13 @@ public class AccesibilidadServices extends Services
 	
 	@PUT
 	@Path( "{id}" )
-	public Response updateAccesibilidad( @PathParam( "id" ) Long id, Accesibilidad accesibilidad )
+	public Response updateBoleta( @PathParam( "id" ) Long numBoleta, Boleta accesibilidad )
 	{
-		Accesibilidad ac;
-		AccesibilidadTM tm = new AccesibilidadTM( getPath( ) );
+		Boleta ac;
+		BoletaTM tm = new BoletaTM( getPath( ) );
 		try
 		{
-			ac = tm.updateAccesibilidad( id, accesibilidad );
+			ac = tm.updateBoleta( numBoleta, accesibilidad );
 		}
 		catch( SQLException e )
 		{
@@ -78,12 +78,12 @@ public class AccesibilidadServices extends Services
 	
 	@DELETE
 	@Path( "{id}" )
-	public Response deleteAccesibilidad( @PathParam( "id" ) Long id )
+	public Response deleteBoleta( @PathParam( "id" ) Long id )
 	{
-		AccesibilidadTM tm = new AccesibilidadTM( getPath( ) );
+		BoletaTM tm = new BoletaTM( getPath( ) );
 		try
 		{
-			tm.deleteAccesibilidad( id );
+			tm.deleteBoleta( id );
 		}
 		catch( SQLException e )
 		{

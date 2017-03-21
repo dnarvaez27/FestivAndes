@@ -1,27 +1,27 @@
 package tm;
 
-import dao.DAOAccesibilidad;
-import vos.Accesibilidad;
+import dao.DAOClasificacion;
+import vos.Clasificacion;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public class AccesibilidadTM extends TransactionManager
+public class ClasificacionTM extends TransactionManager
 {
-	public AccesibilidadTM( String contextPathP )
+	public ClasificacionTM( String contextPathP )
 	{
 		super( contextPathP );
 	}
 	
-	public Accesibilidad createAccesibilidad( Accesibilidad accesibilidad ) throws SQLException
+	public Clasificacion createClasificacion( Clasificacion accesibilidad ) throws SQLException
 	{
-		Accesibilidad ac;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		Clasificacion clas;
+		DAOClasificacion dao = new DAOClasificacion( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.createAccesibilidad( accesibilidad );
+			clas = dao.createClasificacion( accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -40,18 +40,18 @@ public class AccesibilidadTM extends TransactionManager
 		{
 			closeDAO( dao );
 		}
-		return ac;
+		return clas;
 	}
 	
-	public List<Accesibilidad> getAccesibilidades( ) throws SQLException
+	public List<Clasificacion> getClasificaciones( ) throws SQLException
 	{
-		List<Accesibilidad> list;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		List<Clasificacion> list;
+		DAOClasificacion dao = new DAOClasificacion( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			list = dao.getAccesibilidades( );
+			list = dao.getClasificaciones( );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -73,15 +73,15 @@ public class AccesibilidadTM extends TransactionManager
 		return list;
 	}
 	
-	public Accesibilidad getAccesibilidad( Long id ) throws SQLException
+	public Clasificacion getClasificacion( Long id ) throws SQLException
 	{
-		Accesibilidad ac;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		Clasificacion clas;
+		DAOClasificacion dao = new DAOClasificacion( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.getAccesibilidad( id );
+			clas = dao.getClasificacion( id );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -100,18 +100,18 @@ public class AccesibilidadTM extends TransactionManager
 		{
 			closeDAO( dao );
 		}
-		return ac;
+		return clas;
 	}
 	
-	public Accesibilidad updateAccesibilidad( Long id, Accesibilidad accesibilidad ) throws SQLException
+	public Clasificacion updateClasificacion( Long id, Clasificacion accesibilidad ) throws SQLException
 	{
-		Accesibilidad ac;
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		Clasificacion clas;
+		DAOClasificacion dao = new DAOClasificacion( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.updateAccesibilidad( id, accesibilidad );
+			clas = dao.updateClasificacion( id, accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -130,17 +130,17 @@ public class AccesibilidadTM extends TransactionManager
 		{
 			closeDAO( dao );
 		}
-		return ac;
+		return clas;
 	}
 	
-	public void deleteAccesibilidad( Long id ) throws SQLException
+	public void deleteClasificacion( Long id ) throws SQLException
 	{
-		DAOAccesibilidad dao = new DAOAccesibilidad( );
+		DAOClasificacion dao = new DAOClasificacion( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.deleteAccesibilidad( id );
+			dao.deleteClasificacion( id );
 		}
 		catch( SQLException e )
 		{
