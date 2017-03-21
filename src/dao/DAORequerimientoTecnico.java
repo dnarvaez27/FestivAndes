@@ -98,7 +98,7 @@ public class DAORequerimientoTecnico extends DAO
 		s.close( );
 	}
 	
-	private RequerimientoTecnico resultToRequerimientoTecnico( ResultSet rs ) throws SQLException
+	public static RequerimientoTecnico resultToRequerimientoTecnico( ResultSet rs ) throws SQLException
 	{
 		RequerimientoTecnico req = new RequerimientoTecnico( );
 		req.setId( rs.getLong( "ID" ) );

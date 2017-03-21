@@ -1,28 +1,27 @@
 package tm;
 
-import dao.DAOEspectaculo;
-import vos.Espectaculo;
-import vos.reportes.RFC4;
+import dao.DAOCompaniaDeTeatro;
+import vos.CompaniaDeTeatro;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public class EspectaculoTM extends TransactionManager
+public class CompaniaDeTeatroTM extends TransactionManager
 {
-	public EspectaculoTM( String contextPathP )
+	public CompaniaDeTeatroTM( String contextPathP )
 	{
 		super( contextPathP );
 	}
 	
-	public Espectaculo createEspectaculo( Espectaculo accesibilidad ) throws SQLException
+	public CompaniaDeTeatro createCompaniaDeTeatro( CompaniaDeTeatro accesibilidad ) throws SQLException
 	{
-		Espectaculo ac;
-		DAOEspectaculo dao = new DAOEspectaculo( );
+		CompaniaDeTeatro ac;
+		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.createEspectaculo( accesibilidad );
+			ac = dao.createCompaniaDeTeatro( accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -44,15 +43,15 @@ public class EspectaculoTM extends TransactionManager
 		return ac;
 	}
 	
-	public List<Espectaculo> getEspectaculos( ) throws SQLException
+	public List<CompaniaDeTeatro> getCompaniaDeTeatros( ) throws SQLException
 	{
-		List<Espectaculo> list;
-		DAOEspectaculo dao = new DAOEspectaculo( );
+		List<CompaniaDeTeatro> list;
+		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			list = dao.getEspectaculos( );
+			list = dao.getCompaniaDeTeatros( );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -74,15 +73,15 @@ public class EspectaculoTM extends TransactionManager
 		return list;
 	}
 	
-	public Espectaculo getEspectaculo( Long id ) throws SQLException
+	public CompaniaDeTeatro getCompaniaDeTeatro( Long id ) throws SQLException
 	{
-		Espectaculo ac;
-		DAOEspectaculo dao = new DAOEspectaculo( );
+		CompaniaDeTeatro ac;
+		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.getEspectaculo( id );
+			ac = dao.getCompaniaDeTeatro( id );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -104,15 +103,15 @@ public class EspectaculoTM extends TransactionManager
 		return ac;
 	}
 	
-	public Espectaculo updateEspectaculo( Long id, Espectaculo accesibilidad ) throws SQLException
+	public CompaniaDeTeatro updateCompaniaDeTeatro( CompaniaDeTeatro accesibilidad ) throws SQLException
 	{
-		Espectaculo ac;
-		DAOEspectaculo dao = new DAOEspectaculo( );
+		CompaniaDeTeatro ac;
+		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.updateEspectaculo( id, accesibilidad );
+			ac = dao.updateCompaniaDeTeatro( accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -134,14 +133,14 @@ public class EspectaculoTM extends TransactionManager
 		return ac;
 	}
 	
-	public void deleteEspectaculo( Long id ) throws SQLException
+	public void deleteCompaniaDeTeatro( Long id ) throws SQLException
 	{
-		DAOEspectaculo dao = new DAOEspectaculo( );
+		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.deleteEspectaculo( id );
+			dao.deleteCompaniaDeTeatro( id );
 		}
 		catch( SQLException e )
 		{
@@ -159,35 +158,5 @@ public class EspectaculoTM extends TransactionManager
 		{
 			closeDAO( dao );
 		}
-	}
-	
-	public RFC4 generarReporte( Long id ) throws SQLException
-	{
-		RFC4 req;
-		DAOEspectaculo dao = new DAOEspectaculo( );
-		try
-		{
-			this.connection = getConnection( );
-			dao.setConnection( this.connection );
-			req = dao.generarReporte( id );
-			connection.commit( );
-		}
-		catch( SQLException e )
-		{
-			System.err.println( "SQLException:" + e.getMessage( ) );
-			e.printStackTrace( );
-			throw e;
-		}
-		catch( Exception e )
-		{
-			System.err.println( "GeneralException:" + e.getMessage( ) );
-			e.printStackTrace( );
-			throw e;
-		}
-		finally
-		{
-			closeDAO( dao );
-		}
-		return req;
 	}
 }

@@ -1,28 +1,28 @@
 package tm.intermediate;
 
-import dao.intermediate.DAOEspectaculoGenero;
+import dao.intermediate.DAOPreferenciaLugar;
 import tm.TransactionManager;
-import vos.Espectaculo;
-import vos.Genero;
+import vos.Lugar;
+import vos.UsuarioRegistrado;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public class EspectaculoGeneroTM extends TransactionManager
+public class PreferenciaLugarTM extends TransactionManager
 {
-	public EspectaculoGeneroTM( String contextPathP )
+	public PreferenciaLugarTM( String contextPathP )
 	{
 		super( contextPathP );
 	}
 	
-	public void createEspectaculoGenero( Long idEspectaculo, Long idGenero ) throws SQLException
+	public void createPreferenciaLugar( Long idUsuario, Long idLugar ) throws SQLException
 	{
-		DAOEspectaculoGenero dao = new DAOEspectaculoGenero( );
+		DAOPreferenciaLugar dao = new DAOPreferenciaLugar( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.createEntryEG( idEspectaculo, idGenero );
+			dao.createEntryPreferenciaLugar( idUsuario, idLugar );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -43,15 +43,15 @@ public class EspectaculoGeneroTM extends TransactionManager
 		}
 	}
 	
-	public List<Genero> getGenerosFrom( Long idEspectaculo ) throws SQLException
+	public List<Lugar> getLugaresPreferidosByUser( Long idUsuario ) throws SQLException
 	{
-		List<Genero> list;
-		DAOEspectaculoGenero dao = new DAOEspectaculoGenero( );
+		List<Lugar> list;
+		DAOPreferenciaLugar dao = new DAOPreferenciaLugar( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			list = dao.getGenerosFromEspectaculo( idEspectaculo );
+			list = dao.getLugaresPreferidosByUser( idUsuario );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -73,15 +73,15 @@ public class EspectaculoGeneroTM extends TransactionManager
 		return list;
 	}
 	
-	public List<Espectaculo> getEspectaculoWithGenero( Long idGenero ) throws SQLException
+	public List<UsuarioRegistrado> getUsersWhoPrefer( Long idLugar ) throws SQLException
 	{
-		List<Espectaculo> list;
-		DAOEspectaculoGenero dao = new DAOEspectaculoGenero( );
+		List<UsuarioRegistrado> list;
+		DAOPreferenciaLugar dao = new DAOPreferenciaLugar( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			list = dao.getEspectaculosFromGenero( idGenero );
+			list = dao.getUsersWhoPrefer( idLugar );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -103,14 +103,45 @@ public class EspectaculoGeneroTM extends TransactionManager
 		return list;
 	}
 	
-	public void deleteEspectaculoGenero( Long idEspectaculo, Long idGenero ) throws SQLException
+	public Lugar getPreferedLugarByUsar( Long idUsuario, Long idLugar ) throws SQLException
 	{
-		DAOEspectaculoGenero dao = new DAOEspectaculoGenero( );
+		Lugar lugar;
+		DAOPreferenciaLugar dao = new DAOPreferenciaLugar( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.deleteEntryEG( idEspectaculo, idGenero );
+			lugar = dao.getLugarPreferidoUser( idUsuario, idLugar );
+			connection.commit( );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException:" + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException:" + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return lugar;
+	}
+	
+	public void deletePreferenciaLugar( Long idUsuario, Long idLugar ) throws SQLException
+	{
+		DAOPreferenciaLugar dao = new DAOPreferenciaLugar( );
+		try
+		{
+			this.connection = getConnection( );
+			dao.setConnection( this.connection );
+			dao.deletePreferenciaLugar( idUsuario, idLugar );
+			connection.commit( );
 		}
 		catch( SQLException e )
 		{

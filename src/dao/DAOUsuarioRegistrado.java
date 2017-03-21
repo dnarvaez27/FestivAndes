@@ -106,7 +106,7 @@ public class DAOUsuarioRegistrado extends DAO
 		s.close( );
 	}
 	
-	private UsuarioRegistrado restultToAccesibildiad( ResultSet rs ) throws SQLException
+	public static UsuarioRegistrado restultToAccesibildiad( ResultSet rs ) throws SQLException
 	{
 		UsuarioRegistrado object = new UsuarioRegistrado( );
 		object.setEmail( rs.getString( "EMAIL" ) );

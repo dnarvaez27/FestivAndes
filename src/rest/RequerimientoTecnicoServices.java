@@ -1,6 +1,8 @@
 package rest;
 
 import tm.RequerimientoTecnicoTM;
+import tm.intermediate.LugarRequerimientoTM;
+import vos.Lugar;
 import vos.RequerimientoTecnico;
 
 import javax.ws.rs.*;
@@ -91,5 +93,23 @@ public class RequerimientoTecnicoServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
+	}
+	
+	@GET
+	@Path( "{id_requerimiento}/lugares" )
+	public Response getLugaresWithRequerimiento(
+			@PathParam( "id_requerimiento" ) Long idRequerimiento )
+	{
+		List<Lugar> list;
+		LugarRequerimientoTM tm = new LugarRequerimientoTM( getPath( ) );
+		try
+		{
+			list = tm.getLugaresWithRequerimiento( idRequerimiento );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
 	}
 }

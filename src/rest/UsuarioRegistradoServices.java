@@ -1,6 +1,8 @@
 package rest;
 
 import tm.UsuarioRegistradoTM;
+import tm.intermediate.PreferenciaLugarTM;
+import vos.Lugar;
 import vos.UsuarioRegistrado;
 
 import javax.ws.rs.*;
@@ -85,6 +87,75 @@ public class UsuarioRegistradoServices extends Services
 		try
 		{
 			tm.deleteUsuarioRegistrado( id );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).build( );
+	}
+	
+	@GET
+	@Path( "{id_usuario}/lugares" )
+	public Response getLugaresPreferidos( @PathParam( "id_usuario" ) Long idUsuario )
+	{
+		List<Lugar> list;
+		PreferenciaLugarTM tm = new PreferenciaLugarTM( getPath( ) );
+		try
+		{
+			list = tm.getLugaresPreferidosByUser( idUsuario );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	@GET
+	@Path( "{id_usuario}/lugares/{id_lugar}" )
+	public Response getLugarPreferido(
+			@PathParam( "id_usuario" ) Long idUsuario, @PathParam( "id_lugar" ) Long idLugar )
+	{
+		Lugar lugar;
+		PreferenciaLugarTM tm = new PreferenciaLugarTM( getPath( ) );
+		try
+		{
+			lugar = tm.getPreferedLugarByUsar( idUsuario, idLugar );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( lugar ).build( );
+	}
+	
+	@POST
+	@Path( "{id_usuario}/lugares/{id_lugar}" )
+	public Response createLugarPreferido(
+			@PathParam( "id_usuario" ) Long idUsuario, @PathParam( "id_lugar" ) Long idLugar )
+	{
+		PreferenciaLugarTM tm = new PreferenciaLugarTM( getPath( ) );
+		try
+		{
+			tm.createPreferenciaLugar( idUsuario, idLugar );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).build( );
+	}
+	
+	@DELETE
+	@Path( "{id_usuario}/lugares/{id_lugar}" )
+	public Response deleteLugarPreferido(
+			@PathParam( "id_usuario" ) Long idUsuario, @PathParam( "id_lugar" ) Long idLugar )
+	{
+		PreferenciaLugarTM tm = new PreferenciaLugarTM( getPath( ) );
+		try
+		{
+			tm.deletePreferenciaLugar( idUsuario, idLugar );
 		}
 		catch( SQLException e )
 		{

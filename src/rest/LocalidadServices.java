@@ -1,7 +1,9 @@
 package rest;
 
 import tm.LocalidadTM;
+import tm.intermediate.CostoLocalidadTM;
 import vos.Localidad;
+import vos.intermediate.CostoLocalidad;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -90,5 +92,22 @@ public class LocalidadServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
+	}
+	
+	@GET
+	@Path( "{id_localidad}/funciones" )
+	public Response getFuncionesInLocalidad( @PathParam( "id_localidad" ) Long idLocalidad )
+	{
+		List<CostoLocalidad> list;
+		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
+		try
+		{
+			list = tm.getCostoLocalidadFromLocalidad( idLocalidad );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
 	}
 }

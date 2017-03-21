@@ -1,7 +1,9 @@
 package rest;
 
 import tm.FuncionTM;
+import tm.intermediate.CostoLocalidadTM;
 import vos.Funcion;
+import vos.intermediate.CostoLocalidad;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -96,5 +98,64 @@ public class FuncionServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
+	}
+	
+	@GET
+	@Path( "{id_lugar}/{fecha_funcion}/localidades" )
+	public Response getCostoLocalidadesFrom(
+			@PathParam( "id_lugar" ) Long idLugar, @PathParam( "fecha_funcion" ) Date fechaFuncion )
+	{
+		List<CostoLocalidad> list;
+		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
+		try
+		{
+			list = tm.getCostoLocalidadesFromFuncion( fechaFuncion, idLugar );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	@GET
+	@Path( "{id_lugar}/{fecha_funcion}/localidades/{id_localidad}" )
+	public Response getCostoLocalidadFrom(
+			@PathParam( "id_lugar" ) Long idLugar,
+			@PathParam( "fecha_funcion" ) Date fechaFuncion,
+			@PathParam( "id_localidad" ) Long idLocalidad )
+	{
+		CostoLocalidad costoLocalidad;
+		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
+		try
+		{
+			costoLocalidad = tm.getCostoLocalidadFrom( fechaFuncion, idLugar, idLocalidad );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( costoLocalidad ).build( );
+	}
+	
+	@POST
+	@Path( "{id_lugar}/{fecha_funcion}/localidades" )
+	public Response createEntryCostoLocalidad(
+			@PathParam( "id_lugar" ) Long idLugar,
+			@PathParam( "fecha_funcion" ) Date fechaFuncion, CostoLocalidad costoLocalidad )
+	{
+		costoLocalidad.setIdLugar( idLugar );
+		costoLocalidad.setFecha( fechaFuncion );
+		
+		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
+		try
+		{
+			tm.createCostoLocalidad( costoLocalidad );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( costoLocalidad ).build( );
 	}
 }

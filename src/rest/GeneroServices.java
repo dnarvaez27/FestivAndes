@@ -1,6 +1,8 @@
 package rest;
 
 import tm.GeneroTM;
+import tm.intermediate.EspectaculoGeneroTM;
+import vos.Espectaculo;
 import vos.Genero;
 
 import javax.ws.rs.GET;
@@ -60,5 +62,22 @@ public class GeneroServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).entity( gen ).build( );
+	}
+	
+	@GET
+	@Path( "{id_genero}/espectaculos" )
+	public Response getEspectaculosWithGenero( @PathParam( "id_genero" ) Long idGenero )
+	{
+		List<Espectaculo> list;
+		EspectaculoGeneroTM tm = new EspectaculoGeneroTM( getPath( ) );
+		try
+		{
+			list = tm.getEspectaculoWithGenero( idGenero );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
 	}
 }

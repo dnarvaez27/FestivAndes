@@ -38,7 +38,7 @@ public class DAOCompaniaDeTeatro extends DAO
 		return object;
 	}
 	
-	public List<CompaniaDeTeatro> getCompaniaDeTeatroes( ) throws SQLException
+	public List<CompaniaDeTeatro> getCompaniaDeTeatros( ) throws SQLException
 	{
 		List<CompaniaDeTeatro> list = new LinkedList<>( );
 		
@@ -109,7 +109,7 @@ public class DAOCompaniaDeTeatro extends DAO
 		s.close( );
 	}
 	
-	private CompaniaDeTeatro resultToCompaniaDeTeatro( ResultSet rs ) throws SQLException
+	public static CompaniaDeTeatro resultToCompaniaDeTeatro( ResultSet rs ) throws SQLException
 	{
 		CompaniaDeTeatro object = new CompaniaDeTeatro( );
 		object.setId( rs.getLong( "id" ) );

@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class DAOEspectaculoGenero extends DAO
 {
-	public List<Genero> getGenerosFrom( Long idEspectaculo ) throws SQLException
+	public List<Genero> getGenerosFromEspectaculo( Long idEspectaculo ) throws SQLException
 	{
 		List<Genero> list = new LinkedList<>( );
 		
@@ -36,7 +36,7 @@ public class DAOEspectaculoGenero extends DAO
 		return list;
 	}
 	
-	public List<Espectaculo> getEspectaculosFrom( Long idGenero ) throws SQLException
+	public List<Espectaculo> getEspectaculosFromGenero( Long idGenero ) throws SQLException
 	{
 		List<Espectaculo> list = new LinkedList<>( );
 		
@@ -56,7 +56,7 @@ public class DAOEspectaculoGenero extends DAO
 		return list;
 	}
 	
-	public void createEntry( Long idEspectaculo, Long idGenero ) throws SQLException
+	public void createEntryEG( Long idEspectaculo, Long idGenero ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "INSERT INTO ESPECTACULO_GENERO " );
@@ -71,7 +71,7 @@ public class DAOEspectaculoGenero extends DAO
 		s.close( );
 	}
 	
-	public void deleteEntry( Long idEspectaculo, Long idGenero ) throws SQLException
+	public void deleteEntryEG( Long idEspectaculo, Long idGenero ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "DELETE FROM ESPECTACULO_GENERO " );

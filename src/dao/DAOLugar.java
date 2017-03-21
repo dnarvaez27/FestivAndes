@@ -106,7 +106,7 @@ public class DAOLugar extends DAO
 		s.close( );
 	}
 	
-	private Lugar restultToAccesibildiad( ResultSet rs ) throws SQLException
+	public static Lugar restultToAccesibildiad( ResultSet rs ) throws SQLException
 	{
 		Lugar l = new Lugar( );
 		l.setId( rs.getLong( "id" ) );

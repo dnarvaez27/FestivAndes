@@ -2,7 +2,10 @@ package rest;
 
 import tm.EspectaculoTM;
 import tm.intermediate.EspectaculoGeneroTM;
+import tm.intermediate.OfrecenTM;
+import vos.CompaniaDeTeatro;
 import vos.Espectaculo;
+import vos.reportes.RFC4;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -101,7 +104,7 @@ public class EspectaculoServices extends Services
 		EspectaculoGeneroTM tm = new EspectaculoGeneroTM( getPath( ) );
 		try
 		{
-			list = tm.getEspectaculoFrom( idEspectaculo );
+			list = tm.getEspectaculoWithGenero( idEspectaculo );
 		}
 		catch( SQLException e )
 		{
@@ -143,5 +146,39 @@ public class EspectaculoServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
+	}
+	
+	@GET
+	@Path( "{id_espectaculo}/companias" )
+	public Response getCompaniasFromEspectaculo( @PathParam( "id_espectaculo" ) Long idEspectaculo )
+	{
+		List<CompaniaDeTeatro> list;
+		OfrecenTM tm = new OfrecenTM( getPath( ) );
+		try
+		{
+			list = tm.getCompaniasWhoOffer( idEspectaculo );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	@GET
+	@Path( "{id_espectaculo}/rfc4" )
+	public Response generarReporteRFC4( @PathParam( "id_espectaculo" ) Long idEspectaculo )
+	{
+		RFC4 req;
+		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
+		try
+		{
+			req = tm.generarReporte( idEspectaculo );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( req ).build( );
 	}
 }
