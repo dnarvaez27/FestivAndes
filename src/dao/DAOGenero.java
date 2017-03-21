@@ -1,14 +1,15 @@
 package dao;
 
+import vos.Genero;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import vos.Genero;
-
-public class DAOGenero extends DAO {
+public class DAOGenero extends DAO
+{
 	public DAOGenero( )
 	{
 		super( );
@@ -71,7 +72,7 @@ public class DAOGenero extends DAO {
 		return genero;
 	}
 	
-	public Genero updateGenero(Long id, Genero genero ) throws SQLException
+	public Genero updateGenero( Long id, Genero genero ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE GENEROS " );

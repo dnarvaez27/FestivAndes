@@ -1,12 +1,13 @@
 package tm;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import dao.DAOGenero;
 import vos.Genero;
 
-public class GeneroTM extends TransactionManager{
+import java.sql.SQLException;
+import java.util.List;
+
+public class GeneroTM extends TransactionManager
+{
 	public GeneroTM( String contextPathP )
 	{
 		super( contextPathP );
@@ -110,7 +111,7 @@ public class GeneroTM extends TransactionManager{
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			gen = dao.updateGenero( id,genero );
+			gen = dao.updateGenero( id, genero );
 			connection.commit( );
 		}
 		catch( SQLException e )

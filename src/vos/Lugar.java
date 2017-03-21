@@ -1,74 +1,90 @@
 package vos;
 
-import java.util.Date;
-
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class Lugar {
-	@JsonProperty(value = "id")
+import java.util.Date;
+
+public class Lugar
+{
+	@JsonProperty( value = "id" )
 	private Long id;
-	@JsonProperty(value = "nombre")
+	
+	@JsonProperty( value = "nombre" )
 	private String nombre;
-	@JsonProperty(value = "disponibilidadInicio")
+	
+	@JsonProperty( value = "disponibilidadInicio" )
 	private Date disponibilidadInicio;
-	@JsonProperty(value = "disponibilidadFin")
+	
+	@JsonProperty( value = "disponibilidadFin" )
 	private Date disponibilidadFin;
-	@JsonProperty(value = "esAbierto")
+	
+	@JsonProperty( value = "esAbierto" )
 	private Integer esAbierto;
-
-	public Lugar() {
-
+	
+	public Lugar( )
+	{
+		
 	}
-
-	public Lugar(@JsonProperty(value = "id") Long id, @JsonProperty(value = "nombre") String nombre,
-			@JsonProperty(value = "disponibilidadInicio") Date disponibilidadInicio,
-			@JsonProperty(value = "disponibilidadFin") Date disponibilidadFin,
-			@JsonProperty(value = "esAbierto") Integer esAbierto) {
-		super();
-		this.id = id;
-		this.nombre = nombre;
-		this.disponibilidadInicio = disponibilidadInicio;
-		this.disponibilidadFin = disponibilidadFin;
-		this.esAbierto = esAbierto;
-	}
-
-	public Long getId() {
+	
+	//	public Lugar(@JsonProperty(value = "id") Long id, @JsonProperty(value = "nombre") String nombre,
+	//			@JsonProperty(value = "disponibilidadInicio") Date disponibilidadInicio,
+	//			@JsonProperty(value = "disponibilidadFin") Date disponibilidadFin,
+	//			@JsonProperty(value = "esAbierto") Integer esAbierto) {
+	//		super();
+	//		this.id = id;
+	//		this.nombre = nombre;
+	//		this.disponibilidadInicio = disponibilidadInicio;
+	//		this.disponibilidadFin = disponibilidadFin;
+	//		this.esAbierto = esAbierto;
+	//	}
+	
+	public Long getId( )
+	{
 		return id;
 	}
-
-	public void setId(Long id) {
+	
+	public void setId( Long id )
+	{
 		this.id = id;
 	}
-
-	public String getNombre() {
+	
+	public String getNombre( )
+	{
 		return nombre;
 	}
-
-	public void setNombre(String nombre) {
+	
+	public void setNombre( String nombre )
+	{
 		this.nombre = nombre;
 	}
-
-	public Date getDisponibilidadInicio() {
+	
+	public Date getDisponibilidadInicio( )
+	{
 		return disponibilidadInicio;
 	}
-
-	public void setDisponibilidadInicio(Date disponibilidadInicio) {
+	
+	public void setDisponibilidadInicio( Date disponibilidadInicio )
+	{
 		this.disponibilidadInicio = disponibilidadInicio;
 	}
-
-	public Date getDisponibilidadFin() {
+	
+	public Date getDisponibilidadFin( )
+	{
 		return disponibilidadFin;
 	}
-
-	public void setDisponibilidadFin(Date disponibilidadFin) {
+	
+	public void setDisponibilidadFin( Date disponibilidadFin )
+	{
 		this.disponibilidadFin = disponibilidadFin;
 	}
-
-	public Integer getEsAbierto() {
+	
+	public Integer getEsAbierto( )
+	{
 		return esAbierto;
 	}
-
-	public void setEsAbierto(Integer esAbierto) {
+	
+	public void setEsAbierto( Integer esAbierto )
+	{
 		this.esAbierto = esAbierto;
 	}
 }

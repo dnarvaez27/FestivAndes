@@ -1,14 +1,15 @@
 package dao;
 
+import vos.RequerimientoTecnico;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import vos.RequerimientoTecnico;
-
-public class DAORequerimientoTecnico extends DAO{
+public class DAORequerimientoTecnico extends DAO
+{
 	public DAORequerimientoTecnico( )
 	{
 		super( );
@@ -71,7 +72,7 @@ public class DAORequerimientoTecnico extends DAO{
 		return req;
 	}
 	
-	public RequerimientoTecnico updateRequerimientoTecnico(Long id, RequerimientoTecnico req ) throws SQLException
+	public RequerimientoTecnico updateRequerimientoTecnico( Long id, RequerimientoTecnico req ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE REQUERIMIENTOS_TECNICOS " );

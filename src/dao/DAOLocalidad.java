@@ -1,14 +1,15 @@
 package dao;
 
+import vos.Localidad;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import vos.Localidad;
-
-public class DAOLocalidad extends DAO{
+public class DAOLocalidad extends DAO
+{
 	public DAOLocalidad( )
 	{
 		super( );
@@ -71,12 +72,12 @@ public class DAOLocalidad extends DAO{
 		return localidad;
 	}
 	
-	public Localidad updateLocalidad(Long  id, Localidad localidad ) throws SQLException
+	public Localidad updateLocalidad( Long id, Localidad localidad ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE LOCALIDADES " );
 		sql.append( String.format( "SET nombre = '%s' ", localidad.getNombre( ) ) );
-		sql.append( String.format( "WHERE id = %s", id) );
+		sql.append( String.format( "WHERE id = %s", id ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );

@@ -1,21 +1,15 @@
 package rest;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
-
 import tm.LugarTM;
 import vos.Lugar;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import java.sql.SQLException;
+import java.util.List;
 
-public class LugarServices extends Services{
+public class LugarServices extends Services
+{
 	@POST
 	public Response createLugar( Lugar lugar )
 	{
@@ -63,6 +57,7 @@ public class LugarServices extends Services{
 		}
 		return Response.status( 200 ).entity( l ).build( );
 	}
+	
 	@PUT
 	@Path( "{id}" )
 	public Response updateLugar( @PathParam( "id" ) Long id, Lugar lugar )

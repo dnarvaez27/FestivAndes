@@ -1,15 +1,15 @@
 package tm;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import javax.ws.rs.Path;
-
 import dao.DAOLugar;
 import vos.Lugar;
 
-@Path("lugares")
-public class LugarTM extends TransactionManager{
+import javax.ws.rs.Path;
+import java.sql.SQLException;
+import java.util.List;
+
+@Path( "lugares" )
+public class LugarTM extends TransactionManager
+{
 	public LugarTM( String contextPathP )
 	{
 		super( contextPathP );
@@ -105,7 +105,7 @@ public class LugarTM extends TransactionManager{
 		return l;
 	}
 	
-	public Lugar updateLugar(Long id, Lugar lugar ) throws SQLException
+	public Lugar updateLugar( Long id, Lugar lugar ) throws SQLException
 	{
 		Lugar l;
 		DAOLugar dao = new DAOLugar( );
@@ -113,7 +113,7 @@ public class LugarTM extends TransactionManager{
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			l = dao.updateLugar( id,lugar );
+			l = dao.updateLugar( id, lugar );
 			connection.commit( );
 		}
 		catch( SQLException e )

@@ -12,18 +12,18 @@ import java.util.List;
 public class ClasificacionServices extends Services
 {
 	@POST
-	public Response createClasificacion( Clasificacion accesibilidad )
+	public Response createClasificacion( Clasificacion clasificacion )
 	{
 		ClasificacionTM tm = new ClasificacionTM( getPath( ) );
 		try
 		{
-			accesibilidad = tm.createClasificacion( accesibilidad );
+			clasificacion = tm.createClasificacion( clasificacion );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( accesibilidad ).build( );
+		return Response.status( 200 ).entity( clasificacion ).build( );
 	}
 	
 	@GET
@@ -61,13 +61,13 @@ public class ClasificacionServices extends Services
 	
 	@PUT
 	@Path( "{id}" )
-	public Response updateClasificacion( @PathParam( "id" ) Long id, Clasificacion accesibilidad )
+	public Response updateClasificacion( @PathParam( "id" ) Long id, Clasificacion clasificacion )
 	{
 		Clasificacion ac;
 		ClasificacionTM tm = new ClasificacionTM( getPath( ) );
 		try
 		{
-			ac = tm.updateClasificacion( id, accesibilidad );
+			ac = tm.updateClasificacion( id, clasificacion );
 		}
 		catch( SQLException e )
 		{

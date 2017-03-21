@@ -1,12 +1,13 @@
 package tm;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import dao.DAORequerimientoTecnico;
 import vos.RequerimientoTecnico;
 
-public class RequerimientoTecnicoTM extends TransactionManager{
+import java.sql.SQLException;
+import java.util.List;
+
+public class RequerimientoTecnicoTM extends TransactionManager
+{
 	public RequerimientoTecnicoTM( String contextPathP )
 	{
 		super( contextPathP );
@@ -102,7 +103,7 @@ public class RequerimientoTecnicoTM extends TransactionManager{
 		return req;
 	}
 	
-	public RequerimientoTecnico updateRequerimientoTecnico(Long id, RequerimientoTecnico requerimientoTecnico ) throws SQLException
+	public RequerimientoTecnico updateRequerimientoTecnico( Long id, RequerimientoTecnico requerimientoTecnico ) throws SQLException
 	{
 		RequerimientoTecnico req;
 		DAORequerimientoTecnico dao = new DAORequerimientoTecnico( );

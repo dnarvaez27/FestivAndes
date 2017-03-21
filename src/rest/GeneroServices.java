@@ -1,18 +1,19 @@
 package rest;
 
-import java.sql.SQLException;
-import java.util.List;
+import tm.GeneroTM;
+import vos.Genero;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import java.sql.SQLException;
+import java.util.List;
 
-import tm.GeneroTM;
-import vos.Genero;
 @Path( "generos" )
-public class GeneroServices extends Services{
+public class GeneroServices extends Services
+{
 	@POST
 	public Response createGenero( Genero genero )
 	{
