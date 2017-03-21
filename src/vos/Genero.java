@@ -28,9 +28,9 @@ public class Genero {
 
 	}
 
-	public Genero(@JsonProperty(value = "id") Long id, @JsonProperty(value = "nombre") String nombre) {
-		super();
-		this.id = id;
-		this.nombre = nombre;
-	}
+//	public Genero(@JsonProperty(value = "id") Long id, @JsonProperty(value = "nombre") String nombre) {
+//		super();
+//		this.id = id;
+//		this.nombre = nombre;
+//	}
 }
