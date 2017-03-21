@@ -3,8 +3,10 @@ package rest;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
@@ -39,7 +41,8 @@ public class SillaServices extends Services {
 
 	@GET
 	@Path("{id_lugar}/{id_localidad}/{numero_fila}/{numero_silla}")
-	public Response getSilla(@PathParam("id_lugar") Long id_lugar,@PathParam("id_localidad") Long id_localidad,@PathParam("numero_fila") Integer numero_fila,@PathParam("numero_silla") Integer numero_silla) {
+	public Response getSilla(@PathParam("id_lugar") Long id_lugar, @PathParam("id_localidad") Long id_localidad,
+			@PathParam("numero_fila") Integer numero_fila, @PathParam("numero_silla") Integer numero_silla) {
 		Silla pSilla;
 		SillaTM tm = new SillaTM(getPath());
 		try {
@@ -48,5 +51,33 @@ public class SillaServices extends Services {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 		return Response.status(200).entity(pSilla).build();
+	}
+
+	@PUT
+	@Path("{id_lugar}/{id_localidad}/{numero_fila}/{numero_silla}")
+	public Response updateSilla(@PathParam("id_lugar") Long id_lugar, @PathParam("id_localidad") Long id_localidad,
+			@PathParam("numero_fila") Integer numero_fila, @PathParam("numero_silla") Integer numero_silla,
+			Silla pSilla) {
+		Silla l;
+		SillaTM tm = new SillaTM(getPath());
+		try {
+			l = tm.updateSilla(numero_silla, numero_fila, id_lugar, id_localidad, pSilla);
+		} catch (SQLException e) {
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+		return Response.status(200).entity(l).build();
+	}
+
+	@DELETE
+	@Path("{id_lugar}/{id_localidad}/{numero_fila}/{numero_silla}")
+	public Response deleteSilla(@PathParam("id_lugar") Long id_lugar, @PathParam("id_localidad") Long id_localidad,
+			@PathParam("numero_fila") Integer numero_fila, @PathParam("numero_silla") Integer numero_silla) {
+		SillaTM tm = new SillaTM(getPath());
+		try {
+			tm.deleteSilla(numero_silla, numero_fila, id_lugar, id_localidad);
+		} catch (SQLException e) {
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+		return Response.status(200).build();
 	}
 }

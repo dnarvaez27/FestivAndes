@@ -102,7 +102,7 @@ public class RequerimientoTecnicoTM extends TransactionManager{
 		return req;
 	}
 	
-	public RequerimientoTecnico udpateRequerimientoTecnico( RequerimientoTecnico requerimientoTecnico ) throws SQLException
+	public RequerimientoTecnico updateRequerimientoTecnico(Long id, RequerimientoTecnico requerimientoTecnico ) throws SQLException
 	{
 		RequerimientoTecnico req;
 		DAORequerimientoTecnico dao = new DAORequerimientoTecnico( );
@@ -110,7 +110,7 @@ public class RequerimientoTecnicoTM extends TransactionManager{
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			req = dao.updateRequerimientoTecnico( requerimientoTecnico );
+			req = dao.updateRequerimientoTecnico( id, requerimientoTecnico );
 			connection.commit( );
 		}
 		catch( SQLException e )

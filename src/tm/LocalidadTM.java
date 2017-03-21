@@ -102,7 +102,7 @@ public class LocalidadTM extends TransactionManager{
 		return l;
 	}
 	
-	public Localidad udpateLocalidad( Localidad localidad ) throws SQLException
+	public Localidad updateLocalidad( Long id,Localidad localidad ) throws SQLException
 	{
 		Localidad l;
 		DAOLocalidad dao = new DAOLocalidad( );
@@ -110,7 +110,7 @@ public class LocalidadTM extends TransactionManager{
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			l = dao.updateLocalidad( localidad );
+			l = dao.updateLocalidad(id, localidad );
 			connection.commit( );
 		}
 		catch( SQLException e )

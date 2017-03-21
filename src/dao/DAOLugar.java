@@ -68,7 +68,7 @@ public class DAOLugar extends DAO {
 		return lugar;
 	}
 
-	public Lugar updateLugar(Lugar lugar) throws SQLException {
+	public Lugar updateLugar(Long id, Lugar lugar) throws SQLException {
 		StringBuilder sql = new StringBuilder();
 		sql.append("UPDATE LUGARES ");
 		sql.append(String.format("SET nombre = %s ", lugar.getNombre()));

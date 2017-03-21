@@ -71,12 +71,12 @@ public class DAOLocalidad extends DAO{
 		return localidad;
 	}
 	
-	public Localidad updateLocalidad( Localidad localidad ) throws SQLException
+	public Localidad updateLocalidad(Long  id, Localidad localidad ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE LOCALIDADES " );
 		sql.append( String.format( "SET nombre = '%s' ", localidad.getNombre( ) ) );
-		sql.append( String.format( "WHERE id = %s", localidad.getId( ) ) );
+		sql.append( String.format( "WHERE id = %s", id) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );

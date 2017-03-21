@@ -71,12 +71,12 @@ public class DAOGenero extends DAO {
 		return genero;
 	}
 	
-	public Genero updateGenero( Genero genero ) throws SQLException
+	public Genero updateGenero(Long id, Genero genero ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE GENEROS " );
 		sql.append( String.format( "SET nombre = '%s' ", genero.getNombre( ) ) );
-		sql.append( String.format( "WHERE id = %s", genero.getId( ) ) );
+		sql.append( String.format( "WHERE id = %s", id ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );

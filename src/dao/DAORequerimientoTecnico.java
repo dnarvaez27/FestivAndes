@@ -71,7 +71,7 @@ public class DAORequerimientoTecnico extends DAO{
 		return req;
 	}
 	
-	public RequerimientoTecnico updateRequerimientoTecnico( RequerimientoTecnico req ) throws SQLException
+	public RequerimientoTecnico updateRequerimientoTecnico(Long id, RequerimientoTecnico req ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE REQUERIMIENTOS_TECNICOS " );

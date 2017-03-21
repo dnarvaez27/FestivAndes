@@ -102,7 +102,7 @@ public class GeneroTM extends TransactionManager{
 		return gen;
 	}
 	
-	public Genero udpateGenero( Genero genero ) throws SQLException
+	public Genero udpateGenero( Long id, Genero genero ) throws SQLException
 	{
 		Genero gen;
 		DAOGenero dao = new DAOGenero( );
@@ -110,7 +110,7 @@ public class GeneroTM extends TransactionManager{
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			gen = dao.updateGenero( genero );
+			gen = dao.updateGenero( id,genero );
 			connection.commit( );
 		}
 		catch( SQLException e )

@@ -69,7 +69,7 @@ public class DAOUsuario extends DAO{
 		return usuario;
 	}
 
-	public Usuario updateUsuario(Usuario usuario) throws SQLException {
+	public Usuario updateUsuario(Long id, Usuario usuario) throws SQLException {
 		StringBuilder sql = new StringBuilder();
 		sql.append("UPDATE USUARIOS ");
 		sql.append(String.format("SET email = %s ", usuario.getEmail()));
@@ -78,7 +78,7 @@ public class DAOUsuario extends DAO{
 		sql.append(String.format("rol = %s ", usuario.getRol()));
 		sql.append(String.format("id_festival = %s ", usuario.getIdFestival()));
 
-		sql.append(String.format("WHERE identificacion = %s", usuario.getIdentificacion()));
+		sql.append(String.format("WHERE identificacion = %s", id));
 
 		PreparedStatement s = connection.prepareStatement(sql.toString());
 		recursos.add(s);

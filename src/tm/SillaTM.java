@@ -77,7 +77,7 @@ public class SillaTM extends TransactionManager {
 		return pSilla;
 	}
 
-	public Silla udpateSilla(Integer num_silla, Integer num_fila, Long id_lugar, Long id_localidad, Silla silla)
+	public Silla updateSilla(Integer num_silla, Integer num_fila, Long id_lugar, Long id_localidad, Silla silla)
 			throws SQLException {
 		Silla pSilla;
 		DAOSilla dao = new DAOSilla();
