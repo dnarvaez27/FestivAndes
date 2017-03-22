@@ -12,12 +12,12 @@ import java.util.List;
 public class BoletaServices extends Services
 {
 	@POST
-	public Response createBoleta( Boleta accesibilidad )
+	public Response createBoleta( Long id, String password, Boleta accesibilidad )
 	{
 		BoletaTM tm = new BoletaTM( getPath( ) );
 		try
 		{
-			accesibilidad = tm.createBoleta( accesibilidad );
+			accesibilidad = tm.createBoleta( id, password, accesibilidad );
 		}
 		catch( SQLException e )
 		{
