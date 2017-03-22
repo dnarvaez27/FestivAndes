@@ -107,7 +107,7 @@ public class DAOUsuario extends DAO
 		s.close( );
 	}
 	
-	private Usuario restultToAccesibildiad( ResultSet rs ) throws SQLException
+	public static Usuario restultToAccesibildiad( ResultSet rs ) throws SQLException
 	{
 		Usuario u = new Usuario( );
 		u.setIdentificacion( rs.getLong( "identificacion" ) );

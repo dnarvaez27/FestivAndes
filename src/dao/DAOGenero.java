@@ -98,7 +98,7 @@ public class DAOGenero extends DAO
 		s.close( );
 	}
 	
-	private Genero resultToGenero( ResultSet rs ) throws SQLException
+	public static Genero resultToGenero( ResultSet rs ) throws SQLException
 	{
 		Genero g = new Genero( );
 		g.setId( rs.getLong( "ID" ) );

@@ -98,7 +98,7 @@ public class DAOLocalidad extends DAO
 		s.close( );
 	}
 	
-	private Localidad resultToLocalidad( ResultSet rs ) throws SQLException
+	public static Localidad resultToLocalidad( ResultSet rs ) throws SQLException
 	{
 		Localidad l = new Localidad( );
 		l.setId( rs.getLong( "ID" ) );
