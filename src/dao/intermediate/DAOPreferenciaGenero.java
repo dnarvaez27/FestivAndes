@@ -34,7 +34,7 @@ public class DAOPreferenciaGenero extends DAO {
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM PREFERENCIA_GENERO P INNER JOIN GENEROES L " );
+		sql.append( "FROM PREFERENCIA_GENERO P INNER JOIN GENEROS L " );
 		sql.append( "                        ON P.id_genero = L.id " );
 		sql.append( String.format( "WHERE P.id_usuario = %s ", idUsuario ) );
 		
