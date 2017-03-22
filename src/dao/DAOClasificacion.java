@@ -101,8 +101,8 @@ public class DAOClasificacion extends DAO
 	public static Clasificacion restultToAccesibildiad( ResultSet rs ) throws SQLException
 	{
 		Clasificacion clasificacion = new Clasificacion( );
-		clasificacion.setNombre( rs.getString( "NOMBRE" ) );
-		clasificacion.setId( rs.getLong( "ID" ) );
+		clasificacion.setId( rs.getLong( "id" ) );
+		clasificacion.setNombre( rs.getString( "nombre" ) );
 		return clasificacion;
 	}
 }

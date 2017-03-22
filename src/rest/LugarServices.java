@@ -15,12 +15,12 @@ import java.util.List;
 public class LugarServices extends Services
 {
 	@POST
-	public Response createLugar( Lugar lugar )
+	public Response createLugar( Long id, String password, Lugar lugar )
 	{
 		LugarTM tm = new LugarTM( getPath( ) );
 		try
 		{
-			lugar = tm.createLugar( lugar );
+			lugar = tm.createLugar( id, password, lugar );
 		}
 		catch( SQLException e )
 		{

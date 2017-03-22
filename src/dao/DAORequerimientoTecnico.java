@@ -101,8 +101,8 @@ public class DAORequerimientoTecnico extends DAO
 	public static RequerimientoTecnico resultToRequerimientoTecnico( ResultSet rs ) throws SQLException
 	{
 		RequerimientoTecnico req = new RequerimientoTecnico( );
-		req.setId( rs.getLong( "ID" ) );
-		req.setNombre( rs.getString( "NOMBRE" ) );
+		req.setId( rs.getLong( "id" ) );
+		req.setNombre( rs.getString( "nombre" ) );
 		return req;
 	}
 }

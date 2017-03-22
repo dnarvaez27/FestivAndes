@@ -13,7 +13,7 @@ public class UsuarioRegistradoTM extends TransactionManager
 		super( contextPathP );
 	}
 	
-	public UsuarioRegistrado createUsuarioRegistrado( UsuarioRegistrado accesibilidad ) throws SQLException
+	public UsuarioRegistrado createUsuarioRegistrado( Long id, String password, UsuarioRegistrado accesibilidad ) throws SQLException
 	{
 		UsuarioRegistrado ur;
 		DAOUsuarioRegistrado dao = new DAOUsuarioRegistrado( );
@@ -21,7 +21,7 @@ public class UsuarioRegistradoTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ur = dao.createUsuarioRegistrado( accesibilidad );
+			ur = dao.createUsuarioRegistrado( id, password, accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )

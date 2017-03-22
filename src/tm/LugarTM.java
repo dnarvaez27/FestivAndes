@@ -15,7 +15,7 @@ public class LugarTM extends TransactionManager
 		super( contextPathP );
 	}
 	
-	public Lugar createLugar( Lugar lugar ) throws SQLException
+	public Lugar createLugar( Long id, String password, Lugar lugar ) throws SQLException
 	{
 		Lugar l;
 		DAOLugar dao = new DAOLugar( );
@@ -23,7 +23,7 @@ public class LugarTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			l = dao.createLugar( lugar );
+			l = dao.createLugar( id, password, lugar );
 			connection.commit( );
 		}
 		catch( SQLException e )

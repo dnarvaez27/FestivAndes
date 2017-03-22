@@ -21,6 +21,9 @@ public class Lugar
 	@JsonProperty( value = "esAbierto" )
 	private Integer esAbierto;
 	
+	@JsonProperty( value = "tipo" )
+	private String tipo;
+	
 	public Lugar( )
 	{
 		
@@ -37,6 +40,26 @@ public class Lugar
 	//		this.disponibilidadFin = disponibilidadFin;
 	//		this.esAbierto = esAbierto;
 	//	}
+	
+	/**
+	 * Retrieves the tipo of the Lugar
+	 *
+	 * @return The tipo of the Lugar
+	 */
+	public String getTipo( )
+	{
+		return tipo;
+	}
+	
+	/**
+	 * Updates the tipo of the Lugar by the one given by parameter
+	 *
+	 * @param tipo The new tipo of the Lugar
+	 */
+	public void setTipo( String tipo )
+	{
+		this.tipo = tipo;
+	}
 	
 	public Long getId( )
 	{

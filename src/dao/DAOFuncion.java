@@ -1,6 +1,7 @@
 package dao;
 
 import vos.Funcion;
+import vos.Usuario;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,21 +17,35 @@ public class DAOFuncion extends DAO
 		super( );
 	}
 	
-	public Funcion createFuncion( Funcion funcion ) throws SQLException
+	public Funcion createFuncion( Long id, String password, Funcion funcion ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "INSERT INTO FUNCIONES " );
-		sql.append( "( fecha, id_lugar, id_espectaculo ) " );
-		sql.append( "VALUES " );
-		sql.append( "( " );
-		sql.append( String.format( "%s, ", funcion.getFecha( ) ) );
-		sql.append( String.format( "%s, ", funcion.getIdLugar( ) ) );
-		sql.append( String.format( "%s, ", funcion.getIdEspectaculo( ) ) );
-		sql.append( ")" );
+		sql.append( "SELECT * " );
+		sql.append( "FROM USUARIOS " );
+		sql.append( String.format( "WHERE identificacion = %s ", id ) );
+		sql.append( String.format( "AND password = '%s' ", password ) );
+		sql.append( String.format( "AND rol = '%s' ", Usuario.USUARIO_ADMINISTRADOR ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
-		recursos.add( s );
-		s.execute( );
+		ResultSet rs = s.executeQuery( );
+		
+		if( rs.next( ) )
+		{
+			sql = new StringBuilder( );
+			sql.append( "INSERT INTO FUNCIONES " );
+			sql.append( "( fecha, id_lugar, id_espectaculo, se_realiza ) " );
+			sql.append( "VALUES " );
+			sql.append( "( " );
+			sql.append( String.format( "%s, ", toDate( funcion.getFecha( ) ) ) );
+			sql.append( String.format( "%s, ", funcion.getIdLugar( ) ) );
+			sql.append( String.format( "%s, ", funcion.getIdEspectaculo( ) ) );
+			sql.append( String.format( "%s ", funcion.getSeRealiza( ) ) );
+			sql.append( ")" );
+			
+			s = connection.prepareStatement( sql.toString( ) );
+			recursos.add( s );
+			s.execute( );
+		}
 		s.close( );
 		return funcion;
 	}
@@ -62,7 +77,7 @@ public class DAOFuncion extends DAO
 		sql.append( "SELECT * " );
 		sql.append( "FROM FUNCIONES " );
 		sql.append( "WHERE " );
-		sql.append( String.format( "fecha = %s ", fecha ) );
+		sql.append( String.format( "fecha = %s ", toDate( fecha ) ) );
 		sql.append( "AND" );
 		sql.append( String.format( "id_lugar = %s", idLugar ) );
 		
@@ -77,22 +92,36 @@ public class DAOFuncion extends DAO
 		return funcion;
 	}
 	
-	public Funcion updateFuncion( Date fecha, Long idLugar, Funcion funcion ) throws SQLException
+	public Funcion updateFuncion( Long idUsuario, String password, Date fecha, Long idLugar, Funcion funcion ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "UPDATE FUNCIONES " );
-		sql.append( "SET " );
-		sql.append( String.format( "fecha = '%s'", funcion.getFecha( ) ) );
-		sql.append( String.format( "id_lugar = '%s'", funcion.getIdEspectaculo( ) ) );
-		sql.append( "WHERE " );
-		sql.append( String.format( "fecha = %s ", fecha ) );
-		sql.append( "AND" );
-		sql.append( String.format( "id_lugar = %s", idLugar ) );
+		sql.append( "SELECT * " );
+		sql.append( "FROM USUARIOS " );
+		sql.append( String.format( "WHERE identificacion = %s ", idUsuario ) );
+		sql.append( String.format( "AND password = '%s' ", password ) );
+		sql.append( String.format( "AND rol = '%s'", Usuario.USUARIO_ORGANIZADOR ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
-		recursos.add( s );
-		s.execute( );
-		s.clearParameters( );
+		ResultSet rs = s.executeQuery( );
+		
+		if( rs.next( ) )
+		{
+			sql = new StringBuilder( );
+			sql.append( "UPDATE FUNCIONES " );
+			sql.append( "SET " );
+			sql.append( String.format( "fecha = %s, ", toDate( funcion.getFecha( ) ) ) );
+			sql.append( String.format( "id_lugar = '%s', ", funcion.getIdLugar( ) ) );
+			sql.append( String.format( "se_realiza = %s ", funcion.getSeRealiza( ) ) );
+			sql.append( "WHERE " );
+			sql.append( String.format( "fecha = %s ", toDate( fecha ) ) );
+			sql.append( "AND" );
+			sql.append( String.format( "id_lugar = %s", idLugar ) );
+			
+			s = connection.prepareStatement( sql.toString( ) );
+			recursos.add( s );
+			s.execute( );
+		}
+		s.close( );
 		return funcion;
 	}
 	
@@ -101,7 +130,7 @@ public class DAOFuncion extends DAO
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "DELETE FROM FUNCIONES " );
 		sql.append( "WHERE " );
-		sql.append( String.format( "fecha = %s ", fecha ) );
+		sql.append( String.format( "fecha = %s ", toDate( fecha ) ) );
 		sql.append( "AND" );
 		sql.append( String.format( "id_lugar = %s", idLugar ) );
 		
@@ -117,6 +146,7 @@ public class DAOFuncion extends DAO
 		funcion.setFecha( rs.getDate( "fecha" ) );
 		funcion.setIdLugar( rs.getLong( "id_lugar" ) );
 		funcion.setIdEspectaculo( rs.getLong( "id_espectaculo" ) );
+		funcion.setSeRealiza( rs.getInt( "se_realiza" ) );
 		return funcion;
 	}
 	
@@ -143,7 +173,7 @@ public class DAOFuncion extends DAO
 		sql.append( pais != null && !pais.isEmpty( ) ? String.format( "AND COMPANIA_TEATRO.PAIS = '%s' ", pais ) : "" );
 		sql.append( nombreEspectaculo != null && !nombreEspectaculo.isEmpty( ) ? String.format( "AND ESPECTACULO.NOMBRE = '%s' ", nombreEspectaculo ) : "" );
 		sql.append( idioma != null && !idioma.isEmpty( ) ? String.format( "AND ESPECTACULO.IDIOMA = '%s' ", idioma ) : "" );
-		sql.append( fechaInicio != null && fechaFin != null ? String.format( "AND FUNCION.FECHA BETWEEN %s AND %s", fechaInicio, fechaFin ) : "" );
+		sql.append( fechaInicio != null && fechaFin != null ? String.format( "AND FUNCION.FECHA BETWEEN %s AND %s", toDate( fechaInicio ), toDate( fechaFin ) ) : "" );
 		sql.append( duracionInicio != null && duracionFin != null ? String.format( "AND ESPECTACULO.DURACION BETWEEN %s AND %s ", duracionInicio, duracionFin ) : "" );
 		sql.append( lugar != null && !lugar.isEmpty( ) ? String.format( "AND LUGARES.nombre = '%s' ", lugar ) : "" );
 		sql.append( accesoEspecial != null && !accesoEspecial.isEmpty( ) ? String.format( "AND ACCESO_ESPECIAL.TIPO_ACCESO = '%s'", accesoEspecial ) : "" );

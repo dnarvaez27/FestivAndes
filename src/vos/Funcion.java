@@ -18,8 +18,31 @@ public class Funcion
 	@JsonProperty( value = "id_espectaculo" )
 	private Long idEspectaculo;
 	
+	@JsonProperty( value = "se_realiza" )
+	private Integer seRealiza;
+	
 	public Funcion( )
 	{
+	}
+	
+	/**
+	 * Retrieves the seRealiza of the Funcion
+	 *
+	 * @return The seRealiza of the Funcion
+	 */
+	public Integer getSeRealiza( )
+	{
+		return seRealiza;
+	}
+	
+	/**
+	 * Updates the seRealiza of the Funcion by the one given by parameter
+	 *
+	 * @param seRealiza The new seRealiza of the Funcion
+	 */
+	public void setSeRealiza( Integer seRealiza )
+	{
+		this.seRealiza = seRealiza;
 	}
 	
 	/**

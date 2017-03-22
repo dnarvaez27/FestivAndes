@@ -3,6 +3,7 @@ package rest;
 import tm.FuncionTM;
 import tm.intermediate.CostoLocalidadTM;
 import vos.Funcion;
+import vos.Usuario;
 import vos.intermediate.CostoLocalidad;
 
 import javax.ws.rs.*;
@@ -15,12 +16,12 @@ import java.util.List;
 public class FuncionServices extends Services
 {
 	@POST
-	public Response createFuncion( Funcion accesibilidad )
+	public Response createFuncion( Long id, String password, Funcion accesibilidad )
 	{
 		FuncionTM tm = new FuncionTM( getPath( ) );
 		try
 		{
-			accesibilidad = tm.createFuncion( accesibilidad );
+			accesibilidad = tm.createFuncion( id, password, accesibilidad );
 		}
 		catch( SQLException e )
 		{
@@ -67,13 +68,13 @@ public class FuncionServices extends Services
 	@Path( "{lugar}/{fecha}" )
 	public Response updateFuncion(
 			@PathParam( "lugar" ) Long idFecha,
-			@PathParam( "fecha" ) Date fecha, Funcion accesibilidad )
+			@PathParam( "fecha" ) Date fecha, Usuario usuario, Funcion accesibilidad )
 	{
 		Funcion ac;
 		FuncionTM tm = new FuncionTM( getPath( ) );
 		try
 		{
-			ac = tm.updateFuncion( fecha, idFecha, accesibilidad );
+			ac = tm.updateFuncion( usuario.getIdentificacion( ), usuario.getPassword( ), fecha, idFecha, accesibilidad );
 		}
 		catch( SQLException e )
 		{

@@ -1,14 +1,15 @@
 package tm.intermediate;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import dao.intermediate.DAOEspectaculoRequerimiento;
 import tm.TransactionManager;
 import vos.Espectaculo;
 import vos.RequerimientoTecnico;
 
-public class EspectaculoRequerimientoTM extends TransactionManager{
+import java.sql.SQLException;
+import java.util.List;
+
+public class EspectaculoRequerimientoTM extends TransactionManager
+{
 	public EspectaculoRequerimientoTM( String contextPathP )
 	{
 		super( contextPathP );
@@ -110,6 +111,7 @@ public class EspectaculoRequerimientoTM extends TransactionManager{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
 			dao.deleteEntryEG( idEspectaculo, idRequerimiento );
+			connection.commit( );
 		}
 		catch( SQLException e )
 		{

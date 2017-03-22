@@ -101,8 +101,8 @@ public class DAOLocalidad extends DAO
 	public static Localidad resultToLocalidad( ResultSet rs ) throws SQLException
 	{
 		Localidad l = new Localidad( );
-		l.setId( rs.getLong( "ID" ) );
-		l.setNombre( rs.getString( "NOMBRE" ) );
+		l.setId( rs.getLong( "id" ) );
+		l.setNombre( rs.getString( "nombre" ) );
 		return l;
 	}
 }

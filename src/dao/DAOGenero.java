@@ -101,8 +101,8 @@ public class DAOGenero extends DAO
 	public static Genero resultToGenero( ResultSet rs ) throws SQLException
 	{
 		Genero g = new Genero( );
-		g.setId( rs.getLong( "ID" ) );
-		g.setNombre( rs.getString( "NOMBRE" ) );
+		g.setId( rs.getLong( "id" ) );
+		g.setNombre( rs.getString( "nombre" ) );
 		return g;
 	}
 }

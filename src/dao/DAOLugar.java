@@ -1,6 +1,7 @@
 package dao;
 
 import vos.Lugar;
+import vos.Usuario;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,23 +16,36 @@ public class DAOLugar extends DAO
 		super( );
 	}
 	
-	public Lugar createLugar( Lugar lugar ) throws SQLException
+	public Lugar createLugar( Long id, String password, Lugar lugar ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "INSERT INTO LUGARES " );
-		sql.append( "( id, nombre, diponibilidad_inicio, disponibilidad_fin, es_abierto ) " );
-		sql.append( "VALUES " );
-		sql.append( "( " );
-		sql.append( String.format( "%s, ", lugar.getId( ) ) );
-		sql.append( String.format( "%s, ", lugar.getNombre( ) ) );
-		sql.append( String.format( "%s, ", lugar.getDisponibilidadInicio( ).toString( ) ) );
-		sql.append( String.format( "%s, ", lugar.getDisponibilidadFin( ).toString( ) ) );
-		sql.append( String.format( "%s ", lugar.getEsAbierto( ) ) );
-		sql.append( ")" );
+		sql.append( "SELECT * " );
+		sql.append( "FROM USUARIOS " );
+		sql.append( String.format( "WHERE identificacion = %s ", id ) );
+		sql.append( String.format( "AND password = '%s' ", password ) );
+		sql.append( String.format( "AND rol = '%s'", Usuario.USUARIO_ADMINISTRADOR ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
-		recursos.add( s );
-		s.execute( );
+		ResultSet rs = s.executeQuery( );
+		if( rs.next( ) )
+		{
+			sql = new StringBuilder( );
+			sql.append( "INSERT INTO LUGARES " );
+			sql.append( "( id, nombre, diponibilidad_inicio, disponibilidad_fin, es_abierto, tipo ) " );
+			sql.append( "VALUES " );
+			sql.append( "( " );
+			sql.append( String.format( "%s, ", lugar.getId( ) ) );
+			sql.append( String.format( "'%s', ", lugar.getNombre( ) ) );
+			sql.append( String.format( "%s, ", toDate( lugar.getDisponibilidadInicio( ) ) ) );
+			sql.append( String.format( "%s, ", toDate( lugar.getDisponibilidadFin( ) ) ) );
+			sql.append( String.format( "%s, ", lugar.getEsAbierto( ) ) );
+			sql.append( String.format( "'%s' ", lugar.getTipo( ) ) );
+			sql.append( ")" );
+			
+			s = connection.prepareStatement( sql.toString( ) );
+			recursos.add( s );
+			s.execute( );
+		}
 		s.close( );
 		return lugar;
 	}
@@ -80,11 +94,10 @@ public class DAOLugar extends DAO
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE LUGARES " );
 		sql.append( String.format( "SET nombre = %s ", lugar.getNombre( ) ) );
-		sql.append( String.format( "disponibilidad_inicio = %s ", lugar.getDisponibilidadInicio( )
-		                                                               .toString( ) ) );
-		sql.append( String.format( "disponibilidad_fin = %s ", lugar.getDisponibilidadFin( )
-		                                                            .toString( ) ) );
+		sql.append( String.format( "disponibilidad_inicio = %s ", toDate( lugar.getDisponibilidadInicio( ) ) ) );
+		sql.append( String.format( "disponibilidad_fin = %s ", toDate( lugar.getDisponibilidadFin( ) ) ) );
 		sql.append( String.format( "es_abierto = %s ", lugar.getEsAbierto( ) ) );
+		sql.append( String.format( "tipo = '%s' ", lugar.getTipo( ) ) );
 		sql.append( String.format( "WHERE id = %s", lugar.getId( ) ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
@@ -114,6 +127,7 @@ public class DAOLugar extends DAO
 		l.setDisponibilidadInicio( rs.getDate( "disponibilidad_inicio" ) );
 		l.setDisponibilidadFin( rs.getDate( "disponibilidad_fin" ) );
 		l.setEsAbierto( rs.getInt( "es_abierto" ) );
+		l.setTipo( rs.getString( "tipo" ) );
 		return l;
 	}
 }

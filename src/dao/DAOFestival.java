@@ -19,12 +19,12 @@ public class DAOFestival extends DAO
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "INSERT INTO FESTIVALES " );
-		sql.append( "( id, nombre ) " );
+		sql.append( "( id, fecha_inicio, fecha_fin, ciudad ) " );
 		sql.append( "VALUES " );
 		sql.append( "( " );
 		sql.append( String.format( "%s, ", object.getId( ) ) );
-		sql.append( String.format( "%s, ", object.getFechaInicio( ) ) );
-		sql.append( String.format( "%s, ", object.getFechaFin( ) ) );
+		sql.append( String.format( "%s, ", toDate( object.getFechaInicio( ) ) ) );
+		sql.append( String.format( "%s, ", toDate( object.getFechaFin( ) ) ) );
 		sql.append( String.format( "%s ", object.getCiudad( ) ) );
 		sql.append( ")" );
 		
@@ -79,8 +79,8 @@ public class DAOFestival extends DAO
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE FESTIVALES " );
 		sql.append( "SET " );
-		sql.append( String.format( "fecha_inicio = '%s', ", object.getFechaInicio( ) ) );
-		sql.append( String.format( "fecha_fin = %s, ", object.getFechaFin( ) ) );
+		sql.append( String.format( "fecha_inicio = %s, ", toDate( object.getFechaInicio( ) ) ) );
+		sql.append( String.format( "fecha_fin = %s, ", toDate( object.getFechaFin( ) ) ) );
 		sql.append( String.format( "ciudad = %s ", object.getCiudad( ) ) );
 		sql.append( String.format( "WHERE id = %s", id ) );
 		

@@ -6,13 +6,13 @@ public class Usuario
 {
 	public static final String USUARIO_REGISTRADO = "Usuario Registrado";
 	
-	public static final String USUARIO_NO_REGISTRADO = "Usuario No Registrado";
+	public static final String USUARIO_NO_REGISTRADO = "Usuario No-Registrado";
 	
 	public static final String USUARIO_ADMINISTRADOR = "Usuario Administrador";
 	
 	public static final String USUARIO_ORGANIZADOR = "Usuario Organizador";
 	
-	public static final String USUARIO_COMPANIA = "Usuario Compania";
+	public static final String USUARIO_COMPANIA = "Compania De Teatro";
 	
 	@JsonProperty( value = "identificacion" )
 	protected Long identificacion;

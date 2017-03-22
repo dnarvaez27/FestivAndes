@@ -14,12 +14,12 @@ import java.util.List;
 public class CompaniaDeTeatroServices extends Services
 {
 	@POST
-	public Response createCompaniaDeTeatro( CompaniaDeTeatro accesibilidad )
+	public Response createCompaniaDeTeatro( Long id, String password, CompaniaDeTeatro accesibilidad )
 	{
 		CompaniaDeTeatroTM tm = new CompaniaDeTeatroTM( getPath( ) );
 		try
 		{
-			accesibilidad = tm.createCompaniaDeTeatro( accesibilidad );
+			accesibilidad = tm.createCompaniaDeTeatro( id, password, accesibilidad );
 		}
 		catch( SQLException e )
 		{

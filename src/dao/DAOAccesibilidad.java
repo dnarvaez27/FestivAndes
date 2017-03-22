@@ -101,8 +101,8 @@ public class DAOAccesibilidad extends DAO
 	public static Accesibilidad resultToAccesibilidad( ResultSet rs ) throws SQLException
 	{
 		Accesibilidad a = new Accesibilidad( );
-		a.setId( rs.getLong( "ID" ) );
-		a.setNombre( rs.getString( "NOMBRE" ) );
+		a.setId( rs.getLong( "id" ) );
+		a.setNombre( rs.getString( "nombre" ) );
 		return a;
 	}
 }

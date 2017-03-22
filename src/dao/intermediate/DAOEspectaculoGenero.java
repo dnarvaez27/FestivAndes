@@ -16,6 +16,21 @@ import java.util.List;
  */
 public class DAOEspectaculoGenero extends DAO
 {
+	public void createEntryEG( Long idEspectaculo, Long idGenero ) throws SQLException
+	{
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "INSERT INTO ESPECTACULO_GENERO " );
+		sql.append( "( id_espectaculo, id_genero )" );
+		sql.append( "VALUES ( " );
+		sql.append( String.format( "%s, ", idEspectaculo ) );
+		sql.append( String.format( "%s ", idGenero ) );
+		sql.append( ")" );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		s.execute( );
+		s.close( );
+	}
+	
 	public List<Genero> getGenerosFromEspectaculo( Long idEspectaculo ) throws SQLException
 	{
 		List<Genero> list = new LinkedList<>( );
@@ -54,21 +69,6 @@ public class DAOEspectaculoGenero extends DAO
 		rs.close( );
 		s.close( );
 		return list;
-	}
-	
-	public void createEntryEG( Long idEspectaculo, Long idGenero ) throws SQLException
-	{
-		StringBuilder sql = new StringBuilder( );
-		sql.append( "INSERT INTO ESPECTACULO_GENERO " );
-		sql.append( "( id_espectaculo, id_genero )" );
-		sql.append( "VALUES ( " );
-		sql.append( String.format( "%s, ", idEspectaculo ) );
-		sql.append( String.format( "%s ", idGenero ) );
-		sql.append( ")" );
-		
-		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
-		s.execute( );
-		s.close( );
 	}
 	
 	public void deleteEntryEG( Long idEspectaculo, Long idGenero ) throws SQLException

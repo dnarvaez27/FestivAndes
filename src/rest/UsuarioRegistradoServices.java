@@ -14,12 +14,12 @@ import java.util.List;
 public class UsuarioRegistradoServices extends Services
 {
 	@POST
-	public Response createUsuarioRegistrado( UsuarioRegistrado accesibilidad )
+	public Response createUsuarioRegistrado( Long id, String password, UsuarioRegistrado accesibilidad )
 	{
 		UsuarioRegistradoTM tm = new UsuarioRegistradoTM( getPath( ) );
 		try
 		{
-			accesibilidad = tm.createUsuarioRegistrado( accesibilidad );
+			accesibilidad = tm.createUsuarioRegistrado( id, password, accesibilidad );
 		}
 		catch( SQLException e )
 		{

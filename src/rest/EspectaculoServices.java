@@ -16,12 +16,12 @@ import java.util.List;
 public class EspectaculoServices extends Services
 {
 	@POST
-	public Response createEspectaculo( Espectaculo espectaculo )
+	public Response createEspectaculo( Long id, String password, Espectaculo espectaculo )
 	{
 		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
 		try
 		{
-			espectaculo = tm.createEspectaculo( espectaculo );
+			espectaculo = tm.createEspectaculo( id, password, espectaculo );
 		}
 		catch( SQLException e )
 		{

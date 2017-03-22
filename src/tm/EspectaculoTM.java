@@ -14,7 +14,7 @@ public class EspectaculoTM extends TransactionManager
 		super( contextPathP );
 	}
 	
-	public Espectaculo createEspectaculo( Espectaculo accesibilidad ) throws SQLException
+	public Espectaculo createEspectaculo( Long id, String password, Espectaculo accesibilidad ) throws SQLException
 	{
 		Espectaculo ac;
 		DAOEspectaculo dao = new DAOEspectaculo( );
@@ -22,7 +22,7 @@ public class EspectaculoTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.createEspectaculo( accesibilidad );
+			ac = dao.createEspectaculo( id, password, accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )

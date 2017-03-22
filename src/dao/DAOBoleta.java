@@ -28,7 +28,7 @@ public class DAOBoleta extends DAO
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		ResultSet rs = s.executeQuery( );
-		if( rs.next( ) )
+		if( rs.next( ) && verificarCompraBoleta( object ) )
 		{
 			sql = new StringBuilder( );
 			sql.append( "INSERT INTO BOLETAS " );
@@ -40,7 +40,7 @@ public class DAOBoleta extends DAO
 			sql.append( String.format( "%s, ", object.getIdNumeroFila( ) ) );
 			sql.append( String.format( "%s, ", object.getIdLocalidad( ) ) );
 			sql.append( String.format( "%s, ", object.getIdLugar( ) ) );
-			sql.append( String.format( "%s, ", object.getFecha( ) ) );
+			sql.append( String.format( "%s, ", toDate( object.getFecha( ) ) ) );
 			sql.append( String.format( "%s, ", object.getIdUsuario( ) ) );
 			sql.append( ")" );
 			
@@ -51,6 +51,24 @@ public class DAOBoleta extends DAO
 		rs.close( );
 		s.close( );
 		return object;
+	}
+	
+	private boolean verificarCompraBoleta( Boleta boleta ) throws SQLException
+	{
+		StringBuilder sql = new StringBuilder( );
+		
+		sql.append( "SELECT * " );
+		sql.append( "FROM BOLETA " );
+		sql.append( "WHERE " );
+		sql.append( String.format( "NUM_SILLA = %s ", boleta.getIdNumeroSilla( ) ) );
+		sql.append( String.format( "AND NUM_FILA = %s ", boleta.getIdNumeroFila( ) ) );
+		sql.append( String.format( "AND ID_LUGAR = %s ", boleta.getIdLugar( ) ) );
+		sql.append( String.format( "AND ID_LOCALIDAD = %s ", boleta.getIdLocalidad( ) ) );
+		sql.append( String.format( "AND fecha = %s ", toDate( boleta.getFecha( ) ) ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		return !rs.next( );
 	}
 	
 	public List<Boleta> getBoletas( ) throws SQLException
@@ -101,7 +119,7 @@ public class DAOBoleta extends DAO
 		sql.append( String.format( "id_numero_fila = '%s'", object.getIdNumeroFila( ) ) );
 		sql.append( String.format( "id_localidad = '%s'", object.getIdLocalidad( ) ) );
 		sql.append( String.format( "id_lugar = '%s'", object.getIdLugar( ) ) );
-		sql.append( String.format( "fecha = '%s'", object.getFecha( ) ) );
+		sql.append( String.format( "fecha = %s", toDate( object.getFecha( ) ) ) );
 		sql.append( String.format( "id_usuario = '%s'", object.getIdUsuario( ) ) );
 		sql.append( String.format( "WHERE numBoleta = %s", numBoleta ) );
 		

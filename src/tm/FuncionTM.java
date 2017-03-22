@@ -14,7 +14,7 @@ public class FuncionTM extends TransactionManager
 		super( contextPathP );
 	}
 	
-	public Funcion createFuncion( Funcion accesibilidad ) throws SQLException
+	public Funcion createFuncion( Long id, String password, Funcion accesibilidad ) throws SQLException
 	{
 		Funcion ac;
 		DAOFuncion dao = new DAOFuncion( );
@@ -22,7 +22,7 @@ public class FuncionTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.createFuncion( accesibilidad );
+			ac = dao.createFuncion( id, password, accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -104,7 +104,7 @@ public class FuncionTM extends TransactionManager
 		return ac;
 	}
 	
-	public Funcion updateFuncion( Date fecha, Long idLugar, Funcion accesibilidad ) throws SQLException
+	public Funcion updateFuncion( Long idUsuario, String password, Date fecha, Long idLugar, Funcion accesibilidad ) throws SQLException
 	{
 		Funcion ac;
 		DAOFuncion dao = new DAOFuncion( );
@@ -112,7 +112,7 @@ public class FuncionTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.updateFuncion( fecha, idLugar, accesibilidad );
+			ac = dao.updateFuncion( idUsuario, password, fecha, idLugar, accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )

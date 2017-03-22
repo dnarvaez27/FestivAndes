@@ -16,35 +16,47 @@ public class DAOUsuarioRegistrado extends DAO
 		super( );
 	}
 	
-	public UsuarioRegistrado createUsuarioRegistrado( UsuarioRegistrado object ) throws SQLException
+	public UsuarioRegistrado createUsuarioRegistrado( Long id, String password, UsuarioRegistrado object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "INSERT INTO USUARIOS " );
-		sql.append( "( id_usuario, email, password, nombre, rol )" );
-		sql.append( "VALUES ( " );
-		sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
-		sql.append( String.format( "'%s', ", object.getEmail( ) ) );
-		sql.append( String.format( "'%s', ", object.getPassword( ) ) );
-		sql.append( String.format( "'%s', ", object.getNombre( ) ) );
-		sql.append( String.format( "'%s', ", object.getIdentificacion( ) != -1 ? Usuario.USUARIO_REGISTRADO : Usuario.USUARIO_NO_REGISTRADO ) );
-		sql.append( "); " );
+		sql.append( "SELECT * " );
+		sql.append( "FROM USUARIOS " );
+		sql.append( String.format( "WHERE identificacion = %s ", id ) );
+		sql.append( String.format( "AND password = '%s' ", password ) );
+		sql.append( String.format( "AND rol = '%s' ", Usuario.USUARIO_ADMINISTRADOR ) );
 		
-		PreparedStatement s = connection.prepareCall( sql.toString( ) );
-		recursos.add( s );
-		s.execute( );
-		
-		sql = new StringBuilder( );
-		sql.append( "INSERT INTO USUARIOS_REGISTRADO " );
-		sql.append( "( id_usuario, edad ) " );
-		sql.append( "VALUES " );
-		sql.append( "( " );
-		sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
-		sql.append( String.format( "%s ", object.getEdad( ) ) );
-		sql.append( "); " );
-		
-		s = connection.prepareStatement( sql.toString( ) );
-		recursos.add( s );
-		s.execute( );
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		if( rs.next( ) )
+		{
+			sql = new StringBuilder( );
+			sql.append( "INSERT INTO USUARIOS " );
+			sql.append( "( id_usuario, email, password, nombre, rol )" );
+			sql.append( "VALUES ( " );
+			sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
+			sql.append( String.format( "'%s', ", object.getEmail( ) ) );
+			sql.append( String.format( "'%s', ", object.getPassword( ) ) );
+			sql.append( String.format( "'%s', ", object.getNombre( ) ) );
+			sql.append( String.format( "'%s', ", object.getIdentificacion( ) != -1 ? Usuario.USUARIO_REGISTRADO : Usuario.USUARIO_NO_REGISTRADO ) );
+			sql.append( "); " );
+			
+			s = connection.prepareCall( sql.toString( ) );
+			recursos.add( s );
+			s.execute( );
+			
+			sql = new StringBuilder( );
+			sql.append( "INSERT INTO USUARIOS_REGISTRADO " );
+			sql.append( "( id_usuario, edad ) " );
+			sql.append( "VALUES " );
+			sql.append( "( " );
+			sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
+			sql.append( String.format( "%s ", object.getEdad( ) ) );
+			sql.append( "); " );
+			
+			s = connection.prepareStatement( sql.toString( ) );
+			recursos.add( s );
+			s.execute( );
+		}
 		s.close( );
 		return object;
 	}
