@@ -61,6 +61,23 @@ public class CompaniaDeTeatroServices extends Services
 		return Response.status( 200 ).entity( ac ).build( );
 	}
 	
+	@PUT
+	@Path( "{id}" )
+	public Response updateCompaniaDeTeatro(
+			@PathParam( "id" ) Long id, CompaniaDeTeatro companiaDeTeatro )
+	{
+		CompaniaDeTeatroTM tm = new CompaniaDeTeatroTM( getPath( ) );
+		try
+		{
+			tm.updateCompaniaDeTeatro( id, companiaDeTeatro );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( companiaDeTeatro ).build( );
+	}
+	
 	@DELETE
 	@Path( "{id}" )
 	public Response deleteCompaniaDeTeatro( @PathParam( "id" ) Long id )

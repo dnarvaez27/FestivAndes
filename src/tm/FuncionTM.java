@@ -160,4 +160,36 @@ public class FuncionTM extends TransactionManager
 			closeDAO( dao );
 		}
 	}
+	
+	public List<Funcion> generarReporte1( String nombreCategoria, String nombreCompania, String ciudad, String pais, String nombreEspectaculo, String idioma, Date fechaInicio, Date fechaFin, Integer duracionInicio, Integer duracionFin, String lugar, String accesoEspecial, String publicoObjetivo, String order, boolean asc ) throws SQLException
+	{
+		List<Funcion> list;
+		DAOFuncion dao = new DAOFuncion( );
+		
+		try
+		{
+			this.connection = getConnection( );
+			dao.setConnection( this.connection );
+			list = dao.RFC1( nombreCategoria, nombreCompania, ciudad, pais, nombreEspectaculo, idioma, fechaInicio, fechaFin, duracionInicio, duracionFin, lugar, accesoEspecial, publicoObjetivo, order, asc );
+			connection.commit( );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException:" + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException:" + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return list;
+	}
+	
 }

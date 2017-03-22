@@ -1,6 +1,7 @@
 package dao;
 
 import vos.CompaniaDeTeatro;
+import vos.Usuario;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +19,21 @@ public class DAOCompaniaDeTeatro extends DAO
 	public CompaniaDeTeatro createCompaniaDeTeatro( CompaniaDeTeatro object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
+		sql.append( "INSERT INTO USUARIOS " );
+		sql.append( "( id_usuario, email, password, nombre, rol )" );
+		sql.append( "VALUES ( " );
+		sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
+		sql.append( String.format( "'%s', ", object.getEmail( ) ) );
+		sql.append( String.format( "'%s', ", object.getPassword( ) ) );
+		sql.append( String.format( "'%s', ", object.getNombre( ) ) );
+		sql.append( String.format( "'%s', ", object.getIdentificacion( ) != -1 ? Usuario.USUARIO_REGISTRADO : Usuario.USUARIO_NO_REGISTRADO ) );
+		sql.append( "); " );
+		
+		PreparedStatement s = connection.prepareCall( sql.toString( ) );
+		recursos.add( s );
+		s.execute( );
+		
+		sql = new StringBuilder( );
 		sql.append( "INSERT INTO COMPANIAS_DE_TEATRO " );
 		sql.append( "( id, nombre, nombre_representante, pagina_web, pais_origen, hora_llegada, hora_salida ) " );
 		sql.append( "VALUES " );
@@ -31,7 +47,7 @@ public class DAOCompaniaDeTeatro extends DAO
 		sql.append( String.format( "%s, ", object.getHoraLlegada( ) ) );
 		sql.append( ")" );
 		
-		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		s.execute( );
 		s.close( );
@@ -77,9 +93,21 @@ public class DAOCompaniaDeTeatro extends DAO
 		return object;
 	}
 	
-	public CompaniaDeTeatro updateCompaniaDeTeatro( CompaniaDeTeatro object ) throws SQLException
+	public CompaniaDeTeatro updateCompaniaDeTeatro( Long idCompania, CompaniaDeTeatro object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
+		sql.append( "UPDATE USUARIOS " );
+		sql.append( String.format( "SET nombre = '%s'", object.getNombre( ) ) );
+		sql.append( String.format( "SET nombre = '%s'", object.getNombre( ) ) );
+		sql.append( String.format( "SET email = '%s'", object.getEmail( ) ) );
+		sql.append( String.format( "SET password = '%s'", object.getPassword( ) ) );
+		sql.append( String.format( "WHERE identificacion = %s", idCompania ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		recursos.add( s );
+		s.execute( );
+		
+		sql = new StringBuilder( );
 		sql.append( "UPDATE COMPANIAS_DE_TEATRO " );
 		sql.append( "SET " );
 		sql.append( String.format( "nombre = '%s', ", object.getNombre( ) ) );
@@ -88,9 +116,9 @@ public class DAOCompaniaDeTeatro extends DAO
 		sql.append( String.format( "pais_origen = '%s', ", object.getPaisOrigen( ) ) );
 		sql.append( String.format( "fecha_llegada = %s, ", object.getHoraLlegada( ) ) );
 		sql.append( String.format( "fecha_salida = %s ", object.getHoraSalida( ) ) );
-		sql.append( String.format( "WHERE id = %s", object.getId( ) ) );
+		sql.append( String.format( "WHERE id = %s", idCompania ) );
 		
-		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		s.execute( );
 		s.clearParameters( );

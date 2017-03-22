@@ -103,7 +103,7 @@ public class CompaniaDeTeatroTM extends TransactionManager
 		return ac;
 	}
 	
-	public CompaniaDeTeatro updateCompaniaDeTeatro( CompaniaDeTeatro accesibilidad ) throws SQLException
+	public CompaniaDeTeatro updateCompaniaDeTeatro( Long id, CompaniaDeTeatro accesibilidad ) throws SQLException
 	{
 		CompaniaDeTeatro ac;
 		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
@@ -111,7 +111,7 @@ public class CompaniaDeTeatroTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.updateCompaniaDeTeatro( accesibilidad );
+			ac = dao.updateCompaniaDeTeatro( id, accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )

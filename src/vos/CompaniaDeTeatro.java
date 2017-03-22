@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Created by Dave on 20/03/2017.
  */
-public class CompaniaDeTeatro
+public class CompaniaDeTeatro extends Usuario
 {
 	@JsonProperty( value = "id" )
 	private Long id;

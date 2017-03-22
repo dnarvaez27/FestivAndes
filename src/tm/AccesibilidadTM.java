@@ -141,6 +141,7 @@ public class AccesibilidadTM extends TransactionManager
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
 			dao.deleteAccesibilidad( id );
+			connection.commit( );
 		}
 		catch( SQLException e )
 		{

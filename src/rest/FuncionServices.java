@@ -158,4 +158,35 @@ public class FuncionServices extends Services
 		}
 		return Response.status( 200 ).entity( costoLocalidad ).build( );
 	}
+	
+	@GET
+	public Response getFunciones(
+			@QueryParam( "nombre_categoria" ) String nombreCategoria,
+			@QueryParam( "nombre_compania" ) String nombreCompania,
+			@QueryParam( "ciudad" ) String ciudad,
+			@QueryParam( "pais" ) String pais,
+			@QueryParam( "nombre_espectaculo" ) String nombreEspectaculo,
+			@QueryParam( "idioma" ) String idioma,
+			@QueryParam( "fecha_inicio" ) Date fechaInicio,
+			@QueryParam( "fecha_fin" ) Date fechaFin,
+			@QueryParam( "duracion_inicio" ) Integer duracionInicio,
+			@QueryParam( "duracion_fin" ) Integer duracionFin,
+			@QueryParam( "lugar" ) String lugar,
+			@QueryParam( "acceso_especial" ) String accesoEspecial,
+			@QueryParam( "accesibilidad" ) String publicoObjetivo,
+			@QueryParam( "ordenar" ) String order, @QueryParam( "asc" ) Integer asc )
+	{
+		List<Funcion> list;
+		FuncionTM tm = new FuncionTM( getPath( ) );
+		
+		try
+		{
+			list = tm.generarReporte1( nombreCategoria, nombreCompania, ciudad, pais, nombreEspectaculo, idioma, fechaInicio, fechaFin, duracionInicio, duracionFin, lugar, accesoEspecial, publicoObjetivo, order, asc == 1 );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
+	}
 }

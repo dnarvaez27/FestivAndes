@@ -1,6 +1,7 @@
 package dao;
 
 import vos.Boleta;
+import vos.Usuario;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,25 +16,39 @@ public class DAOBoleta extends DAO
 		super( );
 	}
 	
-	public Boleta createBoleta( Boleta object ) throws SQLException
+	public Boleta createBoleta( Long id, String password, Boleta object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "INSERT INTO BOLETAS " );
-		sql.append( "( num_boleta, id_numero_silla, id_numero_fila, id_localidad, id_lugar, fecha, id_usuario ) " );
-		sql.append( "VALUES " );
-		sql.append( "( " );
-		sql.append( String.format( "%s, ", object.getNumBoleta( ) ) );
-		sql.append( String.format( "%s, ", object.getIdNumeroSilla( ) ) );
-		sql.append( String.format( "%s, ", object.getIdNumeroFila( ) ) );
-		sql.append( String.format( "%s, ", object.getIdLocalidad( ) ) );
-		sql.append( String.format( "%s, ", object.getIdLugar( ) ) );
-		sql.append( String.format( "%s, ", object.getFecha( ) ) );
-		sql.append( String.format( "%s, ", object.getIdUsuario( ) ) );
-		sql.append( ")" );
+		sql.append( "SELECT * " );
+		sql.append( "FROM USUARIOS " );
+		sql.append( String.format( "WHERE id = %s ", id ) );
+		sql.append( String.format( "AND password = '%s'", password ) );
+		sql.append( String.format( "AND ( rol = '%s'", Usuario.USUARIO_REGISTRADO ) );
+		sql.append( String.format( " OR rol = '%s' )", Usuario.USUARIO_NO_REGISTRADO ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
-		recursos.add( s );
-		s.execute( );
+		ResultSet rs = s.executeQuery( );
+		if( rs.next( ) )
+		{
+			sql = new StringBuilder( );
+			sql.append( "INSERT INTO BOLETAS " );
+			sql.append( "( num_boleta, id_numero_silla, id_numero_fila, id_localidad, id_lugar, fecha, id_usuario ) " );
+			sql.append( "VALUES " );
+			sql.append( "( " );
+			sql.append( String.format( "%s, ", object.getNumBoleta( ) ) );
+			sql.append( String.format( "%s, ", object.getIdNumeroSilla( ) ) );
+			sql.append( String.format( "%s, ", object.getIdNumeroFila( ) ) );
+			sql.append( String.format( "%s, ", object.getIdLocalidad( ) ) );
+			sql.append( String.format( "%s, ", object.getIdLugar( ) ) );
+			sql.append( String.format( "%s, ", object.getFecha( ) ) );
+			sql.append( String.format( "%s, ", object.getIdUsuario( ) ) );
+			sql.append( ")" );
+			
+			s = connection.prepareStatement( sql.toString( ) );
+			recursos.add( s );
+			s.execute( );
+		}
+		rs.close( );
 		s.close( );
 		return object;
 	}
