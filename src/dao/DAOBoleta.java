@@ -109,7 +109,7 @@ public class DAOBoleta extends DAO
 		s.close( );
 	}
 	
-	private Boleta resultToBoleta( ResultSet rs ) throws SQLException
+	public static Boleta resultToBoleta( ResultSet rs ) throws SQLException
 	{
 		Boleta object = new Boleta( );
 		object.setNumBoleta( rs.getLong( "num_boleta" ) );

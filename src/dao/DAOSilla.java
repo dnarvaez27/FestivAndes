@@ -111,7 +111,7 @@ public class DAOSilla extends DAO
 		s.close( );
 	}
 	
-	private Silla resultToSilla( ResultSet rs ) throws SQLException
+	public static Silla resultToSilla( ResultSet rs ) throws SQLException
 	{
 		Silla pSilla = new Silla( );
 		pSilla.setNumSilla( rs.getInt( "numero_silla" ) );

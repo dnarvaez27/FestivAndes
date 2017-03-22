@@ -103,7 +103,7 @@ public class DAOFestival extends DAO
 		s.close( );
 	}
 	
-	private Festival resultToFestival( ResultSet rs ) throws SQLException
+	public static Festival resultToFestival( ResultSet rs ) throws SQLException
 	{
 		Festival object = new Festival( );
 		object.setFechaInicio( rs.getDate( "fecha_inicio" ) );

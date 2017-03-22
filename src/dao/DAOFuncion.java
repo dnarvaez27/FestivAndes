@@ -111,7 +111,7 @@ public class DAOFuncion extends DAO
 		s.close( );
 	}
 	
-	private Funcion restultToAccesibildiad( ResultSet rs ) throws SQLException
+	public static Funcion restultToAccesibildiad( ResultSet rs ) throws SQLException
 	{
 		Funcion funcion = new Funcion( );
 		funcion.setFecha( rs.getDate( "fecha" ) );
