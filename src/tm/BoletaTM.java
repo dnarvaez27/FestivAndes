@@ -13,7 +13,7 @@ public class BoletaTM extends TransactionManager
 		super( contextPathP );
 	}
 	
-	public Boleta createBoleta( Boleta accesibilidad ) throws SQLException
+	public Boleta createBoleta( Long id, String password, Boleta accesibilidad ) throws SQLException
 	{
 		Boleta ac;
 		DAOBoleta dao = new DAOBoleta( );
@@ -21,7 +21,7 @@ public class BoletaTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.createBoleta( accesibilidad );
+			ac = dao.createBoleta( id, password, accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )
