@@ -23,9 +23,9 @@ public class DAOOfrecen extends DAO
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM OFRECEN O INNER JOIN ESPECTACULO E " );
+		sql.append( "FROM OFRECE O INNER JOIN ESPECTACULO E " );
 		sql.append( "                ON O.id_espectaculo = E.id " );
-		sql.append( String.format( "WHERE O.id_compania = %s", idCompania ) );
+		sql.append( String.format( "WHERE O.id_compania_de_teatro = %s", idCompania ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		ResultSet rs = s.executeQuery( );

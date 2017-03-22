@@ -32,9 +32,10 @@ public class DAOCompaniaDeTeatro extends DAO
 		{
 			sql = new StringBuilder( );
 			sql.append( "INSERT INTO USUARIOS " );
-			sql.append( "( identificacion, email, password, nombre, rol )" );
+			sql.append( "( identificacion, tipo_identificacion, email, password, nombre, rol )" );
 			sql.append( "VALUES ( " );
 			sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
+			sql.append( String.format( "'%s', ", object.getTipoIdentificacion( ) ) );
 			sql.append( String.format( "'%s', ", object.getEmail( ) ) );
 			sql.append( String.format( "'%s', ", object.getPassword( ) ) );
 			sql.append( String.format( "'%s', ", object.getNombre( ) ) );
@@ -47,14 +48,15 @@ public class DAOCompaniaDeTeatro extends DAO
 			
 			sql = new StringBuilder( );
 			sql.append( "INSERT INTO COMPANIAS_DE_TEATRO " );
-			sql.append( "( id, nombre, nombre_representante, pagina_web, pais_origen, hora_llegada, hora_salida ) " );
+			sql.append( "( id, tipo_id, nombre, nombre_representante, pais_origen, pagina_web, hora_llegada, hora_salida ) " );
 			sql.append( "VALUES " );
 			sql.append( "( " );
 			sql.append( String.format( "%s, ", object.getId( ) ) );
+			sql.append( String.format( "'%s', ", object.getTipoIdentificacion( ) ) );
 			sql.append( String.format( "'%s' ", object.getNombre( ) ) );
 			sql.append( String.format( "'%s', ", object.getNombreRepresentante( ) ) );
-			sql.append( String.format( "'%s', ", object.getPaginaWeb( ) ) );
 			sql.append( String.format( "'%s', ", object.getPaisOrigen( ) ) );
+			sql.append( String.format( "'%s', ", object.getPaginaWeb( ) ) );
 			sql.append( String.format( "%s, ", toDate( object.getFechaLlegada( ) ) ) );
 			sql.append( String.format( "%s, ", toDate( object.getFechaLlegada( ) ) ) );
 			sql.append( ")" );
@@ -110,7 +112,7 @@ public class DAOCompaniaDeTeatro extends DAO
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE USUARIOS " );
-		sql.append( String.format( "SET nombre = '%s', ", object.getNombre( ) ) );
+		sql.append( "SET " );
 		sql.append( String.format( "nombre = '%s', ", object.getNombre( ) ) );
 		sql.append( String.format( "email = '%s', ", object.getEmail( ) ) );
 		sql.append( String.format( "password = '%s' ", object.getPassword( ) ) );
@@ -129,7 +131,8 @@ public class DAOCompaniaDeTeatro extends DAO
 		sql.append( String.format( "pais_origen = '%s', ", object.getPaisOrigen( ) ) );
 		sql.append( String.format( "fecha_llegada = %s, ", toDate( object.getFechaLlegada( ) ) ) );
 		sql.append( String.format( "fecha_salida = %s ", toDate( object.getFechaSalida( ) ) ) );
-		sql.append( String.format( "WHERE id = %s", idCompania ) );
+		sql.append( String.format( "WHERE id = %s ", idCompania ) );
+		sql.append( String.format( "AND tipo_id = %s", object.getTipoIdentificacion( ) ) );
 		
 		s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -138,11 +141,16 @@ public class DAOCompaniaDeTeatro extends DAO
 		return object;
 	}
 	
-	public void deleteCompaniaDeTeatro( Long id ) throws SQLException
+	public void deleteCompaniaDeTeatro( Long id, String tipoId ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
+		sql.append( "DELETE FROM USUARIOS " );
+		sql.append( String.format( "WHERE identificacion = %s", id ) );
+		sql.append( String.format( "AND tipo_identificacion = '%s'", tipoId ) );
+		
 		sql.append( "DELETE FROM COMPANIAS_DE_TEATRO " );
 		sql.append( String.format( "WHERE id = %s", id ) );
+		sql.append( String.format( "AND tipo_id = '%s'", tipoId ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -161,12 +169,16 @@ public class DAOCompaniaDeTeatro extends DAO
 	{
 		CompaniaDeTeatro object = new CompaniaDeTeatro( );
 		object.setId( rs.getLong( "id" ) );
+		object.setTipoIdentificacion( rs.getString( "tipo_id" ) );
 		object.setNombre( rs.getString( "nombre" ) );
 		object.setNombreRepresentante( rs.getString( "nombre_representante" ) );
 		object.setPaginaWeb( rs.getString( "pagina_web" ) );
 		object.setPaisOrigen( rs.getString( "pais_origen" ) );
 		object.setFechaLlegada( rs.getDate( "hora_llegada" ) );
 		object.setFechaSalida( rs.getDate( "hora_salida" ) );
+		object.setEmail( rs.getString( "email" ) );
+		object.setPassword( rs.getString( "password" ) );
+		object.setRol( rs.getString( "rol" ) );
 		return object;
 	}
 }

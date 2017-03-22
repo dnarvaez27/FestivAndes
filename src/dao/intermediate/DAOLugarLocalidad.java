@@ -1,29 +1,30 @@
 package dao.intermediate;
 
+import dao.DAO;
+import dao.DAOLocalidad;
+import dao.DAOLugar;
+import vos.Localidad;
+import vos.Lugar;
+import vos.intermediate.LugarLocalidad;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import dao.DAO;
-import dao.DAOLugar;
-import dao.DAOLocalidad;
-import vos.Lugar;
-import vos.intermediate.LugarLocalidad;
-import vos.Localidad;
-
-public class DAOLugarLocalidad extends DAO {
+public class DAOLugarLocalidad extends DAO
+{
 	public void createEntryLugarLocalidad( LugarLocalidad ll ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "INSERT INTO LUGAR_LOCALIDAD " );
-		sql.append( "( id_lugar, id_localidad, es_numerada, capacidad )" );
+		sql.append( "( id_lugar, id_localidad, es_numerado, capacidad )" );
 		sql.append( "VALUES ( " );
-		sql.append( String.format( "%s, ", ll.getIdLugar() ) );
-		sql.append( String.format( "%s ", ll.getIdLocalidad() ) );
-		sql.append( String.format( "%s, ", ll.getEsNumerada() ) );
-		sql.append( String.format( "%s ", ll.getCapacidad() ) );
+		sql.append( String.format( "%s, ", ll.getIdLugar( ) ) );
+		sql.append( String.format( "%s ", ll.getIdLocalidad( ) ) );
+		sql.append( String.format( "%s, ", ll.getEsNumerada( ) ) );
+		sql.append( String.format( "%s ", ll.getCapacidad( ) ) );
 		sql.append( ") " );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );

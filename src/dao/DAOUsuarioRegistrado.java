@@ -31,9 +31,10 @@ public class DAOUsuarioRegistrado extends DAO
 		{
 			sql = new StringBuilder( );
 			sql.append( "INSERT INTO USUARIOS " );
-			sql.append( "( id_usuario, email, password, nombre, rol )" );
+			sql.append( "( identificacion, tipo_identificacion, email, password, nombre, rol )" );
 			sql.append( "VALUES ( " );
 			sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
+			sql.append( String.format( "'%s', ", object.getTipoIdentificacion( ) ) );
 			sql.append( String.format( "'%s', ", object.getEmail( ) ) );
 			sql.append( String.format( "'%s', ", object.getPassword( ) ) );
 			sql.append( String.format( "'%s', ", object.getNombre( ) ) );
@@ -46,10 +47,11 @@ public class DAOUsuarioRegistrado extends DAO
 			
 			sql = new StringBuilder( );
 			sql.append( "INSERT INTO USUARIOS_REGISTRADO " );
-			sql.append( "( id_usuario, edad ) " );
+			sql.append( "( id_usuario, tipo_id, edad ) " );
 			sql.append( "VALUES " );
 			sql.append( "( " );
 			sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
+			sql.append( String.format( "'%s', ", object.getTipoIdentificacion( ) ) );
 			sql.append( String.format( "%s ", object.getEdad( ) ) );
 			sql.append( "); " );
 			
@@ -69,6 +71,7 @@ public class DAOUsuarioRegistrado extends DAO
 		sql.append( "SELECT * " );
 		sql.append( "FROM USUARIOS_REGISTRADO UR INNER JOIN USUARIOS U" );
 		sql.append( "                             ON UR.id_usuario = U.identificacion " );
+		sql.append( "                             AND UR.tipo_id = U.tipo_identificacion " );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -82,15 +85,17 @@ public class DAOUsuarioRegistrado extends DAO
 		return list;
 	}
 	
-	public UsuarioRegistrado getUsuarioRegistrado( Long id ) throws SQLException
+	public UsuarioRegistrado getUsuarioRegistrado( Long id, String tipoId ) throws SQLException
 	{
 		UsuarioRegistrado object = null;
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
 		sql.append( "FROM USUARIOS_REGISTRADO UR INNER JOIN USUARIOS U " );
-		sql.append( "                          ON UR.id_usuario = U.identificacion " );
-		sql.append( String.format( "WHERE id_usuario = %s", id ) );
+		sql.append( "                             ON UR.id_usuario = U.identificacion " );
+		sql.append( "                             AND UR.tipo_id = U.tipo_identificacion " );
+		sql.append( String.format( "WHERE id_usuario = %s ", id ) );
+		sql.append( String.format( "AND tipo_id = '%s' ", tipoId ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -103,15 +108,15 @@ public class DAOUsuarioRegistrado extends DAO
 		return object;
 	}
 	
-	public UsuarioRegistrado updateUsuarioRegistrado( Long id, UsuarioRegistrado object ) throws SQLException
+	public UsuarioRegistrado updateUsuarioRegistrado( Long id, String tipo, UsuarioRegistrado object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE USUARIOS " );
-		sql.append( String.format( "SET nombre = '%s'", object.getNombre( ) ) );
-		sql.append( String.format( "SET nombre = '%s'", object.getNombre( ) ) );
-		sql.append( String.format( "SET email = '%s'", object.getEmail( ) ) );
-		sql.append( String.format( "SET password = '%s'", object.getPassword( ) ) );
-		sql.append( String.format( "WHERE identificacion = %s", id ) );
+		sql.append( String.format( "SET nombre = '%s' ", object.getNombre( ) ) );
+		sql.append( String.format( "SET email = '%s' ", object.getEmail( ) ) );
+		sql.append( String.format( "SET password = '%s' ", object.getPassword( ) ) );
+		sql.append( String.format( "WHERE identificacion = %s ", id ) );
+		sql.append( String.format( "AND tipo_identificacion = '%s' ", tipo ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -119,8 +124,9 @@ public class DAOUsuarioRegistrado extends DAO
 		
 		sql = new StringBuilder( );
 		sql.append( "UPDATE USUARIOS_REGISTRADO " );
-		sql.append( String.format( "SET edad = %s", object.getEdad( ) ) );
-		sql.append( String.format( "WHERE id_usuario = %s", id ) );
+		sql.append( String.format( "SET edad = %s ", object.getEdad( ) ) );
+		sql.append( String.format( "WHERE id_usuario = %s ", id ) );
+		sql.append( String.format( "AND tipo_id = '%s' ", tipo ) );
 		
 		s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -130,11 +136,12 @@ public class DAOUsuarioRegistrado extends DAO
 		return object;
 	}
 	
-	public void deleteUsuarioRegistrado( Long id ) throws SQLException
+	public void deleteUsuarioRegistrado( Long id, String tipoId ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "DELETE FROM USUARIOS_REGISTRADO " );
 		sql.append( String.format( "WHERE id_usuario = %s", id ) );
+		sql.append( String.format( "AND tipo_id = '%s'", tipoId ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -158,6 +165,7 @@ public class DAOUsuarioRegistrado extends DAO
 		object.setPassword( rs.getString( "password" ) );
 		object.setNombre( rs.getString( "nombre" ) );
 		object.setIdentificacion( rs.getLong( "id_usuario" ) );
+		object.setTipoIdentificacion( rs.getString( "tipo_id" ) );
 		object.setEdad( rs.getInt( "edad" ) );
 		return object;
 	}

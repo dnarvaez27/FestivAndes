@@ -19,13 +19,13 @@ public class DAOSilla extends DAO
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "INSERT INTO SILLAS " );
-		sql.append( "( numero_silla, numero_fila, id_lugar, id_localidad ) " );
+		sql.append( "( num_fila, num_silla, id_localidad, id_lugar ) " );
 		sql.append( "VALUES " );
 		sql.append( "( " );
-		sql.append( String.format( "%s, ", silla.getNumSilla( ) ) );
 		sql.append( String.format( "%s, ", silla.getNumFila( ) ) );
-		sql.append( String.format( "%s, ", silla.getIdLugar( ) ) );
+		sql.append( String.format( "%s, ", silla.getNumSilla( ) ) );
 		sql.append( String.format( "%s ", silla.getIdLocalidad( ) ) );
+		sql.append( String.format( "%s, ", silla.getIdLugar( ) ) );
 		sql.append( ")" );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
@@ -61,8 +61,8 @@ public class DAOSilla extends DAO
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
 		sql.append( "FROM SILLAS " );
-		sql.append( String.format( "WHERE numero_silla = %s AND ", num_silla ) );
-		sql.append( String.format( "numero_fila = %s AND ", num_fila ) );
+		sql.append( String.format( "WHERE num_silla = %s AND ", num_silla ) );
+		sql.append( String.format( "num_fila = %s AND ", num_fila ) );
 		sql.append( String.format( "id_lugar = %s AND ", id_lugar ) );
 		sql.append( String.format( "id_localidad = %s", id_localidad ) );
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
@@ -80,12 +80,12 @@ public class DAOSilla extends DAO
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE SILLAS " );
-		sql.append( String.format( "SET numero_silla = %s, ", silla.getNumSilla( ) ) );
-		sql.append( String.format( "numero_fila = %s, ", silla.getNumFila( ) ) );
+		sql.append( String.format( "SET num_silla = %s, ", silla.getNumSilla( ) ) );
+		sql.append( String.format( "num_fila = %s, ", silla.getNumFila( ) ) );
 		sql.append( String.format( "id_lugar = %s, ", silla.getIdLugar( ) ) );
 		sql.append( String.format( "id_localidad = %s", silla.getIdLocalidad( ) ) );
-		sql.append( String.format( "WHERE numero_silla = %s AND ", num_silla ) );
-		sql.append( String.format( "numero_fila = %s AND ", num_fila ) );
+		sql.append( String.format( "WHERE num_silla = %s AND ", num_silla ) );
+		sql.append( String.format( "num_fila = %s AND ", num_fila ) );
 		sql.append( String.format( "id_lugar = %s AND ", id_lugar ) );
 		sql.append( String.format( "id_localidad = %s", id_localidad ) );
 		
@@ -100,8 +100,8 @@ public class DAOSilla extends DAO
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "DELETE FROM SILLAS " );
-		sql.append( String.format( "WHERE numero_silla = %s AND ", num_silla ) );
-		sql.append( String.format( "numero_fila = %s AND ", num_fila ) );
+		sql.append( String.format( "WHERE num_silla = %s AND ", num_silla ) );
+		sql.append( String.format( "num_fila = %s AND ", num_fila ) );
 		sql.append( String.format( "id_lugar = %s AND ", id_lugar ) );
 		sql.append( String.format( "id_localidad = %s", id_localidad ) );
 		
@@ -114,8 +114,8 @@ public class DAOSilla extends DAO
 	public static Silla resultToSilla( ResultSet rs ) throws SQLException
 	{
 		Silla pSilla = new Silla( );
-		pSilla.setNumSilla( rs.getInt( "numero_silla" ) );
-		pSilla.setNumFila( rs.getInt( "numero_fila" ) );
+		pSilla.setNumSilla( rs.getInt( "num_silla" ) );
+		pSilla.setNumFila( rs.getInt( "num_fila" ) );
 		pSilla.setIdLugar( rs.getLong( "id_lugar" ) );
 		pSilla.setIdLocalidad( rs.getLong( "id_localidad" ) );
 		return pSilla;

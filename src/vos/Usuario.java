@@ -17,6 +17,9 @@ public class Usuario
 	@JsonProperty( value = "identificacion" )
 	protected Long identificacion;
 	
+	@JsonProperty( value = "tipo_identificacion" )
+	protected String tipoIdentificacion;
+	
 	@JsonProperty( value = "email" )
 	protected String email;
 	
@@ -31,6 +34,31 @@ public class Usuario
 	
 	@JsonProperty( value = "idFestival" )
 	protected Long idFestival;
+	
+	public Usuario( )
+	{
+		
+	}
+	
+	/**
+	 * Retrieves the tipoIdentificacion of the Usuario
+	 *
+	 * @return The tipoIdentificacion of the Usuario
+	 */
+	public String getTipoIdentificacion( )
+	{
+		return tipoIdentificacion;
+	}
+	
+	/**
+	 * Updates the tipoIdentificacion of the Usuario by the one given by parameter
+	 *
+	 * @param tipoIdentificacion The new tipoIdentificacion of the Usuario
+	 */
+	public void setTipoIdentificacion( String tipoIdentificacion )
+	{
+		this.tipoIdentificacion = tipoIdentificacion;
+	}
 	
 	public Long getIdentificacion( )
 	{
@@ -90,11 +118,6 @@ public class Usuario
 	public void setIdFestival( Long idFestival )
 	{
 		this.idFestival = idFestival;
-	}
-	
-	public Usuario( )
-	{
-		
 	}
 	
 	//	public Usuario(

@@ -20,7 +20,7 @@ public class DAOPreferenciaLugar extends DAO
 	public void createEntryPreferenciaLugar( Long idLugar, Long idUsuario ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "INSERT INTO PREFERENCIA_LUGAR " );
+		sql.append( "INSERT INTO PREFERENCIA_LUGARES " );
 		sql.append( "( id_lugar, id_usuario )" );
 		sql.append( "VALUES ( " );
 		sql.append( String.format( "%s, ", idLugar ) );
@@ -38,7 +38,7 @@ public class DAOPreferenciaLugar extends DAO
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM PREFERENCIA_LUGAR P INNER JOIN LUGARES L " );
+		sql.append( "FROM PREFERENCIA_LUGARES P INNER JOIN LUGARES L " );
 		sql.append( "                        ON P.id_lugar = L.id " );
 		sql.append( String.format( "WHERE P.id_usuario = %s ", idUsuario ) );
 		
@@ -57,13 +57,13 @@ public class DAOPreferenciaLugar extends DAO
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM PREFERENCIA_LUGAR P INNER JOIN USUARIOS_REGISTRADO U " );
+		sql.append( "FROM PREFERENCIA_LUGARES P INNER JOIN USUARIOS_REGISTRADO U " );
 		sql.append( "                        ON P.id_usuario = U.identificacion " );
 		sql.append( String.format( "WHERE P.id_lugar = %s ", idLugar ) );
 		
-		PreparedStatement s = connection.prepareStatement( sql.toString() );
-		ResultSet rs = s.executeQuery();
-		while( rs.next())
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		while( rs.next( ) )
 		{
 			list.add( DAOUsuarioRegistrado.restultToAccesibildiad( rs ) );
 		}
@@ -74,7 +74,7 @@ public class DAOPreferenciaLugar extends DAO
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM PREFERENCIA_LUGAR P INNER JOIN LUGARES L " );
+		sql.append( "FROM PREFERENCIA_LUGARES P INNER JOIN LUGARES L " );
 		sql.append( "                        ON P.id_lugar = L.id " );
 		sql.append( String.format( "WHERE P.id_usuario = %s ", idUsuario ) );
 		sql.append( String.format( "AND P.id_lugar = %s ", idLugar ) );
@@ -91,7 +91,7 @@ public class DAOPreferenciaLugar extends DAO
 	public void deletePreferenciaLugar( Long idUsuario, Long idLugar ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "DELETE FROM PREFERENCIA_LUGAR " );
+		sql.append( "DELETE FROM PREFERENCIA_LUGARES " );
 		sql.append( String.format( "WHERE id_usuario = %s ", idUsuario ) );
 		sql.append( String.format( "AND id_lugar = %s", idLugar ) );
 		

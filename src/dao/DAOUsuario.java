@@ -19,10 +19,11 @@ public class DAOUsuario extends DAO
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "INSERT INTO USUARIOS " );
-		sql.append( "( identificacion, email, password, nombre, rol, id_festival ) " );
+		sql.append( "( identificacion, tipo_identificacion, email, password, nombre, rol, id_festival ) " );
 		sql.append( "VALUES " );
 		sql.append( "( " );
 		sql.append( String.format( "%s, ", usuario.getIdentificacion( ) ) );
+		sql.append( String.format( "'%s', ", usuario.getTipoIdentificacion( ) ) );
 		sql.append( String.format( "%s, ", usuario.getEmail( ) ) );
 		sql.append( String.format( "%s, ", usuario.getPassword( ) ) );
 		sql.append( String.format( "%s, ", usuario.getNombre( ) ) );
@@ -80,7 +81,8 @@ public class DAOUsuario extends DAO
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE USUARIOS " );
-		sql.append( String.format( "SET email = %s ", usuario.getEmail( ) ) );
+		sql.append( "SET " );
+		sql.append( String.format( "email = %s ", usuario.getEmail( ) ) );
 		sql.append( String.format( "password = %s ", usuario.getPassword( ) ) );
 		sql.append( String.format( "nombre = %s ", usuario.getNombre( ) ) );
 		sql.append( String.format( "rol = %s ", usuario.getRol( ) ) );
