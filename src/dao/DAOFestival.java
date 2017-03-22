@@ -25,7 +25,7 @@ public class DAOFestival extends DAO
 		sql.append( String.format( "%s, ", object.getId( ) ) );
 		sql.append( String.format( "%s, ", toDate( object.getFechaInicio( ) ) ) );
 		sql.append( String.format( "%s, ", toDate( object.getFechaFin( ) ) ) );
-		sql.append( String.format( "%s ", object.getCiudad( ) ) );
+		sql.append( String.format( "'%s' ", object.getCiudad( ) ) );
 		sql.append( ")" );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
