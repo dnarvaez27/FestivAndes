@@ -24,11 +24,11 @@ public class CompaniaDeTeatro extends Usuario
 	@JsonProperty( value = "pais_origen" )
 	private String paisOrigen;
 	
-	@JsonProperty( value = "hora_llegada" )
-	private Date horaLlegada;
+	@JsonProperty( value = "fecha_llegada" )
+	private Date fechaLlegada;
 	
-	@JsonProperty( value = "hora_salida" )
-	private Date horaSalida;
+	@JsonProperty( value = "fecha_salida" )
+	private Date fechaSalida;
 	
 	public CompaniaDeTeatro( )
 	{
@@ -135,42 +135,42 @@ public class CompaniaDeTeatro extends Usuario
 	}
 	
 	/**
-	 * Retrieves the horaLlegada of the CompaniaDeTeatro
+	 * Retrieves the fechaLlegada of the CompaniaDeTeatro
 	 *
-	 * @return The horaLlegada of the CompaniaDeTeatro
+	 * @return The fechaLlegada of the CompaniaDeTeatro
 	 */
-	public Date getHoraLlegada( )
+	public Date getFechaLlegada( )
 	{
-		return horaLlegada;
+		return fechaLlegada;
 	}
 	
 	/**
-	 * Updates the horaLlegada of the CompaniaDeTeatro by the one given by parameter
+	 * Updates the fechaLlegada of the CompaniaDeTeatro by the one given by parameter
 	 *
-	 * @param horaLlegada The new horaLlegada of the CompaniaDeTeatro
+	 * @param fechaLlegada The new fechaLlegada of the CompaniaDeTeatro
 	 */
-	public void setHoraLlegada( Date horaLlegada )
+	public void setFechaLlegada( Date fechaLlegada )
 	{
-		this.horaLlegada = horaLlegada;
+		this.fechaLlegada = fechaLlegada;
 	}
 	
 	/**
-	 * Retrieves the horaSalida of the CompaniaDeTeatro
+	 * Retrieves the fechaSalida of the CompaniaDeTeatro
 	 *
-	 * @return The horaSalida of the CompaniaDeTeatro
+	 * @return The fechaSalida of the CompaniaDeTeatro
 	 */
-	public Date getHoraSalida( )
+	public Date getFechaSalida( )
 	{
-		return horaSalida;
+		return fechaSalida;
 	}
 	
 	/**
-	 * Updates the horaSalida of the CompaniaDeTeatro by the one given by parameter
+	 * Updates the fechaSalida of the CompaniaDeTeatro by the one given by parameter
 	 *
-	 * @param horaSalida The new horaSalida of the CompaniaDeTeatro
+	 * @param fechaSalida The new fechaSalida of the CompaniaDeTeatro
 	 */
-	public void setHoraSalida( Date horaSalida )
+	public void setFechaSalida( Date fechaSalida )
 	{
-		this.horaSalida = horaSalida;
+		this.fechaSalida = fechaSalida;
 	}
 }
