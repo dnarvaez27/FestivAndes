@@ -1,11 +1,15 @@
 package dao;
 
+import vos.Localidad;
 import vos.Lugar;
 import vos.Usuario;
+import vos.reportes.RFC2;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -131,4 +135,118 @@ public class DAOLugar extends DAO
 		l.setTipo( rs.getString( "tipo" ) );
 		return l;
 	}
+	
+	public List<RFC2> consultaRFC2( String nombre, String tipoEspacio, Integer capacidad ) throws SQLException
+	{
+		StringBuilder sqlSitio = new StringBuilder( );
+		sqlSitio.append( "SELECT * " );
+		sqlSitio.append( "FROM LUGARES " );
+		
+		if( nombre != null && !nombre.isEmpty( ) )
+		{
+			sqlSitio.append( "WHERE NOMBRE = '" + nombre + "'" );
+			if( tipoEspacio != null && !tipoEspacio.isEmpty( ) )
+			{
+				sqlSitio.append( "AND TIPO_ESPACIO = '" + tipoEspacio + "'" );
+			}
+			if( capacidad != null )
+			{
+				sqlSitio.append( "AND CAPACIDAD = " + capacidad );
+			}
+		}
+		else if( tipoEspacio != null && !tipoEspacio.isEmpty( ) )
+		{
+			sqlSitio.append( "WHERE TIPO_ESPACIO = '" + tipoEspacio + "'" );
+			if( capacidad != null )
+			{
+				sqlSitio.append( "AND CAPACIDAD = " + capacidad );
+			}
+		}
+		else if( capacidad != null )
+		{
+			sqlSitio.append( "WHERE CAPACIDAD = " + capacidad );
+		}
+		
+		PreparedStatement prepStmt1 = conn.prepareStatement( sqlSitio.toString( ) );
+		recursos.add( prepStmt1 );
+		ResultSet rs1 = prepStmt1.executeQuery( );
+		
+		List<RFC2> respuesta = new ArrayList<>( );
+		
+		while( rs1.next( ) )
+		{
+			Sitio s = resultToSitio( rs1 );
+			
+			StringBuilder sqlFuncion = new StringBuilder( );
+			sqlFuncion.append( "SELECT * FROM(" );
+			sqlFuncion.append( "SELECT * FROM(" );
+			sqlFuncion.append( "(SELECT * " );
+			sqlFuncion.append( "FROM " + USUARIO_ORACLE + ".FUNCION" );
+			sqlFuncion.append( String.format( "WHERE ID_SITIO = %s )", s.getId( ) ) );
+			sqlFuncion.append( "NATURAL INNER JOIN" );
+			sqlFuncion.append( "(SELECT * " );
+			sqlFuncion.append( "FROM " + USUARIO_ORACLE + ".FUNCION_COSTO_LOCALIDAD))" );
+			sqlFuncion.append( "NATURAL INNER JOIN " );
+			sqlFuncion.append( "(SELECT * " );
+			sqlFuncion.append( "FROM " + USUARIO_ORACLE + ".ESPECTACULO))" );
+			sqlFuncion.append( "ORDER BY ID_ESPECTACULO, ID_FUNCION" );
+			
+			PreparedStatement prepStmt = conn.prepareStatement( sqlFuncion.toString( ) );
+			recursos.add( prepStmt );
+			ResultSet rs = prepStmt.executeQuery( );
+			
+			List<EspectaculoDetail> espectaculos = new ArrayList( );
+			
+			Long idEspectaculo = ( long ) -1;
+			Long idFuncion = ( long ) -1;
+			List<LocalidadCosto> localidadesC = new ArrayList( );
+			List<FuncionDetail> funciones = new ArrayList( );
+			while( rs.next( ) )
+			{
+				if( idEspectaculo != rs.getLong( "ID_ESPECTACULO" ) )
+				{
+					idEspectaculo = rs.getLong( "ID_ESPECTACULO" );
+					
+					String nombreE = rs.getString( "NOMBRE" );
+					Integer duracion = rs.getInt( "DURACION" );
+					String idioma = rs.getString( "IDIOMA" );
+					Float costoRealizacion = rs.getFloat( "COSTO_REALIZACION" );
+					Boolean participacionPublico = rs.getBoolean( "PARTICIPACION_PUBLICO" );
+					String descripcion = rs.getString( "PARTICIPACION" );
+					Long idFestival = rs.getLong( "ID_FESTIVAL" );
+					Long idPublicoObjetivo = rs.getLong( "ID_PUBLICO_OBJETIVO" );
+					
+					funciones = new ArrayList( );
+					
+					EspectaculoDetail e = new EspectaculoDetail( idEspectaculo, nombreE, duracion, idioma, costoRealizacion, descripcion, idFestival, idPublicoObjetivo, funciones );
+					espectaculos.add( e );
+				}
+				if( idFuncion != rs.getLong( "ID_FUNCION" ) )
+				{
+					idFuncion = rs.getLong( "ID_FUNCION" );
+					
+					Date fecha = rs.getDate( "FECHA" );
+					Boolean realizadoConExito = rs.getBoolean( "REALIZADO_CON_EXITO" );
+					
+					localidadesC = new ArrayList( );
+					FuncionDetail f = new FuncionDetail( idFuncion, fecha, idEspectaculo, s.getId( ), realizadoConExito, localidadesC );
+					funciones.add( f );
+				}
+				
+				Localidad l = traerLocalidad( rs.getLong( "ID_LOCALIDAD" ) );
+				Double costo = rs.getDouble( "COSTO" );
+				Integer boleteria = boleteriaDisponible( idFuncion, l.getId( ), s.getId( ) );
+				LocalidadCosto locC = new LocalidadCosto( l, costo, boleteria );
+				
+				localidadesC.add( locC );
+			}
+			
+			RFC2 nuevo = new RFC2( s, espectaculos );
+			respuesta.add( nuevo );
+			
+		}
+		
+		return respuesta;
+	}
+	
 }

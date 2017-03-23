@@ -6,20 +6,30 @@ import vos.Espectaculo;
 import vos.Genero;
 
 import javax.servlet.ServletContext;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.List;
 
 @Path( "generos" )
+@Produces( { MediaType.APPLICATION_JSON } )
+@Consumes( { MediaType.APPLICATION_JSON } )
 public class GeneroServices
 {
 	@Context
 	private ServletContext context;
+	
+	private String getPath( )
+	{
+		return context.getRealPath( "WEB-INF/ConnectionData" );
+	}
+	
+	private String doErrorMessage( Exception e )
+	{
+		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
+	}
 	
 	@POST
 	public Response createGenero( Genero genero )
@@ -84,15 +94,5 @@ public class GeneroServices
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).entity( list ).build( );
-	}
-	
-	private String getPath( )
-	{
-		return context.getRealPath( "WEB-INF/ConnecctionDate" );
-	}
-	
-	private String doErrorMessage( Exception e )
-	{
-		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
 	}
 }

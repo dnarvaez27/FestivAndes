@@ -19,6 +19,16 @@ public class AccesibilidadServices
 	@Context
 	private ServletContext context;
 	
+	private String getPath( )
+	{
+		return context.getRealPath( "WEB-INF/ConnectionData" );
+	}
+	
+	private String doErrorMessage( Exception e )
+	{
+		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
+	}
+	
 	@POST
 	public Response createAccesibilidad( Accesibilidad accesibilidad )
 	{
@@ -99,15 +109,5 @@ public class AccesibilidadServices
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
-	}
-	
-	private String getPath( )
-	{
-		return context.getRealPath( "WEB-INF/ConnecctionDate" );
-	}
-	
-	private String doErrorMessage( Exception e )
-	{
-		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
 	}
 }
