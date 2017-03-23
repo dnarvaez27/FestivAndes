@@ -3,14 +3,19 @@ package rest;
 import tm.FestivalTM;
 import vos.Festival;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.List;
 
 @Path( "festivales" )
-public class FestivalServices extends Services
+public class FestivalServices
 {
+	@Context
+	private ServletContext context;
+	
 	@POST
 	public Response createFestival( Festival object )
 	{
@@ -90,5 +95,15 @@ public class FestivalServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
+	}
+	
+	private String getPath( )
+	{
+		return context.getRealPath( "WEB-INF/ConnecctionDate" );
+	}
+	
+	private String doErrorMessage( Exception e )
+	{
+		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
 	}
 }

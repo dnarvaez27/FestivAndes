@@ -7,6 +7,7 @@ import vos.reportes.RFC5;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class DAOCompaniaDeTeatro extends DAO
 	
 	public List<CompaniaDeTeatro> getCompaniaDeTeatros( ) throws SQLException
 	{
-		List<CompaniaDeTeatro> list = new LinkedList<>( );
+		List<CompaniaDeTeatro> list = new ArrayList<>( );
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * FROM COMPANIAS_DE_TEATRO" );

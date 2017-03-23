@@ -3,14 +3,22 @@ package rest;
 import tm.AccesibilidadTM;
 import vos.Accesibilidad;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.List;
 
 @Path( "accesibilidades" )
-public class AccesibilidadServices extends Services
+@Produces( { MediaType.APPLICATION_JSON } )
+@Consumes( { MediaType.APPLICATION_JSON } )
+public class AccesibilidadServices
 {
+	@Context
+	private ServletContext context;
+	
 	@POST
 	public Response createAccesibilidad( Accesibilidad accesibilidad )
 	{
@@ -37,6 +45,7 @@ public class AccesibilidadServices extends Services
 		}
 		catch( SQLException e )
 		{
+			e.printStackTrace( );
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).entity( list ).build( );
@@ -90,5 +99,15 @@ public class AccesibilidadServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
+	}
+	
+	private String getPath( )
+	{
+		return context.getRealPath( "WEB-INF/ConnecctionDate" );
+	}
+	
+	private String doErrorMessage( Exception e )
+	{
+		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
 	}
 }

@@ -7,14 +7,19 @@ import vos.CompaniaDeTeatro;
 import vos.Espectaculo;
 import vos.reportes.RFC4;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.List;
 
 @Path( "espectaculos" )
-public class EspectaculoServices extends Services
+public class EspectaculoServices
 {
+	@Context
+	private ServletContext context;
+	
 	@POST
 	public Response createEspectaculo( Long id, String password, Espectaculo espectaculo )
 	{
@@ -180,5 +185,15 @@ public class EspectaculoServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).entity( req ).build( );
+	}
+	
+	private String getPath( )
+	{
+		return context.getRealPath( "WEB-INF/ConnecctionDate" );
+	}
+	
+	private String doErrorMessage( Exception e )
+	{
+		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
 	}
 }

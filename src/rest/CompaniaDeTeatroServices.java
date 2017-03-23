@@ -5,14 +5,32 @@ import tm.intermediate.OfrecenTM;
 import vos.CompaniaDeTeatro;
 import vos.Espectaculo;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.List;
 
 @Path( "companias" )
-public class CompaniaDeTeatroServices extends Services
+@Produces( { MediaType.APPLICATION_JSON } )
+@Consumes( { MediaType.APPLICATION_JSON } )
+public class CompaniaDeTeatroServices
 {
+	@Context
+	private ServletContext context;
+	
+	private String getPath( )
+	{
+		return context.getRealPath( "WEB-INF/ConnectionData" );
+	}
+	
+	private String doErrorMessage( Exception e )
+	{
+		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
+	}
+	
 	@POST
 	public Response createCompaniaDeTeatro( Long id, String password, CompaniaDeTeatro accesibilidad )
 	{
@@ -79,13 +97,14 @@ public class CompaniaDeTeatroServices extends Services
 	}
 	
 	@DELETE
-	@Path( "{id}" )
-	public Response deleteCompaniaDeTeatro( @PathParam( "id" ) Long id )
+	@Path( "{id}/{tipo}" )
+	public Response deleteCompaniaDeTeatro(
+			@PathParam( "id" ) Long id, @PathParam( "tipo" ) String tipo )
 	{
 		CompaniaDeTeatroTM tm = new CompaniaDeTeatroTM( getPath( ) );
 		try
 		{
-			tm.deleteCompaniaDeTeatro( id );
+			tm.deleteCompaniaDeTeatro( id, tipo );
 		}
 		catch( SQLException e )
 		{

@@ -7,13 +7,19 @@ import vos.Lugar;
 import vos.RequerimientoTecnico;
 import vos.UsuarioRegistrado;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.List;
 
-public class LugarServices extends Services
+@Path( "lugares" )
+public class LugarServices
 {
+	@Context
+	private ServletContext context;
+	
 	@POST
 	public Response createLugar( Long id, String password, Lugar lugar )
 	{
@@ -161,5 +167,15 @@ public class LugarServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
+	}
+	
+	private String getPath( )
+	{
+		return context.getRealPath( "WEB-INF/ConnecctionDate" );
+	}
+	
+	private String doErrorMessage( Exception e )
+	{
+		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
 	}
 }

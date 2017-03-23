@@ -3,11 +3,9 @@ package tm;
 import dao.DAOLugar;
 import vos.Lugar;
 
-import javax.ws.rs.Path;
 import java.sql.SQLException;
 import java.util.List;
 
-@Path( "lugares" )
 public class LugarTM extends TransactionManager
 {
 	public LugarTM( String contextPathP )

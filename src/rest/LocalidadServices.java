@@ -5,14 +5,19 @@ import tm.intermediate.CostoLocalidadTM;
 import vos.Localidad;
 import vos.intermediate.CostoLocalidad;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.List;
 
 @Path( "localidades" )
-public class LocalidadServices extends Services
+public class LocalidadServices
 {
+	@Context
+	private ServletContext context;
+	
 	@POST
 	public Response createLocalidad( Localidad localidad )
 	{
@@ -109,5 +114,15 @@ public class LocalidadServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	private String getPath( )
+	{
+		return context.getRealPath( "WEB-INF/ConnecctionDate" );
+	}
+	
+	private String doErrorMessage( Exception e )
+	{
+		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
 	}
 }

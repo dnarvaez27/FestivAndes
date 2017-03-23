@@ -73,7 +73,7 @@ public class UsuarioRegistradoTM extends TransactionManager
 		return list;
 	}
 	
-	public UsuarioRegistrado getUsuarioRegistrado( Long id ) throws SQLException
+	public UsuarioRegistrado getUsuarioRegistrado( Long id, String tipo ) throws SQLException
 	{
 		UsuarioRegistrado ur;
 		DAOUsuarioRegistrado dao = new DAOUsuarioRegistrado( );
@@ -81,7 +81,7 @@ public class UsuarioRegistradoTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ur = dao.getUsuarioRegistrado( id );
+			ur = dao.getUsuarioRegistrado( id, tipo );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -103,7 +103,7 @@ public class UsuarioRegistradoTM extends TransactionManager
 		return ur;
 	}
 	
-	public UsuarioRegistrado updateUsuarioRegistrado( Long id, UsuarioRegistrado accesibilidad ) throws SQLException
+	public UsuarioRegistrado updateUsuarioRegistrado( Long id, String tipo, UsuarioRegistrado accesibilidad ) throws SQLException
 	{
 		UsuarioRegistrado ur;
 		DAOUsuarioRegistrado dao = new DAOUsuarioRegistrado( );
@@ -111,7 +111,7 @@ public class UsuarioRegistradoTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ur = dao.updateUsuarioRegistrado( id, accesibilidad );
+			ur = dao.updateUsuarioRegistrado( id, tipo, accesibilidad );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -133,14 +133,14 @@ public class UsuarioRegistradoTM extends TransactionManager
 		return ur;
 	}
 	
-	public void deleteUsuarioRegistrado( Long id ) throws SQLException
+	public void deleteUsuarioRegistrado( Long id, String tipo ) throws SQLException
 	{
 		DAOUsuarioRegistrado dao = new DAOUsuarioRegistrado( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.deleteUsuarioRegistrado( id );
+			dao.deleteUsuarioRegistrado( id, tipo );
 		}
 		catch( SQLException e )
 		{

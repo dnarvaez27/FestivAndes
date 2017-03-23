@@ -3,14 +3,19 @@ package rest;
 import tm.SillaTM;
 import vos.Silla;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.List;
 
 @Path( "sillas" )
-public class SillaServices extends Services
+public class SillaServices
 {
+	@Context
+	private ServletContext context;
+	
 	@POST
 	public Response createSilla( Silla silla )
 	{
@@ -102,5 +107,15 @@ public class SillaServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
+	}
+	
+	private String getPath( )
+	{
+		return context.getRealPath( "WEB-INF/ConnecctionDate" );
+	}
+	
+	private String doErrorMessage( Exception e )
+	{
+		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
 	}
 }

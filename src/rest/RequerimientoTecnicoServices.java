@@ -5,14 +5,19 @@ import tm.intermediate.LugarRequerimientoTM;
 import vos.Lugar;
 import vos.RequerimientoTecnico;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.List;
 
 @Path( "requerimientos" )
-public class RequerimientoTecnicoServices extends Services
+public class RequerimientoTecnicoServices
 {
+	@Context
+	private ServletContext context;
+	
 	@POST
 	public Response createRequerimientoTecnico( RequerimientoTecnico requerimientoTecnico )
 	{
@@ -111,5 +116,15 @@ public class RequerimientoTecnicoServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	private String getPath( )
+	{
+		return context.getRealPath( "WEB-INF/ConnecctionDate" );
+	}
+	
+	private String doErrorMessage( Exception e )
+	{
+		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
 	}
 }

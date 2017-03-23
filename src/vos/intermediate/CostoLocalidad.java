@@ -11,7 +11,6 @@ public class CostoLocalidad
 {
 	public static class Extended extends CostoLocalidad
 	{
-		
 		@JsonProperty( value = "nombre_localidad" )
 		private String nombreLocalidad;
 		

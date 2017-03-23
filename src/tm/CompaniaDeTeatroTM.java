@@ -133,14 +133,14 @@ public class CompaniaDeTeatroTM extends TransactionManager
 		return ac;
 	}
 	
-	public void deleteCompaniaDeTeatro( Long id ) throws SQLException
+	public void deleteCompaniaDeTeatro( Long id , String tipo ) throws SQLException
 	{
 		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.deleteCompaniaDeTeatro( id );
+			dao.deleteCompaniaDeTeatro( id, tipo );
 		}
 		catch( SQLException e )
 		{

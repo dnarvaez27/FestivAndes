@@ -6,15 +6,20 @@ import vos.Funcion;
 import vos.Usuario;
 import vos.intermediate.CostoLocalidad;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
 @Path( "funciones" )
-public class FuncionServices extends Services
+public class FuncionServices
 {
+	@Context
+	private ServletContext context;
+	
 	@POST
 	public Response createFuncion( Long id, String password, Funcion accesibilidad )
 	{
@@ -189,5 +194,15 @@ public class FuncionServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	private String getPath( )
+	{
+		return context.getRealPath( "WEB-INF/ConnecctionDate" );
+	}
+	
+	private String doErrorMessage( Exception e )
+	{
+		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
 	}
 }

@@ -5,14 +5,19 @@ import tm.intermediate.PreferenciaLugarTM;
 import vos.Lugar;
 import vos.UsuarioRegistrado;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.List;
 
 @Path( "registrados" )
-public class UsuarioRegistradoServices extends Services
+public class UsuarioRegistradoServices
 {
+	@Context
+	private ServletContext context;
+	
 	@POST
 	public Response createUsuarioRegistrado( Long id, String password, UsuarioRegistrado accesibilidad )
 	{
@@ -45,14 +50,14 @@ public class UsuarioRegistradoServices extends Services
 	}
 	
 	@GET
-	@Path( "{id}" )
-	public Response getUsuarioRegistrado( @PathParam( "id" ) Long id )
+	@Path( "{id}/{tipo}" )
+	public Response getUsuarioRegistrado( @PathParam( "id" ) Long id, String tipo )
 	{
 		UsuarioRegistrado ac;
 		UsuarioRegistradoTM tm = new UsuarioRegistradoTM( getPath( ) );
 		try
 		{
-			ac = tm.getUsuarioRegistrado( id );
+			ac = tm.getUsuarioRegistrado( id, tipo );
 		}
 		catch( SQLException e )
 		{
@@ -62,15 +67,16 @@ public class UsuarioRegistradoServices extends Services
 	}
 	
 	@PUT
-	@Path( "{id}" )
+	@Path( "{id}/{tipo}" )
 	public Response updateUsuarioRegistrado(
-			@PathParam( "id" ) Long id, UsuarioRegistrado accesibilidad )
+			@PathParam( "id" ) Long id,
+			@PathParam( "tipo" ) String tipo, UsuarioRegistrado accesibilidad )
 	{
 		UsuarioRegistrado ac;
 		UsuarioRegistradoTM tm = new UsuarioRegistradoTM( getPath( ) );
 		try
 		{
-			ac = tm.updateUsuarioRegistrado( id, accesibilidad );
+			ac = tm.updateUsuarioRegistrado( id, tipo, accesibilidad );
 		}
 		catch( SQLException e )
 		{
@@ -80,13 +86,14 @@ public class UsuarioRegistradoServices extends Services
 	}
 	
 	@DELETE
-	@Path( "{id}" )
-	public Response deleteUsuarioRegistrado( @PathParam( "id" ) Long id )
+	@Path( "{id}/{tipo}" )
+	public Response deleteUsuarioRegistrado(
+			@PathParam( "id" ) Long id, @PathParam( "tipo" ) String tipo )
 	{
 		UsuarioRegistradoTM tm = new UsuarioRegistradoTM( getPath( ) );
 		try
 		{
-			tm.deleteUsuarioRegistrado( id );
+			tm.deleteUsuarioRegistrado( id, tipo );
 		}
 		catch( SQLException e )
 		{
@@ -162,5 +169,15 @@ public class UsuarioRegistradoServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
+	}
+	
+	private String getPath( )
+	{
+		return context.getRealPath( "WEB-INF/ConnecctionDate" );
+	}
+	
+	private String doErrorMessage( Exception e )
+	{
+		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
 	}
 }
