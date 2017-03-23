@@ -167,31 +167,35 @@ public class DAOLugar extends DAO
 			sqlSitio.append( "WHERE CAPACIDAD = " + capacidad );
 		}
 		
-		PreparedStatement prepStmt1 = conn.prepareStatement( sqlSitio.toString( ) );
+		PreparedStatement prepStmt1 = connection.prepareStatement( sqlSitio.toString( ) );
 		recursos.add( prepStmt1 );
-		ResultSet rs1 = prepStmt1.executeQuery( );
+		ResultSet rs = prepStmt1.executeQuery( );
 		
 		List<RFC2> respuesta = new ArrayList<>( );
 		
-		while( rs1.next( ) )
+		while( rs.next( ) )
 		{
-			Sitio s = resultToSitio( rs1 );
+			Lugar lugar = restultToAccesibildiad(rs );
 			
-			StringBuilder sqlFuncion = new StringBuilder( );
-			sqlFuncion.append( "SELECT * FROM(" );
-			sqlFuncion.append( "SELECT * FROM(" );
-			sqlFuncion.append( "(SELECT * " );
-			sqlFuncion.append( "FROM " + USUARIO_ORACLE + ".FUNCION" );
-			sqlFuncion.append( String.format( "WHERE ID_SITIO = %s )", s.getId( ) ) );
-			sqlFuncion.append( "NATURAL INNER JOIN" );
-			sqlFuncion.append( "(SELECT * " );
-			sqlFuncion.append( "FROM " + USUARIO_ORACLE + ".FUNCION_COSTO_LOCALIDAD))" );
-			sqlFuncion.append( "NATURAL INNER JOIN " );
-			sqlFuncion.append( "(SELECT * " );
-			sqlFuncion.append( "FROM " + USUARIO_ORACLE + ".ESPECTACULO))" );
-			sqlFuncion.append( "ORDER BY ID_ESPECTACULO, ID_FUNCION" );
+			StringBuilder sql = new StringBuilder( );
+			sql.append( "" )
+					
 			
-			PreparedStatement prepStmt = conn.prepareStatement( sqlFuncion.toString( ) );
+			
+			sql.append( "SELECT * FROM(" );
+			sql.append( "SELECT * FROM(" );
+			sql.append( "(SELECT * " );
+			sql.append( "FROM FUNCION" );
+			sql.append( String.format( "WHERE ID_SITIO = %s )", s.getId( ) ) );
+			sql.append( "NATURAL INNER JOIN" );
+			sql.append( "(SELECT * " );
+			sql.append( "FROM FUNCION_COSTO_LOCALIDAD))" );
+			sql.append( "NATURAL INNER JOIN " );
+			sql.append( "(SELECT * " );
+			sql.append( "FROM ESPECTACULO))" );
+			sql.append( "ORDER BY ID_ESPECTACULO, ID_FUNCION" );
+			
+			PreparedStatement prepStmt = connection.prepareStatement( sql.toString( ) );
 			recursos.add( prepStmt );
 			ResultSet rs = prepStmt.executeQuery( );
 			
@@ -248,5 +252,4 @@ public class DAOLugar extends DAO
 		
 		return respuesta;
 	}
-	
 }
