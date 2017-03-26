@@ -1,18 +1,16 @@
 package dao;
 
+import utilities.DateFormatter;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class DAO
 {
-	private static final String dateStringFormat = "YYYY-MM-DD";
-	
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat( dateStringFormat );
-	
 	protected List<Object> recursos;
 	
 	protected Connection connection;
@@ -47,6 +45,16 @@ public abstract class DAO
 	
 	public String toDate( Date date )
 	{
-		return String.format( "TO_DATE( '%s', '%s' )", dateFormat.format( date ), dateStringFormat );
+		// Para corregir el dia
+		Calendar c = Calendar.getInstance( );
+		c.setTime( date );
+		c.add( Calendar.DATE, 1 );
+		date = c.getTime( );
+		return DateFormatter.toDate( date );
+	}
+	
+	public String toDate( String date )
+	{
+		return DateFormatter.toDate( date );
 	}
 }

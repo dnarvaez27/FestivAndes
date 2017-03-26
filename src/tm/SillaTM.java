@@ -1,6 +1,7 @@
 package tm;
 
 import dao.DAOSilla;
+import dao.intermediate.DAOLugarLocalidad;
 import vos.Silla;
 
 import java.sql.SQLException;
@@ -13,14 +14,23 @@ public class SillaTM extends TransactionManager
 		super( contextPathP );
 	}
 	
-	public Silla createSilla( Silla silla ) throws SQLException
+	public Silla createSilla( Silla silla ) throws SQLException// throws Exception
 	{
 		Silla pSilla;
 		DAOSilla dao = new DAOSilla( );
+		DAOLugarLocalidad daoLugarLocalidad = new DAOLugarLocalidad( );
 		try
 		{
 			this.connection = getConnection( );
+			daoLugarLocalidad.setConnection( this.connection );
 			dao.setConnection( this.connection );
+			
+			if( daoLugarLocalidad.getLocalidadFromLugar( silla.getIdLugar( ), silla.getIdLocalidad( ) ) == null )
+			{
+				connection.rollback( );
+				throw new SQLException( "No existe la localidad o lugar donde se agregará la silla " );
+			}
+			
 			pSilla = dao.createSilla( silla );
 			connection.commit( );
 		}
@@ -28,16 +38,19 @@ public class SillaTM extends TransactionManager
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
 			e.printStackTrace( );
+			connection.rollback( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
 			e.printStackTrace( );
+			connection.rollback( );
 			throw e;
 		}
 		finally
 		{
+			closeDAO( daoLugarLocalidad );
 			closeDAO( dao );
 		}
 		return pSilla;
@@ -52,6 +65,36 @@ public class SillaTM extends TransactionManager
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
 			list = dao.getSillas( );
+			connection.commit( );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException: " + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException: " + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return list;
+	}
+	
+	public List<Silla> getSillasFrom( Long idLugar, Long idLocalidad ) throws SQLException
+	{
+		List<Silla> list;
+		DAOSilla dao = new DAOSilla( );
+		try
+		{
+			this.connection = getConnection( );
+			dao.setConnection( this.connection );
+			list = dao.getSillasFrom( idLugar, idLocalidad );
 			connection.commit( );
 		}
 		catch( SQLException e )

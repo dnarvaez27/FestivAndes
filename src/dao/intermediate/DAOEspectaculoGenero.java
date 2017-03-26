@@ -19,7 +19,7 @@ public class DAOEspectaculoGenero extends DAO
 	public void createEntryEG( Long idEspectaculo, Long idGenero ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "INSERT INTO ESPECTACULO_GENERO " );
+		sql.append( "INSERT INTO ESPECTACULO_GENEROS " );
 		sql.append( "( id_espectaculo, id_genero )" );
 		sql.append( "VALUES ( " );
 		sql.append( String.format( "%s, ", idEspectaculo ) );
@@ -37,7 +37,7 @@ public class DAOEspectaculoGenero extends DAO
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM ESPECTACULO_GENERO EG INNER JOIN GENERO G ON EG.id_genero = G.id " );
+		sql.append( "FROM ESPECTACULO_GENEROS EG INNER JOIN GENEROS G ON EG.id_genero = G.id " );
 		sql.append( String.format( "WHERE id_espectaculo = %s ", idEspectaculo ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
@@ -57,7 +57,7 @@ public class DAOEspectaculoGenero extends DAO
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM ESPECTACULO_GENERO EG INNER JOIN ESPECTACULOS E ON EG.id_espectaculo = E.id " );
+		sql.append( "FROM ESPECTACULO_GENEROS EG INNER JOIN ESPECTACULOS E ON EG.id_espectaculo = E.id " );
 		sql.append( String.format( "WHERE EG.id_genero = %s ", idGenero ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
@@ -74,7 +74,7 @@ public class DAOEspectaculoGenero extends DAO
 	public void deleteEntryEG( Long idEspectaculo, Long idGenero ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "DELETE FROM ESPECTACULO_GENERO " );
+		sql.append( "DELETE FROM ESPECTACULO_GENEROS " );
 		sql.append( String.format( "WHERE id_espectaculo = %s", idEspectaculo ) );
 		sql.append( String.format( "WHERE id_genero = %s", idGenero ) );
 		

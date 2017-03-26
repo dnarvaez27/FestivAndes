@@ -2,6 +2,8 @@ package tm.intermediate;
 
 import dao.intermediate.DAOCostoLocalidad;
 import tm.TransactionManager;
+import vos.Funcion;
+import vos.Localidad;
 import vos.intermediate.CostoLocalidad;
 
 import java.sql.SQLException;
@@ -45,9 +47,9 @@ public class CostoLocalidadTM extends TransactionManager
 		return ac;
 	}
 	
-	public List<CostoLocalidad> getCostoLocalidadesFromFuncion( Date fechaFuncion, Long idLugarFuncion ) throws SQLException
+	public List<Localidad> getCostoLocalidadesFromFuncion( Date fechaFuncion, Long idLugarFuncion ) throws SQLException
 	{
-		List<CostoLocalidad> list;
+		List<Localidad> list;
 		DAOCostoLocalidad dao = new DAOCostoLocalidad( );
 		try
 		{
@@ -75,9 +77,9 @@ public class CostoLocalidadTM extends TransactionManager
 		return list;
 	}
 	
-	public List<CostoLocalidad> getCostoLocalidadFromLocalidad( Long idLocalidad ) throws SQLException
+	public List<Funcion> getCostoLocalidadFromLocalidad( Long idLocalidad ) throws SQLException
 	{
-		List<CostoLocalidad> list;
+		List<Funcion> list;
 		DAOCostoLocalidad dao = new DAOCostoLocalidad( );
 		try
 		{
@@ -102,12 +104,14 @@ public class CostoLocalidadTM extends TransactionManager
 		return list;
 	}
 	
-	public CostoLocalidad getCostoLocalidadFrom( Date fecha, Long idLugar, Long idLocalidad ) throws SQLException
+	public Localidad getCostoLocalidadFrom( Date fecha, Long idLugar, Long idLocalidad ) throws SQLException
 	{
-		CostoLocalidad costoLocalidad;
+		Localidad costoLocalidad;
 		DAOCostoLocalidad dao = new DAOCostoLocalidad( );
 		try
 		{
+			this.connection = getConnection( );
+			dao.setConnection( this.connection );
 			costoLocalidad = dao.getCostoLocalidadFromFuncion( fecha, idLugar, idLocalidad );
 		}
 		catch( SQLException e )

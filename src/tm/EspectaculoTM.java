@@ -1,6 +1,8 @@
 package tm;
 
 import dao.DAOEspectaculo;
+import dao.intermediate.DAOOfrecen;
+import vos.CompaniaDeTeatro;
 import vos.Espectaculo;
 import vos.reportes.RFC4;
 
@@ -14,26 +16,69 @@ public class EspectaculoTM extends TransactionManager
 		super( contextPathP );
 	}
 	
-	public Espectaculo createEspectaculo( Long id, String password, Espectaculo accesibilidad ) throws SQLException
+	public Espectaculo createEspectaculo( Long id, String password, Espectaculo espectaculo ) throws SQLException
 	{
 		Espectaculo ac;
 		DAOEspectaculo dao = new DAOEspectaculo( );
+		DAOOfrecen daoOfrecen = new DAOOfrecen( );
 		try
 		{
 			this.connection = getConnection( );
+			connection.setAutoCommit( false );
+			
+			daoOfrecen.setConnection( this.connection );
 			dao.setConnection( this.connection );
-			ac = dao.createEspectaculo( id, password, accesibilidad );
+			
+			ac = dao.createEspectaculo( id, password, espectaculo );
+			for( CompaniaDeTeatro companiaDeTeatro : espectaculo.getCompanias( ) )
+			{
+				daoOfrecen.createEntryOfrecen( companiaDeTeatro.getIdentificacion( ), espectaculo.getId( ) );
+			}
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
 			e.printStackTrace( );
+			connection.rollback( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
+			e.printStackTrace( );
+			connection.rollback( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+			closeDAO( daoOfrecen );
+		}
+		return ac;
+	}
+	
+	public List<Espectaculo> getEspectaculos( Long idFestival ) throws SQLException
+	{
+		List<Espectaculo> list;
+		DAOEspectaculo dao = new DAOEspectaculo( );
+		try
+		{
+			this.connection = getConnection( );
+			dao.setConnection( this.connection );
+			list = dao.getEspectaculos( idFestival );
+			connection.commit( );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException: " + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException: " + e.getMessage( ) );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -41,7 +86,7 @@ public class EspectaculoTM extends TransactionManager
 		{
 			closeDAO( dao );
 		}
-		return ac;
+		return list;
 	}
 	
 	public List<Espectaculo> getEspectaculos( ) throws SQLException
@@ -74,7 +119,7 @@ public class EspectaculoTM extends TransactionManager
 		return list;
 	}
 	
-	public Espectaculo getEspectaculo( Long id ) throws SQLException
+	public Espectaculo getEspectaculo( Long idFestival, Long id ) throws SQLException
 	{
 		Espectaculo ac;
 		DAOEspectaculo dao = new DAOEspectaculo( );
@@ -82,7 +127,7 @@ public class EspectaculoTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.getEspectaculo( id );
+			ac = dao.getEspectaculo( idFestival, id );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -104,7 +149,7 @@ public class EspectaculoTM extends TransactionManager
 		return ac;
 	}
 	
-	public Espectaculo updateEspectaculo( Long id, Espectaculo accesibilidad ) throws SQLException
+	public Espectaculo updateEspectaculo( Long idFestival, Long id, Espectaculo espectaculo ) throws SQLException
 	{
 		Espectaculo ac;
 		DAOEspectaculo dao = new DAOEspectaculo( );
@@ -112,7 +157,7 @@ public class EspectaculoTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			ac = dao.updateEspectaculo( id, accesibilidad );
+			ac = dao.updateEspectaculo( idFestival, id, espectaculo );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -134,25 +179,39 @@ public class EspectaculoTM extends TransactionManager
 		return ac;
 	}
 	
-	public void deleteEspectaculo( Long id ) throws SQLException
+	public void deleteEspectaculo( Long idFestival, Long idEspectaculo ) throws SQLException
 	{
 		DAOEspectaculo dao = new DAOEspectaculo( );
+		DAOOfrecen daoOfrecen = new DAOOfrecen( );
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
-			dao.deleteEspectaculo( id );
+			daoOfrecen.setConnection( this.connection );
+			
+			dao.deleteEspectaculo( idFestival, idEspectaculo );
+			
+			for( CompaniaDeTeatro companiaDeTeatro : daoOfrecen.getCompaniasWhoOffer( idEspectaculo ) )
+			{
+				daoOfrecen.deleteEntryOfrecen( companiaDeTeatro.getIdentificacion( ), idEspectaculo );
+			}
+			
+			this.connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
 			e.printStackTrace( );
+			connection.rollback( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
 			e.printStackTrace( );
+			connection.rollback( );
 			throw e;
 		}
 		finally
@@ -161,7 +220,7 @@ public class EspectaculoTM extends TransactionManager
 		}
 	}
 	
-	public RFC4 generarReporte( Long id ) throws SQLException
+	public RFC4 generarReporte( Long idFestival, Long id ) throws SQLException
 	{
 		RFC4 req;
 		DAOEspectaculo dao = new DAOEspectaculo( );
@@ -169,7 +228,7 @@ public class EspectaculoTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			req = dao.generarReporte( id );
+			req = dao.generarReporte( idFestival, id );
 			connection.commit( );
 		}
 		catch( SQLException e )

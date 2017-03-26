@@ -5,11 +5,11 @@ import tm.intermediate.EspectaculoGeneroTM;
 import tm.intermediate.OfrecenTM;
 import vos.CompaniaDeTeatro;
 import vos.Espectaculo;
+import vos.Genero;
 import vos.reportes.RFC4;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
@@ -18,27 +18,29 @@ import java.util.List;
 @Path( "espectaculos" )
 @Produces( { MediaType.APPLICATION_JSON } )
 @Consumes( { MediaType.APPLICATION_JSON } )
-public class EspectaculoServices
+public class EspectaculoServices extends Services
 {
-	@Context
-	private ServletContext context;
-	
-	private String getPath( )
+	public EspectaculoServices( )
 	{
-		return context.getRealPath( "WEB-INF/ConnectionData" );
+		super( );
 	}
 	
-	private String doErrorMessage( Exception e )
+	public EspectaculoServices( ServletContext context )
 	{
-		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
+		super( context );
 	}
 	
+	// Usuario Administrador
 	@POST
-	public Response createEspectaculo( Long id, String password, Espectaculo espectaculo )
+	public Response createEspectaculo( Espectaculo espectaculo,
+	                                   @HeaderParam( "id" ) Long id,
+	                                   @HeaderParam( "password" ) String password,
+	                                   @PathParam( "idFestival" ) Long idFestival )
 	{
 		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
 		try
 		{
+			espectaculo.setIdFestival( idFestival );
 			espectaculo = tm.createEspectaculo( id, password, espectaculo );
 		}
 		catch( SQLException e )
@@ -49,6 +51,23 @@ public class EspectaculoServices
 	}
 	
 	@GET
+	public Response getEspectaculos( @PathParam( "idFestival" ) Long idFestival )
+	{
+		List<Espectaculo> list;
+		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
+		try
+		{
+			list = tm.getEspectaculos( idFestival );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	@GET
+	@Path( "all" )
 	public Response getEspectaculos( )
 	{
 		List<Espectaculo> list;
@@ -66,13 +85,14 @@ public class EspectaculoServices
 	
 	@GET
 	@Path( "{id}" )
-	public Response getEspectaculo( @PathParam( "id" ) Long id )
+	public Response getEspectaculo(
+			@PathParam( "idFestival" ) Long idFestival, @PathParam( "id" ) Long id )
 	{
 		Espectaculo es;
 		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
 		try
 		{
-			es = tm.getEspectaculo( id );
+			es = tm.getEspectaculo( idFestival, id );
 		}
 		catch( SQLException e )
 		{
@@ -83,13 +103,15 @@ public class EspectaculoServices
 	
 	@PUT
 	@Path( "{id}" )
-	public Response updateEspectaculo( @PathParam( "id" ) Long id, Espectaculo espectaculo )
+	public Response updateEspectaculo(
+			@PathParam( "idFestival" ) Long idFestival,
+			@PathParam( "id" ) Long id, Espectaculo espectaculo )
 	{
 		Espectaculo es;
 		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
 		try
 		{
-			es = tm.updateEspectaculo( id, espectaculo );
+			es = tm.updateEspectaculo( idFestival, id, espectaculo );
 		}
 		catch( SQLException e )
 		{
@@ -100,12 +122,13 @@ public class EspectaculoServices
 	
 	@DELETE
 	@Path( "{id}" )
-	public Response deleteEspectaculo( @PathParam( "id" ) Long id )
+	public Response deleteEspectaculo(
+			@PathParam( "idFestival" ) Long idFestival, @PathParam( "id" ) Long id )
 	{
 		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
 		try
 		{
-			tm.deleteEspectaculo( id );
+			tm.deleteEspectaculo( idFestival, id );
 		}
 		catch( SQLException e )
 		{
@@ -114,15 +137,22 @@ public class EspectaculoServices
 		return Response.status( 200 ).build( );
 	}
 	
+	@Path( "{idEspectaculo}/funciones" )
+	public FuncionServices getFunciones( )
+	{
+		return new FuncionServices( context );
+	}
+	
+	// GENEROS
 	@GET
 	@Path( "{id}/generos" )
 	public Response getGenerosFrom( @PathParam( "id" ) Long idEspectaculo )
 	{
-		List<Espectaculo> list;
+		List<Genero> list;
 		EspectaculoGeneroTM tm = new EspectaculoGeneroTM( getPath( ) );
 		try
 		{
-			list = tm.getEspectaculoWithGenero( idEspectaculo );
+			list = tm.getGenerosFrom( idEspectaculo );
 		}
 		catch( SQLException e )
 		{
@@ -151,7 +181,8 @@ public class EspectaculoServices
 	
 	@POST
 	@Path( "{id_espectaculo}/generos" )
-	public Response createEntry( @PathParam( "id_espectaculo" ) Long idEspectaculo, Long idGenero )
+	public Response createEntryGenero(
+			@PathParam( "id_espectaculo" ) Long idEspectaculo, Long idGenero )
 	{
 		// TODO Long idGenero por JSON o por URI?
 		EspectaculoGeneroTM tm = new EspectaculoGeneroTM( getPath( ) );
@@ -166,6 +197,7 @@ public class EspectaculoServices
 		return Response.status( 200 ).build( );
 	}
 	
+	// COMPANIAS
 	@GET
 	@Path( "{id_espectaculo}/companias" )
 	public Response getCompaniasFromEspectaculo( @PathParam( "id_espectaculo" ) Long idEspectaculo )
@@ -183,15 +215,18 @@ public class EspectaculoServices
 		return Response.status( 200 ).entity( list ).build( );
 	}
 	
+	// REPORTES
 	@GET
 	@Path( "{id_espectaculo}/rfc4" )
-	public Response generarReporteRFC4( @PathParam( "id_espectaculo" ) Long idEspectaculo )
+	public Response generarReporteRFC4(
+			@PathParam( "idFestival" ) Long idFestival,
+			@PathParam( "id_espectaculo" ) Long idEspectaculo )
 	{
 		RFC4 req;
 		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
 		try
 		{
-			req = tm.generarReporte( idEspectaculo );
+			req = tm.generarReporte( idFestival, idEspectaculo );
 		}
 		catch( SQLException e )
 		{

@@ -16,6 +16,11 @@ public class Silla
 	@JsonProperty( value = "idLocalidad" )
 	private Long idLocalidad;
 	
+	public Silla( )
+	{
+	
+	}
+	
 	public Integer getNumSilla( )
 	{
 		return numSilla;
@@ -55,19 +60,4 @@ public class Silla
 	{
 		this.idLocalidad = idLocalidad;
 	}
-	
-	public Silla( )
-	{
-		
-	}
-	
-	//	public Silla(@JsonProperty(value = "numSilla") Integer numSilla, @JsonProperty(value = "numFila") Integer numFila,
-	//			@JsonProperty(value = "idLugar") Long idLugar, @JsonProperty(value = "idLocalidad") Long idLocalidad) {
-	//		super();
-	//		this.numSilla = numSilla;
-	//		this.numFila = numFila;
-	//		this.idLugar = idLugar;
-	//		this.idLocalidad = idLocalidad;
-	//	}
-	
 }

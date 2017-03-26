@@ -17,13 +17,31 @@ import java.util.List;
  */
 public class DAOOfrecen extends DAO
 {
+	public void createEntryOfrecen( Long idCompania, Long idEspectaculo ) throws SQLException
+	{
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "INSERT INTO OFRECE " );
+		sql.append( "( id_compania_de_teatro, tipo_id, id_espectaculo )" );
+		sql.append( "VALUES ( " );
+		sql.append( String.format( "%s, ", idCompania ) );
+		sql.append( String.format( "'%s', ", CompaniaDeTeatro.TIPO_ID ) );
+		sql.append( String.format( "%s ", idEspectaculo ) );
+		sql.append( ")" );
+		
+		System.out.println( sql.toString( ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		s.execute( );
+		s.close( );
+	}
+	
 	public List<Espectaculo> getEspectaculosFromCompania( Long idCompania ) throws SQLException
 	{
 		List<Espectaculo> list = new LinkedList<>( );
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM OFRECE O INNER JOIN ESPECTACULO E " );
+		sql.append( "FROM OFRECE O INNER JOIN ESPECTACULOS E " );
 		sql.append( "                ON O.id_espectaculo = E.id " );
 		sql.append( String.format( "WHERE O.id_compania_de_teatro = %s", idCompania ) );
 		
@@ -43,42 +61,27 @@ public class DAOOfrecen extends DAO
 		List<CompaniaDeTeatro> list = new LinkedList<>( );
 		
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELET * " );
-		sql.append( "FROM OFRECEN O INNER JOIN COMPANIAS_DE_TEATRO C " );
-		sql.append( "                ON O.id_compania = C.id " );
-		sql.append( String.format( "WHERE O.id_espectaculo = %s", idEspectaculo ) );
+		sql.append( "SELECT * " );
+		sql.append( "FROM OFRECE O INNER JOIN COMPANIAS_DE_TEATRO C " );
+		sql.append( "                ON O.id_compania_de_teatro = C.id " );
+		sql.append( String.format( "WHERE O.id_espectaculo = %s ", idEspectaculo ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		ResultSet rs = s.executeQuery( );
 		while( rs.next( ) )
 		{
-			list.add( DAOCompaniaDeTeatro.resultToCompaniaDeTeatro( rs ) );
+			list.add( DAOCompaniaDeTeatro.resultToBasicCompaniaDeTeatro( rs ) );
 		}
 		rs.close( );
 		s.close( );
 		return list;
 	}
 	
-	public void createEntryOfrecen( Long idCompania, Long idEspectaculo ) throws SQLException
+	public void deleteEntryOfrecen( Long icCompania, Long idEspectaculo ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "INSERT INTO OFRECEN " );
-		sql.append( "( id_compania, id_espectaculo )" );
-		sql.append( "VALUES ( " );
-		sql.append( String.format( "%s, ", idCompania ) );
-		sql.append( String.format( "%s ", idEspectaculo ) );
-		sql.append( ")" );
-		
-		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
-		s.execute( );
-		s.close( );
-	}
-	
-	public void deleteEntryOfrecen( Long idCompnia, Long idEspectaculo ) throws SQLException
-	{
-		StringBuilder sql = new StringBuilder( );
-		sql.append( "DELETE FROM OFRECEN " );
-		sql.append( String.format( "WHERE id_compania = %s ", idCompnia ) );
+		sql.append( "DELETE FROM OFRECE " );
+		sql.append( String.format( "WHERE id_compania_de_teatro = %s ", icCompania ) );
 		sql.append( String.format( "AND id_espectaculo = %s ", idEspectaculo ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );

@@ -1,7 +1,9 @@
 package tm;
 
 import dao.DAOCompaniaDeTeatro;
+import dao.DAOUsuario;
 import vos.CompaniaDeTeatro;
+import vos.Usuario;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -13,31 +15,43 @@ public class CompaniaDeTeatroTM extends TransactionManager
 		super( contextPathP );
 	}
 	
-	public CompaniaDeTeatro createCompaniaDeTeatro( Long id, String password, CompaniaDeTeatro accesibilidad ) throws SQLException
+	public CompaniaDeTeatro createCompaniaDeTeatro( Long id, String password, CompaniaDeTeatro companiaDeTeatro ) throws SQLException
 	{
 		CompaniaDeTeatro ac;
 		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
+		DAOUsuario daoUsuario = new DAOUsuario( );
 		try
 		{
+			companiaDeTeatro.setRol( Usuario.USUARIO_COMPANIA );
+			companiaDeTeatro.setTipoIdentificacion( CompaniaDeTeatro.TIPO_ID );
+			
 			this.connection = getConnection( );
+			connection.setAutoCommit( false );
+			daoUsuario.setConnection( this.connection );
 			dao.setConnection( this.connection );
-			ac = dao.createCompaniaDeTeatro( id, password, accesibilidad );
+			
+			daoUsuario.createUsuario( companiaDeTeatro );
+			ac = dao.createCompaniaDeTeatro( id, password, companiaDeTeatro );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
 			e.printStackTrace( );
+			connection.rollback( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
 			e.printStackTrace( );
+			connection.rollback( );
 			throw e;
 		}
 		finally
 		{
+			closeDAO( daoUsuario );
 			closeDAO( dao );
 		}
 		return ac;
@@ -103,15 +117,21 @@ public class CompaniaDeTeatroTM extends TransactionManager
 		return ac;
 	}
 	
-	public CompaniaDeTeatro updateCompaniaDeTeatro( Long id, CompaniaDeTeatro accesibilidad ) throws SQLException
+	public CompaniaDeTeatro updateCompaniaDeTeatro( Long id, CompaniaDeTeatro usuario ) throws SQLException
 	{
 		CompaniaDeTeatro ac;
 		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
+		DAOUsuario daoUsuario = new DAOUsuario( );
 		try
 		{
+			usuario.setRol( Usuario.USUARIO_COMPANIA );
+			
 			this.connection = getConnection( );
+			connection.setAutoCommit( false );
+			daoUsuario.setConnection( this.connection );
 			dao.setConnection( this.connection );
-			ac = dao.updateCompaniaDeTeatro( id, accesibilidad );
+			daoUsuario.updateUsuario( id, usuario );
+			ac = dao.updateCompaniaDeTeatro( id, usuario );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -133,29 +153,39 @@ public class CompaniaDeTeatroTM extends TransactionManager
 		return ac;
 	}
 	
-	public void deleteCompaniaDeTeatro( Long id , String tipo ) throws SQLException
+	public void deleteCompaniaDeTeatro( Long id ) throws SQLException
 	{
 		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
+		DAOUsuario daoUsuario = new DAOUsuario( );
 		try
 		{
 			this.connection = getConnection( );
+			connection.setAutoCommit( false );
+			daoUsuario.setConnection( this.connection );
 			dao.setConnection( this.connection );
-			dao.deleteCompaniaDeTeatro( id, tipo );
+			
+			dao.deleteCompaniaDeTeatro( id );
+			daoUsuario.deleteUsuario( id, CompaniaDeTeatro.TIPO_ID );
+			
+			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
 			e.printStackTrace( );
+			connection.rollback( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
 			e.printStackTrace( );
+			connection.rollback( );
 			throw e;
 		}
 		finally
 		{
+			closeDAO( daoUsuario );
 			closeDAO( dao );
 		}
 	}

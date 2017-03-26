@@ -12,13 +12,13 @@ public class Funcion
 	@JsonProperty( value = "fecha" )
 	private Date fecha;
 	
-	@JsonProperty( value = "id_lugar" )
+	@JsonProperty( value = "idLugar" )
 	private Long idLugar;
 	
-	@JsonProperty( value = "id_espectaculo" )
+	@JsonProperty( value = "idEspectaculo" )
 	private Long idEspectaculo;
 	
-	@JsonProperty( value = "se_realiza" )
+	@JsonProperty( value = "seRealiza" )
 	private Integer seRealiza;
 	
 	public Funcion( )

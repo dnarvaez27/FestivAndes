@@ -5,7 +5,6 @@ import vos.Festival;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
@@ -14,19 +13,15 @@ import java.util.List;
 @Path( "festivales" )
 @Produces( { MediaType.APPLICATION_JSON } )
 @Consumes( { MediaType.APPLICATION_JSON } )
-public class FestivalServices
+public class FestivalServices extends Services
 {
-	@Context
-	private ServletContext context;
-	
-	private String getPath( )
+	public FestivalServices( )
 	{
-		return context.getRealPath( "WEB-INF/ConnectionData" );
 	}
 	
-	private String doErrorMessage( Exception e )
+	public FestivalServices( ServletContext context )
 	{
-		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
+		super( context );
 	}
 	
 	@POST
@@ -108,5 +103,11 @@ public class FestivalServices
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
+	}
+	
+	@Path( "{idFestival}/espectaculos" )
+	public EspectaculoServices getCustomer( )
+	{
+		return new EspectaculoServices( context );
 	}
 }

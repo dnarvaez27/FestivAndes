@@ -44,6 +44,36 @@ public class FuncionTM extends TransactionManager
 		return ac;
 	}
 	
+	public List<Funcion> getFuncionesFrom( Long idEspectaculo ) throws SQLException
+	{
+		List<Funcion> list;
+		DAOFuncion dao = new DAOFuncion( );
+		try
+		{
+			this.connection = getConnection( );
+			dao.setConnection( this.connection );
+			list = dao.getFuncionesFrom( idEspectaculo );
+			connection.commit( );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException: " + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException: " + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return list;
+	}
+	
 	public List<Funcion> getFunciones( ) throws SQLException
 	{
 		List<Funcion> list;
@@ -161,7 +191,7 @@ public class FuncionTM extends TransactionManager
 		}
 	}
 	
-	public List<Funcion> generarReporte1( String nombreCategoria, String nombreCompania, String ciudad, String pais, String nombreEspectaculo, String idioma, Date fechaInicio, Date fechaFin, Integer duracionInicio, Integer duracionFin, String lugar, String accesoEspecial, String publicoObjetivo, String order, boolean asc ) throws SQLException
+	public List<Funcion> generarReporte1( String nombreCategoria, String nombreCompania, String ciudad, String pais, String nombreEspectaculo, String idioma, String fechaInicio, String fechaFin, Integer duracionInicio, Integer duracionFin, String lugar, String accesoEspecial, String publicoObjetivo, List<String> order, boolean asc ) throws SQLException
 	{
 		List<Funcion> list;
 		DAOFuncion dao = new DAOFuncion( );

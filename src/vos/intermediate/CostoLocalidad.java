@@ -43,10 +43,10 @@ public class CostoLocalidad
 	@JsonProperty( value = "fecha" )
 	protected Date fecha;
 	
-	@JsonProperty( value = "id_lugar" )
+	@JsonProperty( value = "idLugar" )
 	protected Long idLugar;
 	
-	@JsonProperty( value = "id_localidad" )
+	@JsonProperty( value = "idLocalidad" )
 	protected Long idLocalidad;
 	
 	@JsonProperty( value = "costo" )

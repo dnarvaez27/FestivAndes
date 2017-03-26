@@ -7,6 +7,7 @@ import vos.reportes.RFC4;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class DAOEspectaculo extends DAO
 			sql.append( String.format( "%s, ", object.getCostoRealizacion( ) ) );
 			sql.append( String.format( "'%s', ", object.getDescripcion( ) ) );
 			sql.append( String.format( "%s, ", object.getIdFestival( ) ) );
-			sql.append( String.format( "%s, ", object.getIdClasificacion( ) ) );
+			sql.append( String.format( "%s ", object.getIdClasificacion( ) ) );
 			sql.append( ")" );
 			
 			s = connection.prepareStatement( sql.toString( ) );
@@ -53,12 +54,13 @@ public class DAOEspectaculo extends DAO
 		return object;
 	}
 	
-	public List<Espectaculo> getEspectaculos( ) throws SQLException
+	public List<Espectaculo> getEspectaculos( Long idFestival ) throws SQLException
 	{
 		List<Espectaculo> list = new LinkedList<>( );
 		
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELECT * FROM ESPECTACULOS" );
+		sql.append( "SELECT * FROM ESPECTACULOS " );
+		sql.append( String.format( "WHERE id_festival = %s ", idFestival ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -72,14 +74,34 @@ public class DAOEspectaculo extends DAO
 		return list;
 	}
 	
-	public Espectaculo getEspectaculo( Long id ) throws SQLException
+	public List<Espectaculo> getEspectaculos( ) throws SQLException
+	{
+		List<Espectaculo> list = new LinkedList<>( );
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT * FROM ESPECTACULOS " );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		recursos.add( s );
+		ResultSet rs = s.executeQuery( );
+		while( rs.next( ) )
+		{
+			list.add( resultToEspectaculo( rs ) );
+		}
+		
+		s.close( );
+		return list;
+	}
+	
+	public Espectaculo getEspectaculo( Long idFestival, Long id ) throws SQLException
 	{
 		Espectaculo object = null;
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
 		sql.append( "FROM ESPECTACULOS " );
-		sql.append( String.format( "WHERE id = %s", id ) );
+		sql.append( String.format( "WHERE id = %s ", id ) );
+		sql.append( String.format( "AND id_festival = %s ", idFestival ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -92,19 +114,21 @@ public class DAOEspectaculo extends DAO
 		return object;
 	}
 	
-	public Espectaculo updateEspectaculo( Long id, Espectaculo object ) throws SQLException
+	public Espectaculo updateEspectaculo( Long idFestival, Long id, Espectaculo object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE ESPECTACULOS " );
 		sql.append( "SET " );
-		sql.append( String.format( "nombre = '%s'", object.getNombre( ) ) );
-		sql.append( String.format( "duracion = '%s'", object.getDuracion( ) ) );
-		sql.append( String.format( "idioma = '%s'", object.getIdioma( ) ) );
-		sql.append( String.format( "costo_realizacion = '%s'", object.getCostoRealizacion( ) ) );
-		sql.append( String.format( "descripcion = '%s'", object.getDescripcion( ) ) );
-		sql.append( String.format( "id_festival= '%s'", object.getIdFestival( ) ) );
-		sql.append( String.format( "id_clasificacion = '%s'", object.getIdClasificacion( ) ) );
-		sql.append( String.format( "WHERE id = %s", id ) );
+		sql.append( String.format( "id = %s, ", object.getId( ) ) );
+		sql.append( String.format( "nombre = '%s', ", object.getNombre( ) ) );
+		sql.append( String.format( "duracion = %s, ", object.getDuracion( ) ) );
+		sql.append( String.format( "idioma = '%s', ", object.getIdioma( ) ) );
+		sql.append( String.format( "costo_realizacion = %s, ", object.getCostoRealizacion( ) ) );
+		sql.append( String.format( "descripcion = '%s', ", object.getDescripcion( ) ) );
+		sql.append( String.format( "id_festival= %s, ", object.getIdFestival( ) ) );
+		sql.append( String.format( "id_clasificacion = %s ", object.getIdClasificacion( ) ) );
+		sql.append( String.format( "WHERE id = %s ", id ) );
+		sql.append( String.format( "AND id_festival = %s ", idFestival ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -113,11 +137,12 @@ public class DAOEspectaculo extends DAO
 		return object;
 	}
 	
-	public void deleteEspectaculo( Long id ) throws SQLException
+	public void deleteEspectaculo( Long idFestival, Long id ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "DELETE FROM ESPECTACULOS " );
-		sql.append( String.format( "WHERE id = %s", id ) );
+		sql.append( String.format( "WHERE id = %s ", id ) );
+		sql.append( String.format( "AND id_festival = %s ", idFestival ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -132,7 +157,7 @@ public class DAOEspectaculo extends DAO
 		object.setNombre( rs.getString( "nombre" ) );
 		object.setDuracion( rs.getInt( "duracion" ) );
 		object.setIdioma( rs.getString( "idioma" ) );
-		object.setCostoRealizacion( rs.getFloat( "costo_duracion" ) );
+		object.setCostoRealizacion( rs.getFloat( "costo_realizacion" ) );
 		object.setDescripcion( rs.getString( "descripcion" ) );
 		object.setIdFestival( rs.getLong( "id_festival" ) );
 		object.setIdClasificacion( rs.getLong( "id_clasificacion" ) );
@@ -145,78 +170,101 @@ public class DAOEspectaculo extends DAO
 	 * @return
 	 * @throws SQLException
 	 */
-	public RFC4 generarReporte( Long idEspectaculo ) throws SQLException
+	public RFC4 generarReporte( Long idFestival, Long idEspectaculo ) throws SQLException
 	{
 		RFC4 req = new RFC4( );
 		List<RFC4.P1> p1s = new LinkedList<>( );
 		List<RFC4.P2> p2s = new LinkedList<>( );
+		req.setEspectaculo( getEspectaculo( idFestival, idEspectaculo ).getNombre( ) );
 		
 		// P1
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT " );
-		sql.append( "  E.nombre," );
-		sql.append( "  B.id_funcion," );
-		sql.append( "  S.nombre,             AS LUGAR" );
-		sql.append( "  Lo.nombre             AS LOCALIDAD," );
-		sql.append( "  U.rol                 AS TIPO_USUARIO," );
-		sql.append( "  COUNT( B.id_funcion ) AS BOLETAS_VENDIDAS," );
-		sql.append( "  SUM( FCL.costo )      AS TOTAL_VENDIDO" );
-		sql.append( "FROM ESPECTACULO E, BOLETA B, FUNCION_COSTO_LOCALIDAD FCL, USUARIO U, LOCALIDAD Lo, FUNCION F, SITIO S " );
-		sql.append( "WHERE E.id_espectaculo = F.id_espectaculo" );
-		sql.append( "      AND F.id_funcion = FCL.id_funcion" );
-		sql.append( "      AND B.id_localidad = FCL.id_localidad" );
-		sql.append( "      AND B.id_funcion = FCL.id_funcion" );
-		sql.append( "      AND B.id_usuario = U.identificacion" );
-		sql.append( "      AND B.id_usuario_tipo = U.tipo_identificacion" );
-		sql.append( "      AND Lo.id_localidad = B.id_localidad" );
-		sql.append( "      AND S.id_lugar = F.id_lugar" );
-		sql.append( String.format( "      AND E.id_espectaculo = %s ", idEspectaculo ) );
-		sql.append( "GROUP BY E.nombre, B.id_funcion, S.nombre, Lo.nombre, B.id_localidad, rol" );
-		sql.append( "ORDER BY E.nombre, id_funcion, id_localidad" );
+		sql.append( "  F.FECHA, " );
+		sql.append( "  L.NOMBRE                 AS LUGAR, " );
+		sql.append( "  ROL                      AS TIPO_USUARIO, " );
+		sql.append( "  NVL(BOLETAS_VENDIDAS, 0) AS BOLETAS_VENDIDAS, " );
+		sql.append( "  NVL(TOTAL, 0)            AS TOTAL " );
+		sql.append( "FROM (SELECT " );
+		sql.append( "        FECHA, " );
+		sql.append( "        ID_LUGAR, " );
+		sql.append( "        ROL, " );
+		sql.append( "        SUM(BOLETAS_VENDIDAS)         AS BOLETAS_VENDIDAS, " );
+		sql.append( "        SUM(BOLETAS_VENDIDAS * COSTO) AS TOTAL " );
+		sql.append( "      FROM (SELECT " );
+		sql.append( "              FECHA, " );
+		sql.append( "              ID_LUGAR, " );
+		sql.append( "              ID_LOCALIDAD, " );
+		sql.append( "              COSTO, " );
+		sql.append( "              ROL, " );
+		sql.append( "              COUNT(*) AS BOLETAS_VENDIDAS " );
+		sql.append( "            FROM (SELECT " );
+		sql.append( "                    F.FECHA, " );
+		sql.append( "                    F.ID_LUGAR, " );
+		sql.append( "                    F.ID_LOCALIDAD, " );
+		sql.append( "                    F.COSTO, " );
+		sql.append( "                    B.ID_USUARIO " );
+		sql.append( "                  FROM COSTO_LOCALIDAD F " );
+		sql.append( "                    INNER JOIN BOLETAS B " );
+		sql.append( "                      ON F.ID_LUGAR = B.ID_LUGAR " );
+		sql.append( "                         AND F.FECHA = B.FECHA " );
+		sql.append( "                         AND F.ID_LOCALIDAD = B.ID_LOCALIDAD) B INNER JOIN USUARIOS U " );
+		sql.append( "                ON B.ID_USUARIO = U.IDENTIFICACION " );
+		sql.append( "            GROUP BY FECHA, ID_LUGAR, COSTO, ID_LOCALIDAD, ROL) " );
+		sql.append( "      GROUP BY FECHA, ID_LUGAR, ROL) " );
+		sql.append( "     A RIGHT JOIN FUNCIONES F " );
+		sql.append( "    ON A.FECHA = F.FECHA " );
+		sql.append( "       AND A.ID_LUGAR = F.ID_LUGAR " );
+		sql.append( "  LEFT JOIN LUGARES L ON F.ID_LUGAR = L.ID " );
+		sql.append( String.format( "WHERE f.ID_ESPECTACULO = %s ", idEspectaculo ) );
+		sql.append( "ORDER BY FECHA, L.NOMBRE, ROL, BOLETAS_VENDIDAS " );
 		
-		PreparedStatement prepStmt1 = connection.prepareStatement( sql.toString( ) );
-		recursos.add( prepStmt1 );
+		System.out.println( sql.toString( ) );
 		
-		ResultSet rs = prepStmt1.executeQuery( );
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		recursos.add( s );
+		
+		ResultSet rs = s.executeQuery( );
 		while( rs.next( ) )
 		{
 			RFC4.P1 p1 = req.new P1( );
 			
-			String nombreEspectaculo = rs.getString( "nombre" );
-			Long idFuncion = rs.getLong( "id_funcion" );
+			Date fecha = rs.getDate( "fecha" );
 			String lugar = rs.getString( "lugar" );
-			String nombreLocalidad = rs.getString( "localidad" );
 			String tipoUsuario = rs.getString( "tipo_usuario" );
 			int numBoletasVendidas = rs.getInt( "boletas_vendidas" );
-			double totalVendido = rs.getDouble( "total_vendido" );
+			double totalVendido = rs.getDouble( "total" );
 			
-			p1.setNombreEspectaculo( nombreEspectaculo );
-			p1.setIdFuncion( idFuncion );
+			p1.setFecha( fecha );
 			p1.setLugar( lugar );
-			p1.setNombreLocalidad( nombreLocalidad );
 			p1.setTipoUsuario( tipoUsuario );
-			p1.setNumBoletasVendidas( numBoletasVendidas );
-			p1.setTotalVendido( totalVendido );
+			p1.setBoletasVendidas( numBoletasVendidas );
+			p1.setTotal( totalVendido );
 			
 			p1s.add( p1 );
 		}
-		// TODO Esoectaculo id ???
 		// P2
 		sql = new StringBuilder( );
-		sql.append( "SELECT" );
-		sql.append( "  C.id_lugar," );
-		sql.append( "  ( OCUPADOS * 100 / TOTAL ) AS PORCENTAJE_DE_OCUPACION" );
-		sql.append( "FROM ( SELECT" );
-		sql.append( "         id_lugar," );
-		sql.append( "         SUM( CAPACIDAD ) TOTAL" );
-		sql.append( "       FROM LUGAR_LOCALIDAD" );
-		sql.append( "       GROUP BY id_lugar ) C" );
-		sql.append( "  INNER JOIN ( SELECT" );
-		sql.append( "                 id_lugar," );
-		sql.append( "                 COUNT( id_lugar ) OCUPADOS" );
-		sql.append( "               FROM BOLETA" );
-		sql.append( "               GROUP BY id_lugar ) O" );
-		sql.append( "    ON C.id_lugar = O.id_lugar" );
+		sql.append( "SELECT " );
+		sql.append( "  l.NOMBRE                             AS LUGAR," );
+		sql.append( "  NVL( ( OCUPADOS * 100 / TOTAL ), 0 ) AS PORCENTAJE_DE_OCUPACION " );
+		sql.append( "FROM ( SELECT " );
+		sql.append( "         id_lugar, " );
+		sql.append( "         SUM( CAPACIDAD ) AS TOTAL " );
+		sql.append( "       FROM LUGAR_LOCALIDAD " );
+		sql.append( "       GROUP BY id_lugar ) C " );
+		sql.append( "  INNER JOIN ( SELECT " );
+		sql.append( "                 F.id_lugar, " );
+		sql.append( "                 COUNT( B.id_lugar ) OCUPADOS " );
+		sql.append( "               FROM BOLETAS B RIGHT JOIN FUNCIONES F " );
+		sql.append( "                   ON B.ID_LUGAR = F.ID_LUGAR " );
+		sql.append( "                      AND B.FECHA = F.FECHA " );
+		sql.append( String.format( "WHERE F.ID_ESPECTACULO = %s ", idEspectaculo ) );
+		sql.append( "               GROUP BY F.id_lugar ) O " );
+		sql.append( "    ON C.id_lugar = O.id_lugar " );
+		sql.append( "  INNER JOIN LUGARES L " );
+		sql.append( "    ON O.ID_LUGAR = L.ID " );
+		sql.append( "ORDER BY PORCENTAJE_DE_OCUPACION DESC " );
 		
 		PreparedStatement prepStmt2 = connection.prepareStatement( sql.toString( ) );
 		recursos.add( prepStmt2 );
@@ -226,17 +274,17 @@ public class DAOEspectaculo extends DAO
 		{
 			RFC4.P2 p2 = req.new P2( );
 			
-			Long idLugar = rs.getLong( "id_lugar" );
+			String idLugar = rs.getString( "lugar" );
 			Double porcentajeOcupacion = rs.getDouble( "porcentaje_de_ocupacion" );
 			
-			p2.setIdLugar( idLugar );
+			p2.setLugar( idLugar );
 			p2.setPorcentajeOcupacion( porcentajeOcupacion );
 			
 			p2s.add( p2 );
 		}
 		
-		req.setP1( p1s );
-		req.setP2( p2s );
+		req.setProducido( p1s );
+		req.setOcupacion( p2s );
 		
 		return req;
 	}

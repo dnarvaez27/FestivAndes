@@ -32,34 +32,18 @@ public class DAOCompaniaDeTeatro extends DAO
 		if( rs.next( ) )
 		{
 			sql = new StringBuilder( );
-			sql.append( "INSERT INTO USUARIOS " );
-			sql.append( "( identificacion, tipo_identificacion, email, password, nombre, rol )" );
-			sql.append( "VALUES ( " );
-			sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
-			sql.append( String.format( "'%s', ", object.getTipoIdentificacion( ) ) );
-			sql.append( String.format( "'%s', ", object.getEmail( ) ) );
-			sql.append( String.format( "'%s', ", object.getPassword( ) ) );
-			sql.append( String.format( "'%s', ", object.getNombre( ) ) );
-			sql.append( String.format( "'%s' ", Usuario.USUARIO_COMPANIA ) );
-			sql.append( "); " );
-			
-			s = connection.prepareCall( sql.toString( ) );
-			recursos.add( s );
-			s.execute( );
-			
-			sql = new StringBuilder( );
 			sql.append( "INSERT INTO COMPANIAS_DE_TEATRO " );
-			sql.append( "( id, tipo_id, nombre, nombre_representante, pais_origen, pagina_web, hora_llegada, hora_salida ) " );
+			sql.append( "( id, tipo_id, nombre, nombre_representante, pais_origen, pagina_web, fecha_llegada, fecha_salida ) " );
 			sql.append( "VALUES " );
 			sql.append( "( " );
-			sql.append( String.format( "%s, ", object.getId( ) ) );
+			sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
 			sql.append( String.format( "'%s', ", object.getTipoIdentificacion( ) ) );
-			sql.append( String.format( "'%s' ", object.getNombre( ) ) );
+			sql.append( String.format( "'%s', ", object.getNombre( ) ) );
 			sql.append( String.format( "'%s', ", object.getNombreRepresentante( ) ) );
 			sql.append( String.format( "'%s', ", object.getPaisOrigen( ) ) );
 			sql.append( String.format( "'%s', ", object.getPaginaWeb( ) ) );
 			sql.append( String.format( "%s, ", toDate( object.getFechaLlegada( ) ) ) );
-			sql.append( String.format( "%s, ", toDate( object.getFechaLlegada( ) ) ) );
+			sql.append( String.format( "%s ", toDate( object.getFechaSalida( ) ) ) );
 			sql.append( ")" );
 			
 			s = connection.prepareStatement( sql.toString( ) );
@@ -75,7 +59,9 @@ public class DAOCompaniaDeTeatro extends DAO
 		List<CompaniaDeTeatro> list = new ArrayList<>( );
 		
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELECT * FROM COMPANIAS_DE_TEATRO" );
+		sql.append( "SELECT * FROM COMPANIAS_DE_TEATRO CT INNER JOIN USUARIOS U" );
+		sql.append( "                                      ON CT.id = U.identificacion " );
+		sql.append( "                                      AND CT.tipo_id = U.tipo_identificacion " );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -95,8 +81,10 @@ public class DAOCompaniaDeTeatro extends DAO
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM COMPANIAS_DE_TEATRO " );
-		sql.append( String.format( "WHERE id = %s", id ) );
+		sql.append( "FROM COMPANIAS_DE_TEATRO CT INNER JOIN USUARIOS U " );
+		sql.append( "                            ON CT.id = U.identificacion " );
+		sql.append( String.format( "WHERE id = %s ", id ) );
+		sql.append( String.format( "AND tipo_id = '%s'", CompaniaDeTeatro.TIPO_ID ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -112,18 +100,7 @@ public class DAOCompaniaDeTeatro extends DAO
 	public CompaniaDeTeatro updateCompaniaDeTeatro( Long idCompania, CompaniaDeTeatro object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "UPDATE USUARIOS " );
-		sql.append( "SET " );
-		sql.append( String.format( "nombre = '%s', ", object.getNombre( ) ) );
-		sql.append( String.format( "email = '%s', ", object.getEmail( ) ) );
-		sql.append( String.format( "password = '%s' ", object.getPassword( ) ) );
-		sql.append( String.format( "WHERE identificacion = %s", idCompania ) );
 		
-		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
-		recursos.add( s );
-		s.execute( );
-		
-		sql = new StringBuilder( );
 		sql.append( "UPDATE COMPANIAS_DE_TEATRO " );
 		sql.append( "SET " );
 		sql.append( String.format( "nombre = '%s', ", object.getNombre( ) ) );
@@ -133,25 +110,21 @@ public class DAOCompaniaDeTeatro extends DAO
 		sql.append( String.format( "fecha_llegada = %s, ", toDate( object.getFechaLlegada( ) ) ) );
 		sql.append( String.format( "fecha_salida = %s ", toDate( object.getFechaSalida( ) ) ) );
 		sql.append( String.format( "WHERE id = %s ", idCompania ) );
-		sql.append( String.format( "AND tipo_id = %s", object.getTipoIdentificacion( ) ) );
+		sql.append( String.format( "AND tipo_id = '%s'", CompaniaDeTeatro.TIPO_ID ) );
 		
-		s = connection.prepareStatement( sql.toString( ) );
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		s.execute( );
 		s.clearParameters( );
 		return object;
 	}
 	
-	public void deleteCompaniaDeTeatro( Long id, String tipoId ) throws SQLException
+	public void deleteCompaniaDeTeatro( Long id ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "DELETE FROM USUARIOS " );
-		sql.append( String.format( "WHERE identificacion = %s", id ) );
-		sql.append( String.format( "AND tipo_identificacion = '%s'", tipoId ) );
-		
 		sql.append( "DELETE FROM COMPANIAS_DE_TEATRO " );
-		sql.append( String.format( "WHERE id = %s", id ) );
-		sql.append( String.format( "AND tipo_id = '%s'", tipoId ) );
+		sql.append( String.format( "WHERE id = %s ", id ) );
+		sql.append( String.format( "AND tipo_id = '%s'", CompaniaDeTeatro.TIPO_ID ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -166,20 +139,27 @@ public class DAOCompaniaDeTeatro extends DAO
 		return list;
 	}
 	
-	public static CompaniaDeTeatro resultToCompaniaDeTeatro( ResultSet rs ) throws SQLException
+	public static CompaniaDeTeatro resultToBasicCompaniaDeTeatro( ResultSet rs ) throws SQLException
 	{
 		CompaniaDeTeatro object = new CompaniaDeTeatro( );
-		object.setId( rs.getLong( "id" ) );
+		object.setIdentificacion( rs.getLong( "id" ) );
 		object.setTipoIdentificacion( rs.getString( "tipo_id" ) );
 		object.setNombre( rs.getString( "nombre" ) );
 		object.setNombreRepresentante( rs.getString( "nombre_representante" ) );
 		object.setPaginaWeb( rs.getString( "pagina_web" ) );
 		object.setPaisOrigen( rs.getString( "pais_origen" ) );
-		object.setFechaLlegada( rs.getDate( "hora_llegada" ) );
-		object.setFechaSalida( rs.getDate( "hora_salida" ) );
+		object.setFechaLlegada( rs.getDate( "fecha_llegada" ) );
+		object.setFechaSalida( rs.getDate( "fecha_salida" ) );
+		return object;
+	}
+	
+	public static CompaniaDeTeatro resultToCompaniaDeTeatro( ResultSet rs ) throws SQLException
+	{
+		CompaniaDeTeatro object = resultToBasicCompaniaDeTeatro( rs );
 		object.setEmail( rs.getString( "email" ) );
 		object.setPassword( rs.getString( "password" ) );
 		object.setRol( rs.getString( "rol" ) );
+		object.setIdFestival( rs.getLong( "id_festival" ) );
 		return object;
 	}
 }

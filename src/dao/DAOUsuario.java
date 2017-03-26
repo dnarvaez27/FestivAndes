@@ -24,12 +24,14 @@ public class DAOUsuario extends DAO
 		sql.append( "( " );
 		sql.append( String.format( "%s, ", usuario.getIdentificacion( ) ) );
 		sql.append( String.format( "'%s', ", usuario.getTipoIdentificacion( ) ) );
-		sql.append( String.format( "%s, ", usuario.getEmail( ) ) );
-		sql.append( String.format( "%s, ", usuario.getPassword( ) ) );
-		sql.append( String.format( "%s, ", usuario.getNombre( ) ) );
-		sql.append( String.format( "%s ", usuario.getRol( ) ) );
+		sql.append( String.format( "'%s', ", usuario.getEmail( ) ) );
+		sql.append( String.format( "'%s', ", usuario.getPassword( ) ) );
+		sql.append( String.format( "'%s', ", usuario.getNombre( ) ) );
+		sql.append( String.format( "'%s', ", usuario.getRol( ) ) );
 		sql.append( String.format( "%s ", usuario.getIdFestival( ) ) );
 		sql.append( ")" );
+		
+		System.out.println( sql.toString( ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -77,17 +79,36 @@ public class DAOUsuario extends DAO
 		return usuario;
 	}
 	
+	public Usuario getUsuarioNoRegistrado( ) throws SQLException
+	{
+		Usuario usuario = null;
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT * " );
+		sql.append( "FROM USUARIOS " );
+		sql.append( String.format( "WHERE rol = '%s' ", Usuario.USUARIO_NO_REGISTRADO ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		recursos.add( s );
+		ResultSet rs = s.executeQuery( );
+		if( rs.next( ) )
+		{
+			usuario = restultToAccesibildiad( rs );
+		}
+		s.close( );
+		return usuario;
+	}
+	
 	public Usuario updateUsuario( Long id, Usuario usuario ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE USUARIOS " );
 		sql.append( "SET " );
-		sql.append( String.format( "email = %s ", usuario.getEmail( ) ) );
-		sql.append( String.format( "password = %s ", usuario.getPassword( ) ) );
-		sql.append( String.format( "nombre = %s ", usuario.getNombre( ) ) );
-		sql.append( String.format( "rol = %s ", usuario.getRol( ) ) );
+		sql.append( String.format( "email = '%s', ", usuario.getEmail( ) ) );
+		sql.append( String.format( "password = '%s', ", usuario.getPassword( ) ) );
+		sql.append( String.format( "nombre = '%s', ", usuario.getNombre( ) ) );
+		sql.append( String.format( "rol = '%s', ", usuario.getRol( ) ) );
 		sql.append( String.format( "id_festival = %s ", usuario.getIdFestival( ) ) );
-		
 		sql.append( String.format( "WHERE identificacion = %s", id ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
@@ -97,11 +118,12 @@ public class DAOUsuario extends DAO
 		return usuario;
 	}
 	
-	public void deleteUsuario( Long identificacion ) throws SQLException
+	public void deleteUsuario( Long identificacion, String tipo ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "DELETE FROM USUARIOS " );
-		sql.append( String.format( "WHERE identificacion = %s", identificacion ) );
+		sql.append( String.format( "WHERE identificacion = %s ", identificacion ) );
+		sql.append( String.format( "AND tipo_identificacion = '%s'", tipo ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -113,6 +135,7 @@ public class DAOUsuario extends DAO
 	{
 		Usuario u = new Usuario( );
 		u.setIdentificacion( rs.getLong( "identificacion" ) );
+		u.setTipoIdentificacion( rs.getString( "tipo_identificacion" ) );
 		u.setEmail( rs.getString( "email" ) );
 		u.setPassword( rs.getString( "password" ) );
 		u.setNombre( rs.getString( "nombre" ) );

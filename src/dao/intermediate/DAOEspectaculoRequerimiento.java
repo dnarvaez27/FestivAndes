@@ -1,15 +1,15 @@
 package dao.intermediate;
 
+import dao.DAO;
+import dao.DAOEspectaculo;
+import vos.Espectaculo;
+import vos.RequerimientoTecnico;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-
-import dao.DAO;
-import dao.DAOEspectaculo;
-import vos.Espectaculo;
-import vos.RequerimientoTecnico;
 
 public class DAOEspectaculoRequerimiento extends DAO{
 	public List<RequerimientoTecnico> getRequerimientoTecnicosFromEspectaculo( Long idEspectaculo ) throws SQLException
@@ -52,7 +52,7 @@ public class DAOEspectaculoRequerimiento extends DAO{
 		return list;
 	}
 	
-	public void createEntryEG( Long idEspectaculo, Long idRequerimientoTecnico ) throws SQLException
+	public void createEntryER( Long idEspectaculo, Long idRequerimientoTecnico ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "INSERT INTO ESPECTACULO_REQUERIMIENTO " );

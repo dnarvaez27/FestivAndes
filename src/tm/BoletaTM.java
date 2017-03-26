@@ -1,7 +1,9 @@
 package tm;
 
 import dao.DAOBoleta;
+import dao.DAOUsuario;
 import vos.Boleta;
+import vos.Usuario;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -13,31 +15,59 @@ public class BoletaTM extends TransactionManager
 		super( contextPathP );
 	}
 	
-	public Boleta createBoleta( Long id, String password, Boleta accesibilidad ) throws SQLException
+	private boolean checkUsuarioRegistrado( Long id, String password, DAOUsuario dao ) throws SQLException
+	{
+		if( dao.getUsuario( id ) == null || id == null || password == null )
+		{
+			Usuario nr = dao.getUsuarioNoRegistrado( );
+			if( nr == null )
+			{
+				nr = Usuario.UNREGISTERED_USER;
+				dao.createUsuario( nr );
+			}
+			return false;
+		}
+		return true;
+	}
+	
+	public Boleta createBoleta( Long id, String password, Boleta boleta ) throws SQLException
 	{
 		Boleta ac;
 		DAOBoleta dao = new DAOBoleta( );
+		DAOUsuario daoUsuario = new DAOUsuario( );
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			daoUsuario.setConnection( this.connection );
 			dao.setConnection( this.connection );
-			ac = dao.createBoleta( id, password, accesibilidad );
+			
+			if( !checkUsuarioRegistrado( id, password, daoUsuario ) )
+			{
+				id = Usuario.UNREGISTERED_USER.getIdentificacion( );
+				password = Usuario.UNREGISTERED_USER.getPassword( );
+			}
+			ac = dao.createBoleta( id, password, boleta );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
 			e.printStackTrace( );
+			connection.rollback( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
 			e.printStackTrace( );
+			connection.rollback( );
 			throw e;
 		}
 		finally
 		{
+			closeDAO( daoUsuario );
 			closeDAO( dao );
 		}
 		return ac;

@@ -9,7 +9,6 @@ import vos.UsuarioRegistrado;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
@@ -18,23 +17,23 @@ import java.util.List;
 @Path( "lugares" )
 @Produces( { MediaType.APPLICATION_JSON } )
 @Consumes( { MediaType.APPLICATION_JSON } )
-public class LugarServices
+public class LugarServices extends Services
 {
-	@Context
-	private ServletContext context;
-	
-	private String getPath( )
+	// LUGAR
+	public LugarServices( )
 	{
-		return context.getRealPath( "WEB-INF/ConnectionData" );
 	}
 	
-	private String doErrorMessage( Exception e )
+	public LugarServices( ServletContext context )
 	{
-		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
+		super( context );
 	}
 	
+	// Usuario Administrador
 	@POST
-	public Response createLugar( Long id, String password, Lugar lugar )
+	public Response createLugar( Lugar lugar,
+	                             @HeaderParam( "id" ) Long id,
+	                             @HeaderParam( "password" ) String password )
 	{
 		LugarTM tm = new LugarTM( getPath( ) );
 		try
@@ -114,6 +113,7 @@ public class LugarServices
 		return Response.status( 200 ).build( );
 	}
 	
+	// PREFERENCIA USUARIOS
 	@GET
 	@Path( "{id_lugar}/usuariosprefieren" )
 	public Response getUsuariosWhoPrefers( @PathParam( "id_lugar" ) Long idLugar )
@@ -131,6 +131,7 @@ public class LugarServices
 		return Response.status( 200 ).entity( list ).build( );
 	}
 	
+	// REQUERIMIENTOS
 	@GET
 	@Path( "{id_lugar}/requerimientos" )
 	public Response getRequerimientosFromLugar( @PathParam( "id_lugar" ) Long idLugar )
@@ -180,5 +181,12 @@ public class LugarServices
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
+	}
+	
+	// LOCALIDADES
+	@Path( "{idLugar}/localidades" )
+	public LocalidadServices getLocalidades( @PathParam( "idLugar" ) Long idLugar )
+	{
+		return new LocalidadServices( context );
 	}
 }

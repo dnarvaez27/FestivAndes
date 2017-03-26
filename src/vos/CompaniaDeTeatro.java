@@ -9,49 +9,28 @@ import java.util.Date;
  */
 public class CompaniaDeTeatro extends Usuario
 {
-	@JsonProperty( value = "id" )
-	private Long id;
+	public static final String TIPO_ID = "COMPANY";
 	
 	@JsonProperty( value = "nombre" )
 	private String nombre;
 	
-	@JsonProperty( value = "nombre_representante" )
+	@JsonProperty( value = "nombreRepresentante" )
 	private String nombreRepresentante;
 	
-	@JsonProperty( value = "pagina_web" )
+	@JsonProperty( value = "paginaWeb" )
 	private String paginaWeb;
 	
-	@JsonProperty( value = "pais_origen" )
+	@JsonProperty( value = "paisOrigen" )
 	private String paisOrigen;
 	
-	@JsonProperty( value = "fecha_llegada" )
+	@JsonProperty( value = "fechaLlegada" )
 	private Date fechaLlegada;
 	
-	@JsonProperty( value = "fecha_salida" )
+	@JsonProperty( value = "fechaSalida" )
 	private Date fechaSalida;
 	
 	public CompaniaDeTeatro( )
 	{
-	}
-	
-	/**
-	 * Retrieves the id of the CompaniaDeTeatro
-	 *
-	 * @return The id of the CompaniaDeTeatro
-	 */
-	public Long getId( )
-	{
-		return id;
-	}
-	
-	/**
-	 * Updates the id of the CompaniaDeTeatro by the one given by parameter
-	 *
-	 * @param id The new id of the CompaniaDeTeatro
-	 */
-	public void setId( Long id )
-	{
-		this.id = id;
 	}
 	
 	/**

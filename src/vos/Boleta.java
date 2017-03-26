@@ -9,29 +9,52 @@ import java.util.Date;
  */
 public class Boleta
 {
-	@JsonProperty( value = "num_boleta" )
+	@JsonProperty( value = "numBoleta" )
 	private Long numBoleta;
 	
-	@JsonProperty( value = "id_numero_silla" )
+	@JsonProperty( value = "idNumeroSilla" )
 	private Long idNumeroSilla;
 	
-	@JsonProperty( value = "id_numero_fila" )
+	@JsonProperty( value = "idNumeroFila" )
 	private Long idNumeroFila;
 	
-	@JsonProperty( value = "id_localidad" )
+	@JsonProperty( value = "idLocalidad" )
 	private Long idLocalidad;
 	
-	@JsonProperty( value = "id_lugar" )
+	@JsonProperty( value = "idLugar" )
 	private Long idLugar;
 	
 	@JsonProperty( value = "fecha" )
 	private Date fecha;
 	
-	@JsonProperty( value = "id_usuario" )
+	@JsonProperty( value = "idUsuario" )
 	private Long idUsuario;
+	
+	@JsonProperty( value = "tipoIdUsuario" )
+	private String tipoIdUsuario;
 	
 	public Boleta( )
 	{
+	}
+	
+	/**
+	 * Retrieves the tipoIdUsuario of the Boleta
+	 *
+	 * @return The tipoIdUsuario of the Boleta
+	 */
+	public String getTipoIdUsuario( )
+	{
+		return tipoIdUsuario;
+	}
+	
+	/**
+	 * Updates the tipoIdUsuario of the Boleta by the one given by parameter
+	 *
+	 * @param tipoIdUsuario The new tipoIdUsuario of the Boleta
+	 */
+	public void setTipoIdUsuario( String tipoIdUsuario )
+	{
+		this.tipoIdUsuario = tipoIdUsuario;
 	}
 	
 	/**

@@ -2,53 +2,70 @@ package rest;
 
 import tm.FuncionTM;
 import tm.intermediate.CostoLocalidadTM;
+import utilities.DateFormatter;
 import vos.Funcion;
+import vos.Localidad;
 import vos.Usuario;
 import vos.intermediate.CostoLocalidad;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 @Path( "funciones" )
 @Produces( { MediaType.APPLICATION_JSON } )
 @Consumes( { MediaType.APPLICATION_JSON } )
-public class FuncionServices
+public class FuncionServices extends Services
 {
-	@Context
-	private ServletContext context;
-	
-	private String getPath( )
+	public FuncionServices( )
 	{
-		return context.getRealPath( "WEB-INF/ConnectionData" );
 	}
 	
-	private String doErrorMessage( Exception e )
+	public FuncionServices( ServletContext context )
 	{
-		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
+		super( context );
 	}
 	
 	@POST
-	public Response createFuncion( Long id, String password, Funcion accesibilidad )
+	public Response createFuncion( Funcion funcion,
+	                               @HeaderParam( "id" ) Long id,
+	                               @HeaderParam( "password" ) String password,
+	                               @PathParam( "idEspectaculo" ) Long idEspectaculo )
 	{
 		FuncionTM tm = new FuncionTM( getPath( ) );
 		try
 		{
-			accesibilidad = tm.createFuncion( id, password, accesibilidad );
+			funcion.setIdEspectaculo( idEspectaculo );
+			funcion = tm.createFuncion( id, password, funcion );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( accesibilidad ).build( );
+		return Response.status( 200 ).entity( funcion ).build( );
 	}
 	
 	@GET
+	public Response getFuncions( @PathParam( "idEspectaculo" ) Long idEspectaculo )
+	{
+		List<Funcion> list;
+		FuncionTM tm = new FuncionTM( getPath( ) );
+		try
+		{
+			list = tm.getFuncionesFrom( idEspectaculo );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	@GET
+	@Path( "all" )
 	public Response getFuncions( )
 	{
 		List<Funcion> list;
@@ -67,13 +84,13 @@ public class FuncionServices
 	@GET
 	@Path( "{lugar}/{fecha}" )
 	public Response getFuncion(
-			@PathParam( "lugar" ) Long idFecha, @PathParam( "fecha" ) Date fecha )
+			@PathParam( "lugar" ) Long idFecha, @PathParam( "fecha" ) String fecha )
 	{
 		Funcion ac;
 		FuncionTM tm = new FuncionTM( getPath( ) );
 		try
 		{
-			ac = tm.getFuncion( fecha, idFecha );
+			ac = tm.getFuncion( DateFormatter.format( fecha ), idFecha );
 		}
 		catch( SQLException e )
 		{
@@ -86,13 +103,14 @@ public class FuncionServices
 	@Path( "{lugar}/{fecha}" )
 	public Response updateFuncion(
 			@PathParam( "lugar" ) Long idFecha,
-			@PathParam( "fecha" ) Date fecha, Usuario usuario, Funcion accesibilidad )
+			@PathParam( "fecha" ) String fecha, Usuario usuario, Funcion accesibilidad )
 	{
 		Funcion ac;
 		FuncionTM tm = new FuncionTM( getPath( ) );
 		try
 		{
-			ac = tm.updateFuncion( usuario.getIdentificacion( ), usuario.getPassword( ), fecha, idFecha, accesibilidad );
+			ac = tm.updateFuncion( usuario.getIdentificacion( ), usuario.getPassword( ), DateFormatter
+					.format( fecha ), idFecha, accesibilidad );
 		}
 		catch( SQLException e )
 		{
@@ -104,13 +122,13 @@ public class FuncionServices
 	@DELETE
 	@Path( "{lugar}/{fecha}" )
 	public Response deleteFuncion(
-			@PathParam( "lugar" ) Long idFecha, @PathParam( "fecha" ) Date fecha )
+			@PathParam( "lugar" ) Long idFecha, @PathParam( "fecha" ) String fecha )
 	{
 		FuncionTM tm = new FuncionTM( getPath( ) );
 		
 		try
 		{
-			tm.deleteFuncion( fecha, idFecha );
+			tm.deleteFuncion( DateFormatter.format( fecha ), idFecha );
 		}
 		catch( SQLException e )
 		{
@@ -119,16 +137,39 @@ public class FuncionServices
 		return Response.status( 200 ).build( );
 	}
 	
-	@GET
+	// LOCALIDADES
+	@POST
 	@Path( "{id_lugar}/{fecha_funcion}/localidades" )
-	public Response getCostoLocalidadesFrom(
-			@PathParam( "id_lugar" ) Long idLugar, @PathParam( "fecha_funcion" ) Date fechaFuncion )
+	public Response createEntryCostoLocalidad(
+			@PathParam( "id_lugar" ) Long idLugar,
+			@PathParam( "fecha_funcion" ) String fechaFuncion, CostoLocalidad costoLocalidad )
 	{
-		List<CostoLocalidad> list;
+		costoLocalidad.setIdLugar( idLugar );
+		costoLocalidad.setFecha( DateFormatter.format( fechaFuncion ) );
+		
 		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
 		try
 		{
-			list = tm.getCostoLocalidadesFromFuncion( fechaFuncion, idLugar );
+			costoLocalidad = tm.createCostoLocalidad( costoLocalidad );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( costoLocalidad ).build( );
+	}
+	
+	@GET
+	@Path( "{id_lugar}/{fecha_funcion}/localidades" )
+	public Response getCostoLocalidadesFrom(
+			@PathParam( "id_lugar" ) Long idLugar,
+			@PathParam( "fecha_funcion" ) String fechaFuncion )
+	{
+		List<Localidad> list;
+		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
+		try
+		{
+			list = tm.getCostoLocalidadesFromFuncion( DateFormatter.format( fechaFuncion ), idLugar );
 		}
 		catch( SQLException e )
 		{
@@ -141,14 +182,14 @@ public class FuncionServices
 	@Path( "{id_lugar}/{fecha_funcion}/localidades/{id_localidad}" )
 	public Response getCostoLocalidadFrom(
 			@PathParam( "id_lugar" ) Long idLugar,
-			@PathParam( "fecha_funcion" ) Date fechaFuncion,
+			@PathParam( "fecha_funcion" ) String fechaFuncion,
 			@PathParam( "id_localidad" ) Long idLocalidad )
 	{
-		CostoLocalidad costoLocalidad;
+		Localidad costoLocalidad;
 		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
 		try
 		{
-			costoLocalidad = tm.getCostoLocalidadFrom( fechaFuncion, idLugar, idLocalidad );
+			costoLocalidad = tm.getCostoLocalidadFrom( DateFormatter.format( fechaFuncion ), idLugar, idLocalidad );
 		}
 		catch( SQLException e )
 		{
@@ -157,19 +198,17 @@ public class FuncionServices
 		return Response.status( 200 ).entity( costoLocalidad ).build( );
 	}
 	
-	@POST
-	@Path( "{id_lugar}/{fecha_funcion}/localidades" )
-	public Response createEntryCostoLocalidad(
-			@PathParam( "id_lugar" ) Long idLugar,
-			@PathParam( "fecha_funcion" ) Date fechaFuncion, CostoLocalidad costoLocalidad )
+	@PUT
+	@Path( "{id_Lugar}/{fecha_funcion}/localidades/{id_localidad}" )
+	public Response updateCostoLocalidad( CostoLocalidad costoLocalidad,
+	                                      @PathParam( "id_Lugar" ) Long idLugar,
+	                                      @PathParam( "fecha_funcion" ) String fecha,
+	                                      @PathParam( "id_localidad" ) Long idLocalidad )
 	{
-		costoLocalidad.setIdLugar( idLugar );
-		costoLocalidad.setFecha( fechaFuncion );
-		
 		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
 		try
 		{
-			tm.createCostoLocalidad( costoLocalidad );
+			costoLocalidad = tm.updateCostoLocalidad( DateFormatter.format( fecha ), idLugar, idLocalidad, costoLocalidad );
 		}
 		catch( SQLException e )
 		{
@@ -178,29 +217,30 @@ public class FuncionServices
 		return Response.status( 200 ).entity( costoLocalidad ).build( );
 	}
 	
+	// REPORTES
 	@GET
-	public Response getFunciones(
+	public Response generarReporte1(
 			@QueryParam( "nombre_categoria" ) String nombreCategoria,
 			@QueryParam( "nombre_compania" ) String nombreCompania,
 			@QueryParam( "ciudad" ) String ciudad,
 			@QueryParam( "pais" ) String pais,
 			@QueryParam( "nombre_espectaculo" ) String nombreEspectaculo,
 			@QueryParam( "idioma" ) String idioma,
-			@QueryParam( "fecha_inicio" ) Date fechaInicio,
-			@QueryParam( "fecha_fin" ) Date fechaFin,
+			@QueryParam( "fecha_inicio" ) String fechaInicio,
+			@QueryParam( "fecha_fin" ) String fechaFin,
 			@QueryParam( "duracion_inicio" ) Integer duracionInicio,
 			@QueryParam( "duracion_fin" ) Integer duracionFin,
 			@QueryParam( "lugar" ) String lugar,
-			@QueryParam( "acceso_especial" ) String accesoEspecial,
-			@QueryParam( "accesibilidad" ) String publicoObjetivo,
-			@QueryParam( "ordenar" ) String order, @QueryParam( "asc" ) Integer asc )
+			@QueryParam( "accesibilidad" ) String accesoEspecial,
+			@QueryParam( "clasificacion" ) String publicoObjetivo,
+			@QueryParam( "orderBy" ) List<String> order, @QueryParam( "asc" ) Integer asc )
 	{
 		List<Funcion> list;
 		FuncionTM tm = new FuncionTM( getPath( ) );
 		
 		try
 		{
-			list = tm.generarReporte1( nombreCategoria, nombreCompania, ciudad, pais, nombreEspectaculo, idioma, fechaInicio, fechaFin, duracionInicio, duracionFin, lugar, accesoEspecial, publicoObjetivo, order, asc == 1 );
+			list = tm.generarReporte1( nombreCategoria, nombreCompania, ciudad, pais, nombreEspectaculo, idioma, fechaInicio, fechaFin, duracionInicio, duracionFin, lugar, accesoEspecial, publicoObjetivo, order, asc == null || asc == 1 );
 		}
 		catch( SQLException e )
 		{

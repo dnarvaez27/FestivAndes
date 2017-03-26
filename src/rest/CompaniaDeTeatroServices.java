@@ -7,7 +7,6 @@ import vos.Espectaculo;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
@@ -16,34 +15,34 @@ import java.util.List;
 @Path( "companias" )
 @Produces( { MediaType.APPLICATION_JSON } )
 @Consumes( { MediaType.APPLICATION_JSON } )
-public class CompaniaDeTeatroServices
+public class CompaniaDeTeatroServices extends Services
 {
-	@Context
-	private ServletContext context;
-	
-	private String getPath( )
+	public CompaniaDeTeatroServices( )
 	{
-		return context.getRealPath( "WEB-INF/ConnectionData" );
 	}
 	
-	private String doErrorMessage( Exception e )
+	public CompaniaDeTeatroServices( ServletContext context )
 	{
-		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
+		super( context );
 	}
 	
 	@POST
-	public Response createCompaniaDeTeatro( Long id, String password, CompaniaDeTeatro accesibilidad )
+	public Response createCompaniaDeTeatro( CompaniaDeTeatro compania,
+	                                        @HeaderParam( "id" ) Long id,
+	                                        @HeaderParam( "password" ) String password )
 	{
+		System.out.println( compania.getFechaLlegada( ) );
+		
 		CompaniaDeTeatroTM tm = new CompaniaDeTeatroTM( getPath( ) );
 		try
 		{
-			accesibilidad = tm.createCompaniaDeTeatro( id, password, accesibilidad );
+			compania = tm.createCompaniaDeTeatro( id, password, compania );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( accesibilidad ).build( );
+		return Response.status( 200 ).entity( compania ).build( );
 	}
 	
 	@GET
@@ -97,14 +96,13 @@ public class CompaniaDeTeatroServices
 	}
 	
 	@DELETE
-	@Path( "{id}/{tipo}" )
-	public Response deleteCompaniaDeTeatro(
-			@PathParam( "id" ) Long id, @PathParam( "tipo" ) String tipo )
+	@Path( "{id}" )
+	public Response deleteCompaniaDeTeatro( @PathParam( "id" ) Long id )
 	{
 		CompaniaDeTeatroTM tm = new CompaniaDeTeatroTM( getPath( ) );
 		try
 		{
-			tm.deleteCompaniaDeTeatro( id, tipo );
+			tm.deleteCompaniaDeTeatro( id );
 		}
 		catch( SQLException e )
 		{

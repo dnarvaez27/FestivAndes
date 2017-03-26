@@ -133,14 +133,14 @@ public class UsuarioTM extends TransactionManager
 		return us;
 	}
 	
-	public void deleteUsuario( Long id ) throws SQLException
+	public void deleteUsuario( Long id, String tipo ) throws SQLException
 	{
 		DAOUsuario dao = new DAOUsuario( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.deleteUsuario( id );
+			dao.deleteUsuario( id, tipo );
 		}
 		catch( SQLException e )
 		{

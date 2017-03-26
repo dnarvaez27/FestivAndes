@@ -7,7 +7,6 @@ import vos.UsuarioRegistrado;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
@@ -16,19 +15,15 @@ import java.util.List;
 @Path( "registrados" )
 @Produces( { MediaType.APPLICATION_JSON } )
 @Consumes( { MediaType.APPLICATION_JSON } )
-public class UsuarioRegistradoServices
+public class UsuarioRegistradoServices extends Services
 {
-	@Context
-	private ServletContext context;
-	
-	private String getPath( )
+	public UsuarioRegistradoServices( )
 	{
-		return context.getRealPath( "WEB-INF/ConnectionData" );
 	}
 	
-	private String doErrorMessage( Exception e )
+	public UsuarioRegistradoServices( ServletContext context )
 	{
-		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
+		super( context );
 	}
 	
 	@POST

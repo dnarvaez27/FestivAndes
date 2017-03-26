@@ -14,10 +14,12 @@ public class Usuario
 	
 	public static final String USUARIO_COMPANIA = "Compania De Teatro";
 	
+	public static final Usuario UNREGISTERED_USER = new Usuario( -1L, "NR", null, "1234", USUARIO_NO_REGISTRADO, USUARIO_NO_REGISTRADO, -1L );
+	
 	@JsonProperty( value = "identificacion" )
 	protected Long identificacion;
 	
-	@JsonProperty( value = "tipo_identificacion" )
+	@JsonProperty( value = "tipoIdentificacion" )
 	protected String tipoIdentificacion;
 	
 	@JsonProperty( value = "email" )
@@ -38,6 +40,17 @@ public class Usuario
 	public Usuario( )
 	{
 		
+	}
+	
+	public Usuario( Long identificacion, String tipoIdentificacion, String email, String password, String nombre, String rol, Long idFestival )
+	{
+		this.identificacion = identificacion;
+		this.tipoIdentificacion = tipoIdentificacion;
+		this.email = email;
+		this.password = password;
+		this.nombre = nombre;
+		this.rol = rol;
+		this.idFestival = idFestival;
 	}
 	
 	/**

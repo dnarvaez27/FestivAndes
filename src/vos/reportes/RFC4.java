@@ -2,6 +2,7 @@ package vos.reportes;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,125 +11,122 @@ import java.util.List;
  */
 public class RFC4
 {
+	@JsonProperty( value = "espectaculo" )
+	private String espectaculo;
+	
 	@JsonProperty( value = "producido" )
-	private List<P1> p1;
+	private List<P1> producido;
 	
 	@JsonProperty( value = "ocupacion" )
-	private List<P2> p2;
+	private List<P2> ocupacion;
 	
 	public RFC4( )
 	{
-		p1 = new LinkedList<>( );
-		p2 = new LinkedList<>( );
+		producido = new LinkedList<>( );
+		ocupacion = new LinkedList<>( );
 	}
 	
 	/**
-	 * Retrieves the p1 of the RFC4
+	 * Retrieves the espectaculo of the RFC4
 	 *
-	 * @return The p1 of the RFC4
+	 * @return The espectaculo of the RFC4
 	 */
-	public List<P1> getP1( )
+	public String getEspectaculo( )
 	{
-		return p1;
+		return espectaculo;
 	}
 	
 	/**
-	 * Updates the p1 of the RFC4 by the one given by parameter
+	 * Updates the espectaculo of the RFC4 by the one given by parameter
 	 *
-	 * @param p1 The new p1 of the RFC4
+	 * @param espectaculo The new espectaculo of the RFC4
 	 */
-	public void setP1( List<P1> p1 )
+	public void setEspectaculo( String espectaculo )
 	{
-		this.p1 = p1;
+		this.espectaculo = espectaculo;
 	}
 	
 	/**
-	 * Retrieves the p2 of the RFC4
+	 * Retrieves the producido of the RFC4
 	 *
-	 * @return The p2 of the RFC4
+	 * @return The producido of the RFC4
 	 */
-	public List<P2> getP2( )
+	public List<P1> getProducido( )
 	{
-		return p2;
+		return producido;
 	}
 	
 	/**
-	 * Updates the p2 of the RFC4 by the one given by parameter
+	 * Updates the producido of the RFC4 by the one given by parameter
 	 *
-	 * @param p2 The new p2 of the RFC4
+	 * @param producido The new producido of the RFC4
 	 */
-	public void setP2( List<P2> p2 )
+	public void setProducido( List<P1> producido )
 	{
-		this.p2 = p2;
+		this.producido = producido;
+	}
+	
+	/**
+	 * Retrieves the ocupacion of the RFC4
+	 *
+	 * @return The ocupacion of the RFC4
+	 */
+	public List<P2> getOcupacion( )
+	{
+		return ocupacion;
+	}
+	
+	/**
+	 * Updates the ocupacion of the RFC4 by the one given by parameter
+	 *
+	 * @param ocupacion The new ocupacion of the RFC4
+	 */
+	public void setOcupacion( List<P2> ocupacion )
+	{
+		this.ocupacion = ocupacion;
 	}
 	
 	public class P1
 	{
-		@JsonProperty( value = "nombre_espectaculo" )
-		private String nombreEspectaculo;
-		
-		@JsonProperty( value = "id_funcion" )
-		private Long idFuncion;
+		@JsonProperty( value = "fecha" )
+		private Date fecha;
 		
 		@JsonProperty( value = "lugar" )
 		private String lugar;
 		
-		@JsonProperty( value = "nombre_localidad" )
-		private String nombreLocalidad;
-		
-		@JsonProperty( value = "tipo_usuario" )
+		@JsonProperty( value = "tipoUsuario" )
 		private String tipoUsuario;
 		
-		@JsonProperty( value = "numero_boletas_vendidas" )
-		private Integer numBoletasVendidas;
+		@JsonProperty( value = "boletasVendidas" )
+		private Integer boletasVendidas;
 		
-		@JsonProperty( value = "total_vendido" )
-		private Double totalVendido;
+		@JsonProperty( value = "total" )
+		private Double total;
 		
 		/**
-		 * Retrieves the nombreEspectaculo of the RFC4
+		 * Retrieves the fecha of the P1
 		 *
-		 * @return The nombreEspectaculo of the RFC4
+		 * @return The fecha of the P1
 		 */
-		public String getNombreEspectaculo( )
+		public Date getFecha( )
 		{
-			return nombreEspectaculo;
+			return fecha;
 		}
 		
 		/**
-		 * Updates the nombreEspectaculo of the RFC4 by the one given by parameter
+		 * Updates the fecha of the P1 by the one given by parameter
 		 *
-		 * @param nombreEspectaculo The new nombreEspectaculo of the RFC4
+		 * @param fecha The new fecha of the P1
 		 */
-		public void setNombreEspectaculo( String nombreEspectaculo )
+		public void setFecha( Date fecha )
 		{
-			this.nombreEspectaculo = nombreEspectaculo;
+			this.fecha = fecha;
 		}
 		
 		/**
-		 * Retrieves the idFuncion of the RFC4
+		 * Retrieves the lugar of the P1
 		 *
-		 * @return The idFuncion of the RFC4
-		 */
-		public Long getIdFuncion( )
-		{
-			return idFuncion;
-		}
-		
-		/**
-		 * Updates the idFuncion of the RFC4 by the one given by parameter
-		 *
-		 * @param idFuncion The new idFuncion of the RFC4
-		 */
-		public void setIdFuncion( Long idFuncion )
-		{
-			this.idFuncion = idFuncion;
-		}
-		
-		/**
-		 * Retrieves the lugar of the RFC4
-		 *
-		 * @return The lugar of the RFC4
+		 * @return The lugar of the P1
 		 */
 		public String getLugar( )
 		{
@@ -136,9 +134,9 @@ public class RFC4
 		}
 		
 		/**
-		 * Updates the lugar of the RFC4 by the one given by parameter
+		 * Updates the lugar of the P1 by the one given by parameter
 		 *
-		 * @param lugar The new lugar of the RFC4
+		 * @param lugar The new lugar of the P1
 		 */
 		public void setLugar( String lugar )
 		{
@@ -146,29 +144,9 @@ public class RFC4
 		}
 		
 		/**
-		 * Retrieves the nombreLocalidad of the RFC4
+		 * Retrieves the tipoUsuario of the P1
 		 *
-		 * @return The nombreLocalidad of the RFC4
-		 */
-		public String getNombreLocalidad( )
-		{
-			return nombreLocalidad;
-		}
-		
-		/**
-		 * Updates the nombreLocalidad of the RFC4 by the one given by parameter
-		 *
-		 * @param nombreLocalidad The new nombreLocalidad of the RFC4
-		 */
-		public void setNombreLocalidad( String nombreLocalidad )
-		{
-			this.nombreLocalidad = nombreLocalidad;
-		}
-		
-		/**
-		 * Retrieves the tipoUsuario of the RFC4
-		 *
-		 * @return The tipoUsuario of the RFC4
+		 * @return The tipoUsuario of the P1
 		 */
 		public String getTipoUsuario( )
 		{
@@ -176,9 +154,9 @@ public class RFC4
 		}
 		
 		/**
-		 * Updates the tipoUsuario of the RFC4 by the one given by parameter
+		 * Updates the tipoUsuario of the P1 by the one given by parameter
 		 *
-		 * @param tipoUsuario The new tipoUsuario of the RFC4
+		 * @param tipoUsuario The new tipoUsuario of the P1
 		 */
 		public void setTipoUsuario( String tipoUsuario )
 		{
@@ -186,72 +164,72 @@ public class RFC4
 		}
 		
 		/**
-		 * Retrieves the numBoletasVendidas of the RFC4
+		 * Retrieves the boletasVendidas of the P1
 		 *
-		 * @return The numBoletasVendidas of the RFC4
+		 * @return The boletasVendidas of the P1
 		 */
-		public Integer getNumBoletasVendidas( )
+		public Integer getBoletasVendidas( )
 		{
-			return numBoletasVendidas;
+			return boletasVendidas;
 		}
 		
 		/**
-		 * Updates the numBoletasVendidas of the RFC4 by the one given by parameter
+		 * Updates the boletasVendidas of the P1 by the one given by parameter
 		 *
-		 * @param numBoletasVendidas The new numBoletasVendidas of the RFC4
+		 * @param boletasVendidas The new boletasVendidas of the P1
 		 */
-		public void setNumBoletasVendidas( Integer numBoletasVendidas )
+		public void setBoletasVendidas( Integer boletasVendidas )
 		{
-			this.numBoletasVendidas = numBoletasVendidas;
+			this.boletasVendidas = boletasVendidas;
 		}
 		
 		/**
-		 * Retrieves the totalVendido of the RFC4
+		 * Retrieves the total of the P1
 		 *
-		 * @return The totalVendido of the RFC4
+		 * @return The total of the P1
 		 */
-		public Double getTotalVendido( )
+		public Double getTotal( )
 		{
-			return totalVendido;
+			return total;
 		}
 		
 		/**
-		 * Updates the totalVendido of the RFC4 by the one given by parameter
+		 * Updates the total of the P1 by the one given by parameter
 		 *
-		 * @param totalVendido The new totalVendido of the RFC4
+		 * @param total The new total of the P1
 		 */
-		public void setTotalVendido( Double totalVendido )
+		public void setTotal( Double total )
 		{
-			this.totalVendido = totalVendido;
+			this.total = total;
 		}
 	}
 	
 	public class P2
 	{
-		@JsonProperty( value = "id_lugar" )
-		private Long idLugar;
+		@JsonProperty( value = "lugar" )
+		private String lugar;
 		
-		@JsonProperty( value = "porcentaje_ocupacion" )
+		@JsonProperty( value = "porcentajeOcupacion" )
 		private Double porcentajeOcupacion;
 		
 		/**
-		 * Retrieves the idLugar of the P2
+		 * Retrieves the lugar of the P2
 		 *
-		 * @return The idLugar of the P2
+		 * @return The lugar of the P2
 		 */
-		public Long getIdLugar( )
+		public String getLugar( )
 		{
-			return idLugar;
+			return lugar;
 		}
 		
 		/**
-		 * Updates the idLugar of the P2 by the one given by parameter
+		 * Updates the lugar of the P2 by the one given by parameter
 		 *
-		 * @param idLugar The new idLugar of the P2
+		 * @param lugar The new lugar of the P2
 		 */
-		public void setIdLugar( Long idLugar )
+		public void setLugar( String lugar )
 		{
-			this.idLugar = idLugar;
+			this.lugar = lugar;
 		}
 		
 		/**

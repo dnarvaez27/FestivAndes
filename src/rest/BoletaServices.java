@@ -5,7 +5,6 @@ import vos.Boleta;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
@@ -14,23 +13,21 @@ import java.util.List;
 @Path( "boletas" )
 @Produces( { MediaType.APPLICATION_JSON } )
 @Consumes( { MediaType.APPLICATION_JSON } )
-public class BoletaServices
+public class BoletaServices extends Services
 {
-	@Context
-	private ServletContext context;
-	
-	private String getPath( )
+	public BoletaServices( )
 	{
-		return context.getRealPath( "WEB-INF/ConnectionData" );
 	}
 	
-	private String doErrorMessage( Exception e )
+	public BoletaServices( ServletContext context )
 	{
-		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
+		super( context );
 	}
 	
 	@POST
-	public Response createBoleta( Long id, String password, Boleta accesibilidad )
+	public Response createBoleta( Boleta accesibilidad,
+	                              @HeaderParam( "id" ) Long id,
+	                              @HeaderParam( "password" ) String password )
 	{
 		BoletaTM tm = new BoletaTM( getPath( ) );
 		try

@@ -1,5 +1,6 @@
 package tm.intermediate;
 
+import dao.DAOGenero;
 import dao.intermediate.DAOEspectaculoGenero;
 import tm.TransactionManager;
 import vos.Espectaculo;
@@ -18,11 +19,17 @@ public class EspectaculoGeneroTM extends TransactionManager
 	public void createEspectaculoGenero( Long idEspectaculo, Long idGenero ) throws SQLException
 	{
 		DAOEspectaculoGenero dao = new DAOEspectaculoGenero( );
+		DAOGenero daoGenero = new DAOGenero( );
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
+			daoGenero.setConnection( this.connection );
 			dao.setConnection( this.connection );
+			//TODO COMO SE CREA UN GENERO?
 			dao.createEntryEG( idEspectaculo, idGenero );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )

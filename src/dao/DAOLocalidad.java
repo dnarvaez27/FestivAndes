@@ -45,9 +45,9 @@ public class DAOLocalidad extends DAO
 		ResultSet rs = s.executeQuery( );
 		while( rs.next( ) )
 		{
-			list.add( resultToLocalidad( rs ) );
+			list.add( resultToBasicLocalidad( rs ) );
 		}
-		
+		rs.close( );
 		s.close( );
 		return list;
 	}
@@ -66,7 +66,7 @@ public class DAOLocalidad extends DAO
 		ResultSet rs = s.executeQuery( );
 		if( rs.next( ) )
 		{
-			localidad = resultToLocalidad( rs );
+			localidad = resultToBasicLocalidad( rs );
 		}
 		s.close( );
 		return localidad;
@@ -98,11 +98,30 @@ public class DAOLocalidad extends DAO
 		s.close( );
 	}
 	
-	public static Localidad resultToLocalidad( ResultSet rs ) throws SQLException
+	public static Localidad resultToBasicLocalidad( ResultSet rs ) throws SQLException
 	{
 		Localidad l = new Localidad( );
 		l.setId( rs.getLong( "id" ) );
 		l.setNombre( rs.getString( "nombre" ) );
+		return l;
+	}
+	
+	public static Localidad resultToLocalidad( ResultSet rs, int datos ) throws SQLException
+	{
+		Localidad l = resultToBasicLocalidad( rs );
+		
+		switch( datos )
+		{
+			case 3:
+				l.setCosto( rs.getFloat( "costo" ) );
+			case 1:
+				l.setCapacidad( rs.getInt( "capacidad" ) );
+				l.setEsNumerado( rs.getInt( "es_numerado" ) );
+				break;
+			case 2:
+				l.setCosto( rs.getFloat( "costo" ) );
+				break;
+		}
 		return l;
 	}
 }

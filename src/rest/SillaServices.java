@@ -1,11 +1,11 @@
 package rest;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import tm.SillaTM;
 import vos.Silla;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
@@ -14,27 +14,29 @@ import java.util.List;
 @Path( "sillas" )
 @Produces( { MediaType.APPLICATION_JSON } )
 @Consumes( { MediaType.APPLICATION_JSON } )
-public class SillaServices
+public class SillaServices extends Services
 {
-	@Context
-	private ServletContext context;
+	@JsonIgnore
+	private Long idLugar;
 	
-	private String getPath( )
+	public SillaServices( )
 	{
-		return context.getRealPath( "WEB-INF/ConnectionData" );
 	}
 	
-	private String doErrorMessage( Exception e )
+	public SillaServices( ServletContext context, Long idLugar )
 	{
-		return "{ \"ERROR\": \"" + e.getMessage( ) + "\"}";
+		super( context );
+		this.idLugar = idLugar;
 	}
 	
 	@POST
-	public Response createSilla( Silla silla )
+	public Response createSilla( Silla silla, @PathParam( "idLocalidad" ) Long idLocalidad )
 	{
 		SillaTM tm = new SillaTM( getPath( ) );
 		try
 		{
+			silla.setIdLocalidad( idLocalidad );
+			silla.setIdLugar( idLugar );
 			silla = tm.createSilla( silla );
 		}
 		catch( SQLException e )
@@ -45,7 +47,24 @@ public class SillaServices
 	}
 	
 	@GET
-	public Response getSilla( )
+	public Response getSillasFrom( @PathParam( "idLocalidad" ) Long idLocalidad )
+	{
+		List<Silla> list;
+		SillaTM tm = new SillaTM( getPath( ) );
+		try
+		{
+			list = tm.getSillasFrom( idLugar, idLocalidad );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	@GET
+	@Path( "all" )
+	public Response getSillas( )
 	{
 		List<Silla> list;
 		SillaTM tm = new SillaTM( getPath( ) );
@@ -61,10 +80,9 @@ public class SillaServices
 	}
 	
 	@GET
-	@Path( "{id_lugar}/{id_localidad}/{numero_fila}/{numero_silla}" )
+	@Path( "{numero_fila}/{numero_silla}" )
 	public Response getSilla(
-			@PathParam( "id_lugar" ) Long id_lugar,
-			@PathParam( "id_localidad" ) Long id_localidad,
+			@PathParam( "idLocalidad" ) Long id_localidad,
 			@PathParam( "numero_fila" ) Integer numero_fila,
 			@PathParam( "numero_silla" ) Integer numero_silla )
 	{
@@ -72,7 +90,7 @@ public class SillaServices
 		SillaTM tm = new SillaTM( getPath( ) );
 		try
 		{
-			pSilla = tm.getSilla( numero_silla, numero_fila, id_lugar, id_localidad );
+			pSilla = tm.getSilla( numero_silla, numero_fila, idLugar, id_localidad );
 		}
 		catch( SQLException e )
 		{
@@ -82,10 +100,9 @@ public class SillaServices
 	}
 	
 	@PUT
-	@Path( "{id_lugar}/{id_localidad}/{numero_fila}/{numero_silla}" )
+	@Path( "{numero_fila}/{numero_silla}" )
 	public Response updateSilla(
-			@PathParam( "id_lugar" ) Long id_lugar,
-			@PathParam( "id_localidad" ) Long id_localidad,
+			@PathParam( "idLocalidad" ) Long id_localidad,
 			@PathParam( "numero_fila" ) Integer numero_fila,
 			@PathParam( "numero_silla" ) Integer numero_silla, Silla pSilla )
 	{
@@ -93,7 +110,9 @@ public class SillaServices
 		SillaTM tm = new SillaTM( getPath( ) );
 		try
 		{
-			l = tm.updateSilla( numero_silla, numero_fila, id_lugar, id_localidad, pSilla );
+			pSilla.setIdLugar( idLugar );
+			pSilla.setIdLocalidad( id_localidad );
+			l = tm.updateSilla( numero_silla, numero_fila, idLugar, id_localidad, pSilla );
 		}
 		catch( SQLException e )
 		{
@@ -103,17 +122,16 @@ public class SillaServices
 	}
 	
 	@DELETE
-	@Path( "{id_lugar}/{id_localidad}/{numero_fila}/{numero_silla}" )
+	@Path( "{numero_fila}/{numero_silla}" )
 	public Response deleteSilla(
-			@PathParam( "id_lugar" ) Long id_lugar,
-			@PathParam( "id_localidad" ) Long id_localidad,
+			@PathParam( "idLocalidad" ) Long id_localidad,
 			@PathParam( "numero_fila" ) Integer numero_fila,
 			@PathParam( "numero_silla" ) Integer numero_silla )
 	{
 		SillaTM tm = new SillaTM( getPath( ) );
 		try
 		{
-			tm.deleteSilla( numero_silla, numero_fila, id_lugar, id_localidad );
+			tm.deleteSilla( numero_silla, numero_fila, idLugar, id_localidad );
 		}
 		catch( SQLException e )
 		{

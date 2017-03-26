@@ -22,7 +22,7 @@ public class DAOLugarLocalidad extends DAO
 		sql.append( "( id_lugar, id_localidad, es_numerado, capacidad )" );
 		sql.append( "VALUES ( " );
 		sql.append( String.format( "%s, ", ll.getIdLugar( ) ) );
-		sql.append( String.format( "%s ", ll.getIdLocalidad( ) ) );
+		sql.append( String.format( "%s, ", ll.getIdLocalidad( ) ) );
 		sql.append( String.format( "%s, ", ll.getEsNumerada( ) ) );
 		sql.append( String.format( "%s ", ll.getCapacidad( ) ) );
 		sql.append( ") " );
@@ -46,7 +46,7 @@ public class DAOLugarLocalidad extends DAO
 		ResultSet rs = s.executeQuery( );
 		while( rs.next( ) )
 		{
-			list.add( DAOLocalidad.resultToLocalidad( rs ) );
+			list.add( DAOLocalidad.resultToLocalidad( rs, 1 ) );
 		}
 		rs.close( );
 		s.close( );
@@ -87,7 +87,7 @@ public class DAOLugarLocalidad extends DAO
 		ResultSet rs = s.executeQuery( );
 		if( rs.next( ) )
 		{
-			return DAOLocalidad.resultToLocalidad( rs );
+			return DAOLocalidad.resultToLocalidad( rs, 1 );
 		}
 		return null;
 	}
@@ -108,6 +108,21 @@ public class DAOLugarLocalidad extends DAO
 			return DAOLugar.restultToAccesibildiad( rs );
 		}
 		return null;
+	}
+	
+	public LugarLocalidad updateLugarLocalidad( Long idLugar, Long idLocalidad, LugarLocalidad lugarLocalidad )
+	{
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "UPDATE LUGAR_LOCALIDAD " );
+		sql.append( "SET " );
+		sql.append( String.format( "es_numerado = %s, ", lugarLocalidad.getEsNumerada( ) ) );
+		sql.append( String.format( "capacidad = %s ", lugarLocalidad.getCapacidad( ) ) );
+		sql.append( String.format( "WHERE id_lugar = %s ", idLugar ) );
+		sql.append( String.format( "  AND id_localidad = %s ", idLocalidad ) );
+		
+		lugarLocalidad.setIdLocalidad( idLocalidad );
+		lugarLocalidad.setIdLugar( idLugar );
+		return lugarLocalidad;
 	}
 	
 	public void deleteEntryLugarLocalidad( Long idLugar, Long idLocalidad ) throws SQLException

@@ -1,6 +1,10 @@
 package dao.intermediate;
 
 import dao.DAO;
+import dao.DAOFuncion;
+import dao.DAOLocalidad;
+import vos.Funcion;
+import vos.Localidad;
 import vos.intermediate.CostoLocalidad;
 
 import java.sql.PreparedStatement;
@@ -21,7 +25,7 @@ public class DAOCostoLocalidad extends DAO
 		sql.append( "INSERT INTO COSTO_LOCALIDAD " );
 		sql.append( "( fecha, id_lugar, id_localidad, costo )" );
 		sql.append( "VALUES ( " );
-		sql.append( String.format( "%s, ", costoLocalidad.getFecha( ) ) );
+		sql.append( String.format( "%s, ", toDate( costoLocalidad.getFecha( ) ) ) );
 		sql.append( String.format( "%s, ", costoLocalidad.getIdLugar( ) ) );
 		sql.append( String.format( "%s, ", costoLocalidad.getIdLocalidad( ) ) );
 		sql.append( String.format( "%s ", costoLocalidad.getCosto( ) ) );
@@ -33,19 +37,15 @@ public class DAOCostoLocalidad extends DAO
 		return costoLocalidad;
 	}
 	
-	public List<CostoLocalidad> getCostoLocalidadesFromFuncion( Date fecha, Long idLugar ) throws SQLException
+	public List<CostoLocalidad> getCostosLocalidades( ) throws SQLException
 	{
 		List<CostoLocalidad> list = new LinkedList<>( );
-		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
 		sql.append( "FROM COSTO_LOCALIDAD " );
-		sql.append( String.format( "WHERE fecha = %s", fecha ) );
-		sql.append( String.format( "AND id_lugar = %s", idLugar ) );
-		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		ResultSet rs = s.executeQuery( );
-		while( rs.next( ) )
+		if( rs.next( ) )
 		{
 			list.add( resultToCostoLocalidad( rs ) );
 		}
@@ -54,69 +54,87 @@ public class DAOCostoLocalidad extends DAO
 		return list;
 	}
 	
-	public List<CostoLocalidad> getCostoLocalidadFromLocalidad( Long idLocalidad ) throws SQLException
+	public List<Localidad> getCostoLocalidadesFromFuncion( Date fecha, Long idLugar ) throws SQLException
 	{
-		List<CostoLocalidad> list = new LinkedList<>( );
+		List<Localidad> list = new LinkedList<>( );
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT " );
+		sql.append( "  NVL( CAPACIDAD, -1 )   AS CAPACIDAD, " );
+		sql.append( "  L.id                   AS ID, " );
+		sql.append( "  L.nombre               AS nombre, " );
+		sql.append( "  COSTO, " );
+		sql.append( "  NVL( ES_NUMERADO, 0 )  AS ES_NUMERADO " );
+		sql.append( "FROM ( COSTO_LOCALIDAD CL RIGHT JOIN LOCALIDADES L " );
+		sql.append( "    ON CL.id_localidad = L.id " );
+		sql.append( "  LEFT JOIN LUGAR_LOCALIDAD LL " );
+		sql.append( "    ON L.ID = LL.ID_LOCALIDAD " );
+		sql.append( "       AND CL.ID_LUGAR = LL.ID_LUGAR ) " );
+		sql.append( String.format( "WHERE CL.fecha = %s ", toDate( fecha ) ) );
+		sql.append( String.format( "AND Cl.id_lugar = %s ", idLugar ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		while( rs.next( ) )
+		{
+			list.add( DAOLocalidad.resultToLocalidad( rs, 3 ) );
+		}
+		rs.close( );
+		s.close( );
+		return list;
+	}
+	
+	public List<Funcion> getCostoLocalidadFromLocalidad( Long idLocalidad ) throws SQLException
+	{
+		List<Funcion> list = new LinkedList<>( );
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM COSTO_LOCALIDAD " );
+		sql.append( "FROM COSTO_LOCALIDAD CL INNER JOIN FUNCIONES F " );
+		sql.append( "                     ON CL.fecha = F.fecha " );
+		sql.append( "                     AND CL.id_lugar = F.id_lugar " );
 		sql.append( String.format( "WHERE id_localidad = %s", idLocalidad ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		ResultSet rs = s.executeQuery( );
 		while( rs.next( ) )
 		{
-			list.add( resultToCostoLocalidad( rs ) );
+			list.add( DAOFuncion.resultToFuncion( rs ) );
 		}
 		rs.close( );
 		s.close( );
 		return list;
 	}
 	
-	
-	public CostoLocalidad getCostoLocalidadFromFuncion( Date fecha, Long idLugar, Long idLocalidad ) throws SQLException
+	public Localidad getCostoLocalidadFromFuncion( Date fecha, Long idLugar, Long idLocalidad ) throws SQLException
 	{
-		CostoLocalidad costoLocalidad = null;
+		Localidad costoLocalidad = null;
 		
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELECT * " );
-		sql.append( "FROM COSTO_LOCALIDAD " );
-		sql.append( String.format( "WHERE fecha = %s", fecha ) );
-		sql.append( String.format( "AND id_lugar = %s", idLugar ) );
-		sql.append( String.format( "AND id_localidad = %s", idLocalidad ) );
+		sql.append( "SELECT " );
+		sql.append( "  NVL( CAPACIDAD, -1 )   AS CAPACIDAD, " );
+		sql.append( "  L.id                   AS ID, " );
+		sql.append( "  L.nombre               AS nombre, " );
+		sql.append( "  COSTO, " );
+		sql.append( "  NVL( ES_NUMERADO, 0 )  AS ES_NUMERADO " );
+		sql.append( "FROM ( COSTO_LOCALIDAD CL RIGHT JOIN LOCALIDADES L " );
+		sql.append( "    ON CL.id_localidad = L.id " );
+		sql.append( "  LEFT JOIN LUGAR_LOCALIDAD LL " );
+		sql.append( "    ON L.ID = LL.ID_LOCALIDAD " );
+		sql.append( "       AND CL.ID_LUGAR = LL.ID_LUGAR ) " );
+		sql.append( String.format( "WHERE CL.fecha = %s ", toDate( fecha ) ) );
+		sql.append( String.format( "AND CL.id_lugar = %s ", idLugar ) );
+		sql.append( String.format( "AND CL.id_localidad = %s ", idLocalidad ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		ResultSet rs = s.executeQuery( );
 		if( rs.next( ) )
 		{
-			costoLocalidad = resultToCostoLocalidadExtended( rs );
+			costoLocalidad = DAOLocalidad.resultToLocalidad( rs, 3 );
 		}
 		rs.close( );
 		s.close( );
 		return costoLocalidad;
-	}
-	
-	public List<CostoLocalidad.Extended> getCostoLocalidadesFromFuncionExtended( Date fecha, Long idLugar ) throws SQLException
-	{
-		List<CostoLocalidad.Extended> list = new LinkedList<>( );
-		
-		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELECT * " );
-		sql.append( "FROM COSTO_LOCALIDAD CL INNER JOIN LOCALIDADES L " );
-		sql.append( "                      ON CL.id_localidad = L.id " );
-		sql.append( String.format( "WHERE fecha = %s", fecha ) );
-		sql.append( String.format( "AND id_lugar = %s", idLugar ) );
-		
-		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
-		ResultSet rs = s.executeQuery( );
-		while( rs.next( ) )
-		{
-			list.add( resultToCostoLocalidadExtended( rs ) );
-		}
-		rs.close( );
-		s.close( );
-		return list;
 	}
 	
 	public CostoLocalidad updateCostoLocalidad( Date fecha, Long idLugar, Long idLocalidad, CostoLocalidad costoLocalidad ) throws SQLException
@@ -124,14 +142,9 @@ public class DAOCostoLocalidad extends DAO
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE COSTO_LOCALIDAD " );
 		sql.append( "SET " );
-		sql.append( String.format( "fecha = %s, ", costoLocalidad.getFecha( ) ) );
-		sql.append( String.format( "id_lugar = %s, ", costoLocalidad.getIdLugar( ) ) );
-		sql.append( String.format( "id_localidad = %s, ", costoLocalidad.getIdLocalidad( ) ) );
-		sql.append( String.format( "costo = %s = %s", costoLocalidad.getCosto( ) ) );
-		sql.append( "WHERE " );
-		sql.append( String.format( "fecha = %s AND ", fecha ) );
-		sql.append( String.format( "id_lugar = %s AND ", idLugar ) );
-		sql.append( String.format( "id_localidad = %s ", idLocalidad ) );
+		sql.append( String.format( "WHERE fecha = %s  ", fecha ) );
+		sql.append( String.format( "  AND id_lugar = %s ", idLugar ) );
+		sql.append( String.format( "  AND id_localidad = %s ", idLocalidad ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		s.execute( );
@@ -150,16 +163,6 @@ public class DAOCostoLocalidad extends DAO
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		s.execute( );
 		s.close( );
-	}
-	
-	private CostoLocalidad.Extended resultToCostoLocalidadExtended( ResultSet rs ) throws SQLException
-	{
-		CostoLocalidad.Extended extended = new CostoLocalidad.Extended( );
-		extended.setFecha( rs.getDate( "fecha" ) );
-		extended.setIdLugar( rs.getLong( "id_lugar" ) );
-		extended.setNombreLocalidad( rs.getString( "nombre_localidad" ) );
-		extended.setCosto( rs.getFloat( "costo" ) );
-		return extended;
 	}
 	
 	private CostoLocalidad resultToCostoLocalidad( ResultSet rs ) throws SQLException

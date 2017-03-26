@@ -36,9 +36,32 @@ public class Espectaculo
 	@JsonProperty( value = "reqs" )
 	private List<RequerimientoTecnico> reqs;
 	
+	@JsonProperty( value = "companias" )
+	private List<CompaniaDeTeatro> companias;
+	
 	public Espectaculo( )
 	{
 		
+	}
+	
+	/**
+	 * Retrieves the companias of the Espectaculo
+	 *
+	 * @return The companias of the Espectaculo
+	 */
+	public List<CompaniaDeTeatro> getCompanias( )
+	{
+		return companias;
+	}
+	
+	/**
+	 * Updates the companias of the Espectaculo by the one given by parameter
+	 *
+	 * @param companias The new companias of the Espectaculo
+	 */
+	public void setCompanias( List<CompaniaDeTeatro> companias )
+	{
+		this.companias = companias;
 	}
 	
 	public Long getId( )

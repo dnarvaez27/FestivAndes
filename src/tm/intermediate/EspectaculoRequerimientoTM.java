@@ -22,7 +22,7 @@ public class EspectaculoRequerimientoTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.createEntryEG( idEspectaculo, idRequerimiento );
+			dao.createEntryER( idEspectaculo, idRequerimiento );
 			connection.commit( );
 		}
 		catch( SQLException e )

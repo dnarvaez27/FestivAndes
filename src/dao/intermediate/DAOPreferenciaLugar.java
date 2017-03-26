@@ -57,7 +57,7 @@ public class DAOPreferenciaLugar extends DAO
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM PREFERENCIA_LUGARES P INNER JOIN USUARIOS_REGISTRADO U " );
+		sql.append( "FROM PREFERENCIA_LUGARES P INNER JOIN USUARIOS_REGISTRADOS U " );
 		sql.append( "                        ON P.id_usuario = U.identificacion " );
 		sql.append( String.format( "WHERE P.id_lugar = %s ", idLugar ) );
 		
@@ -81,7 +81,7 @@ public class DAOPreferenciaLugar extends DAO
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		ResultSet rs = s.executeQuery( );
-		while( rs.next( ) )
+		if( rs.next( ) )
 		{
 			return DAOLugar.restultToAccesibildiad( rs );
 		}
