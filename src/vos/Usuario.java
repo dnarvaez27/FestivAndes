@@ -22,7 +22,7 @@ public class Usuario
 	@JsonProperty( value = "tipoIdentificacion" )
 	protected String tipoIdentificacion;
 	
-	@JsonProperty( value = "email" )
+		@JsonProperty( value = "email" )
 	protected String email;
 	
 	@JsonProperty( value = "password" )

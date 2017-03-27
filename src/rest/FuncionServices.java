@@ -219,6 +219,7 @@ public class FuncionServices extends Services
 	
 	// REPORTES
 	@GET
+	@Path( "src" )
 	public Response generarReporte1(
 			@QueryParam( "nombre_categoria" ) String nombreCategoria,
 			@QueryParam( "nombre_compania" ) String nombreCompania,

@@ -43,7 +43,7 @@ public class OfrecenTM extends TransactionManager
 		}
 	}
 	
-	public List<Espectaculo> getEspectaculoFrom( Long idCompania ) throws SQLException
+	public List<Espectaculo> getEspectaculosFrom( Long idCompania ) throws SQLException
 	{
 		List<Espectaculo> list;
 		DAOOfrecen dao = new DAOOfrecen( );
@@ -71,6 +71,37 @@ public class OfrecenTM extends TransactionManager
 			closeDAO( dao );
 		}
 		return list;
+	}
+	
+	public Espectaculo getEspectaculoFrom( Long idCompania, Long idEspectaculo ) throws SQLException
+	{
+		Espectaculo espectaculo;
+		DAOOfrecen dao = new DAOOfrecen( );
+		try
+		{
+			this.connection = getConnection( );
+			dao.setConnection( this.connection );
+			espectaculo = dao.getEspectaculoFrom( idCompania, idEspectaculo );
+			connection.commit( );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException: " + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException: " + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return espectaculo;
+		
 	}
 	
 	public List<CompaniaDeTeatro> getCompaniasWhoOffer( Long idEspectaculo ) throws SQLException

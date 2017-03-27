@@ -1,6 +1,7 @@
 package rest;
 
 import tm.AccesibilidadTM;
+import tm.intermediate.LugarAccesibilidadTM;
 import vos.Accesibilidad;
 
 import javax.servlet.ServletContext;
@@ -40,6 +41,24 @@ public class AccesibilidadServices extends Services
 	}
 	
 	@GET
+	public Response getAccesibilidades( @PathParam( "idLugar" ) Long idLugar )
+	{
+		List<Accesibilidad> list;
+		LugarAccesibilidadTM tm = new LugarAccesibilidadTM( getPath( ) );
+		try
+		{
+			list = tm.getAccesibilidadsFromLugar( idLugar );
+		}
+		catch( SQLException e )
+		{
+			e.printStackTrace( );
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	@GET
+	@Path( "all" )
 	public Response getAccesibilidades( )
 	{
 		List<Accesibilidad> list;

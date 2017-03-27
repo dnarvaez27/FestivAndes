@@ -16,13 +16,13 @@ public class DAOBoleta extends DAO
 		super( );
 	}
 	
-	public Boleta createBoleta( Long id, String password, Boleta object ) throws SQLException
+	public Boleta createBoleta( Long id, String tipo, Boleta object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
 		sql.append( "FROM USUARIOS " );
 		sql.append( String.format( "WHERE identificacion = %s ", id ) );
-		sql.append( String.format( "AND password = '%s'", password ) );
+		sql.append( String.format( "AND tipo_identificacion = '%s' ", tipo ) );
 		sql.append( String.format( "AND ( rol = '%s'", Usuario.USUARIO_REGISTRADO ) );
 		sql.append( String.format( " OR rol = '%s' )", Usuario.USUARIO_NO_REGISTRADO ) );
 		
@@ -84,6 +84,27 @@ public class DAOBoleta extends DAO
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * FROM BOLETAS" );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		recursos.add( s );
+		ResultSet rs = s.executeQuery( );
+		while( rs.next( ) )
+		{
+			list.add( resultToBoleta( rs ) );
+		}
+		
+		s.close( );
+		return list;
+	}
+	
+	public List<Boleta> getBoletasFrom( Long idUsuario, String tipo ) throws SQLException
+	{
+		List<Boleta> list = new LinkedList<>( );
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT * FROM BOLETAS " );
+		sql.append( String.format( "WHERE id_usuario = %s ", idUsuario ) );
+		sql.append( String.format( "  AND id_tipo = '%s' ", tipo ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );

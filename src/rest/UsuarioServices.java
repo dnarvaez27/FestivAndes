@@ -56,14 +56,14 @@ public class UsuarioServices extends Services
 	}
 	
 	@GET
-	@Path( "{id}" )
-	public Response getUsuario( @PathParam( "id" ) Long id )
+	@Path( "{id}/{tipo}" )
+	public Response getUsuario( @PathParam( "id" ) Long id, @PathParam( "tipo" ) String tipo )
 	{
 		Usuario us;
 		UsuarioTM tm = new UsuarioTM( getPath( ) );
 		try
 		{
-			us = tm.getUsuario( id );
+			us = tm.getUsuario( id, tipo );
 		}
 		catch( SQLException e )
 		{

@@ -189,4 +189,10 @@ public class LugarServices extends Services
 	{
 		return new LocalidadServices( context );
 	}
+	
+	@Path( "{idLugar}/accesibilidades" )
+	public AccesibilidadServices getAccesibilidades( )
+	{
+		return new AccesibilidadServices( context );
+	}
 }

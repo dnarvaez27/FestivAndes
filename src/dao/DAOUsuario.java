@@ -59,14 +59,15 @@ public class DAOUsuario extends DAO
 		return list;
 	}
 	
-	public Usuario getUsuario( Long identificacion ) throws SQLException
+	public Usuario getUsuario( Long identificacion, String tipo ) throws SQLException
 	{
 		Usuario usuario = null;
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
 		sql.append( "FROM USUARIOS " );
-		sql.append( String.format( "WHERE identificacion = %s", identificacion ) );
+		sql.append( String.format( "WHERE identificacion = %s ", identificacion ) );
+		sql.append( String.format( "  AND tipo_identificacion = '%s' ", tipo ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );

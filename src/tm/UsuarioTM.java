@@ -73,7 +73,7 @@ public class UsuarioTM extends TransactionManager
 		return list;
 	}
 	
-	public Usuario getUsuario( Long id ) throws SQLException
+	public Usuario getUsuario( Long id, String tipo ) throws SQLException
 	{
 		Usuario us;
 		DAOUsuario dao = new DAOUsuario( );
@@ -81,7 +81,7 @@ public class UsuarioTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			us = dao.getUsuario( id );
+			us = dao.getUsuario( id, tipo );
 			connection.commit( );
 		}
 		catch( SQLException e )

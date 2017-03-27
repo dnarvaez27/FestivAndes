@@ -16,7 +16,7 @@ public class DAOUsuarioRegistrado extends DAO
 		super( );
 	}
 	
-	public UsuarioRegistrado createUsuarioRegistrado( Long id, String password, UsuarioRegistrado object ) throws SQLException
+	public UsuarioRegistrado createUsuarioRegistrado( UsuarioRegistrado object, Long id, String password ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
@@ -30,34 +30,22 @@ public class DAOUsuarioRegistrado extends DAO
 		if( rs.next( ) )
 		{
 			sql = new StringBuilder( );
-			sql.append( "INSERT INTO USUARIOS " );
-			sql.append( "( identificacion, tipo_identificacion, email, password, nombre, rol )" );
-			sql.append( "VALUES ( " );
-			sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
-			sql.append( String.format( "'%s', ", object.getTipoIdentificacion( ) ) );
-			sql.append( String.format( "'%s', ", object.getEmail( ) ) );
-			sql.append( String.format( "'%s', ", object.getPassword( ) ) );
-			sql.append( String.format( "'%s', ", object.getNombre( ) ) );
-			sql.append( String.format( "'%s', ", object.getIdentificacion( ) != -1 ? Usuario.USUARIO_REGISTRADO : Usuario.USUARIO_NO_REGISTRADO ) );
-			sql.append( "); " );
-			
-			s = connection.prepareCall( sql.toString( ) );
-			recursos.add( s );
-			s.execute( );
-			
-			sql = new StringBuilder( );
-			sql.append( "INSERT INTO USUARIOS_REGISTRADO " );
+			sql.append( "INSERT INTO USUARIOS_REGISTRADOS " );
 			sql.append( "( id_usuario, tipo_id, edad ) " );
 			sql.append( "VALUES " );
 			sql.append( "( " );
 			sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
 			sql.append( String.format( "'%s', ", object.getTipoIdentificacion( ) ) );
 			sql.append( String.format( "%s ", object.getEdad( ) ) );
-			sql.append( "); " );
+			sql.append( ") " );
 			
 			s = connection.prepareStatement( sql.toString( ) );
 			recursos.add( s );
 			s.execute( );
+		}
+		else
+		{
+			throw new SQLException( "No tiene permisos para agregar usuarios" );
 		}
 		s.close( );
 		return object;
@@ -69,7 +57,7 @@ public class DAOUsuarioRegistrado extends DAO
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM USUARIOS_REGISTRADO UR INNER JOIN USUARIOS U" );
+		sql.append( "FROM USUARIOS_REGISTRADOS UR INNER JOIN USUARIOS U" );
 		sql.append( "                             ON UR.id_usuario = U.identificacion " );
 		sql.append( "                             AND UR.tipo_id = U.tipo_identificacion " );
 		
@@ -91,7 +79,7 @@ public class DAOUsuarioRegistrado extends DAO
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM USUARIOS_REGISTRADO UR INNER JOIN USUARIOS U " );
+		sql.append( "FROM USUARIOS_REGISTRADOS UR INNER JOIN USUARIOS U " );
 		sql.append( "                             ON UR.id_usuario = U.identificacion " );
 		sql.append( "                             AND UR.tipo_id = U.tipo_identificacion " );
 		sql.append( String.format( "WHERE id_usuario = %s ", id ) );
@@ -123,7 +111,7 @@ public class DAOUsuarioRegistrado extends DAO
 		s.execute( );
 		
 		sql = new StringBuilder( );
-		sql.append( "UPDATE USUARIOS_REGISTRADO " );
+		sql.append( "UPDATE USUARIOS_REGISTRADOS " );
 		sql.append( String.format( "SET edad = %s ", object.getEdad( ) ) );
 		sql.append( String.format( "WHERE id_usuario = %s ", id ) );
 		sql.append( String.format( "AND tipo_id = '%s' ", tipo ) );
@@ -139,7 +127,7 @@ public class DAOUsuarioRegistrado extends DAO
 	public void deleteUsuarioRegistrado( Long id, String tipoId ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "DELETE FROM USUARIOS_REGISTRADO " );
+		sql.append( "DELETE FROM USUARIOS_REGISTRADOS " );
 		sql.append( String.format( "WHERE id_usuario = %s", id ) );
 		sql.append( String.format( "AND tipo_id = '%s'", tipoId ) );
 		
@@ -167,6 +155,8 @@ public class DAOUsuarioRegistrado extends DAO
 		object.setIdentificacion( rs.getLong( "id_usuario" ) );
 		object.setTipoIdentificacion( rs.getString( "tipo_id" ) );
 		object.setEdad( rs.getInt( "edad" ) );
+		object.setIdFestival( rs.getLong( "id_festival" ) );
+		object.setRol( rs.getString( "rol" ) );
 		return object;
 	}
 }

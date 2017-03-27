@@ -2,6 +2,7 @@ package utilities;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -18,7 +19,12 @@ public class DateFormatter
 	{
 		try
 		{
-			return dateFormat.parse( date );
+			Date d = dateFormat.parse( date );
+			Calendar c = Calendar.getInstance( );
+			c.setTime( d );
+			c.add( Calendar.DATE, -1 );
+			d = c.getTime( );
+			return d;
 		}
 		catch( ParseException e )
 		{

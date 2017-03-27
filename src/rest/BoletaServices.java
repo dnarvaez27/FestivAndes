@@ -25,23 +25,43 @@ public class BoletaServices extends Services
 	}
 	
 	@POST
-	public Response createBoleta( Boleta accesibilidad,
-	                              @HeaderParam( "id" ) Long id,
-	                              @HeaderParam( "password" ) String password )
+	public Response createBoleta( Boleta boleta,
+	                              @PathParam( "idUsuario" ) Long idUsuario,
+	                              @PathParam( "idTipo" ) String tipo )
 	{
 		BoletaTM tm = new BoletaTM( getPath( ) );
 		try
 		{
-			accesibilidad = tm.createBoleta( id, password, accesibilidad );
+			boleta.setTipoIdUsuario( tipo );
+			boleta.setIdUsuario( idUsuario );
+			boleta = tm.createBoleta( idUsuario, tipo, boleta );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( accesibilidad ).build( );
+		return Response.status( 200 ).entity( boleta ).build( );
 	}
 	
 	@GET
+	public Response getBoletasFrom(
+			@PathParam( "idUsuario" ) Long idUsuario, @PathParam( "idTipo" ) String tipo )
+	{
+		List<Boleta> list;
+		BoletaTM tm = new BoletaTM( getPath( ) );
+		try
+		{
+			list = tm.getBoletasFrom( idUsuario, tipo );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	@GET
+	@Path( "all" )
 	public Response getBoletas( )
 	{
 		List<Boleta> list;

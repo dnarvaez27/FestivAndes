@@ -1,7 +1,9 @@
 package rest;
 
 import tm.UsuarioRegistradoTM;
+import tm.intermediate.PreferenciaGeneroTM;
 import tm.intermediate.PreferenciaLugarTM;
+import vos.Genero;
 import vos.Lugar;
 import vos.UsuarioRegistrado;
 
@@ -27,7 +29,9 @@ public class UsuarioRegistradoServices extends Services
 	}
 	
 	@POST
-	public Response createUsuarioRegistrado( Long id, String password, UsuarioRegistrado accesibilidad )
+	public Response createUsuarioRegistrado( UsuarioRegistrado accesibilidad,
+	                                         @HeaderParam( "id" ) Long id,
+	                                         @HeaderParam( "password" ) String password )
 	{
 		UsuarioRegistradoTM tm = new UsuarioRegistradoTM( getPath( ) );
 		try
@@ -59,7 +63,8 @@ public class UsuarioRegistradoServices extends Services
 	
 	@GET
 	@Path( "{id}/{tipo}" )
-	public Response getUsuarioRegistrado( @PathParam( "id" ) Long id, String tipo )
+	public Response getUsuarioRegistrado(
+			@PathParam( "id" ) Long id, @PathParam( "tipo" ) String tipo )
 	{
 		UsuarioRegistrado ac;
 		UsuarioRegistradoTM tm = new UsuarioRegistradoTM( getPath( ) );
@@ -110,15 +115,24 @@ public class UsuarioRegistradoServices extends Services
 		return Response.status( 200 ).build( );
 	}
 	
-	@GET
-	@Path( "{id_usuario}/lugares" )
-	public Response getLugaresPreferidos( @PathParam( "id_usuario" ) Long idUsuario )
+	// BOLETAS
+	@Path( "{idUsuario}/{idTipo}/boletas" )
+	public BoletaServices getBoletas( )
 	{
-		List<Lugar> list;
-		PreferenciaLugarTM tm = new PreferenciaLugarTM( getPath( ) );
+		return new BoletaServices( context );
+	}
+	
+	// PREFERENCIA - GENERO
+	@GET
+	@Path( "{idUsuario}/{tipo}/generos" )
+	public Response getGenerosPreferidos(
+			@PathParam( "idUsuario" ) Long idUsuario, @PathParam( "tipo" ) String tipo )
+	{
+		List<Genero> list;
+		PreferenciaGeneroTM tm = new PreferenciaGeneroTM( getPath( ) );
 		try
 		{
-			list = tm.getLugaresPreferidosByUser( idUsuario );
+			list = tm.getGenerosPreferidosByUser( idUsuario, tipo );
 		}
 		catch( SQLException e )
 		{
@@ -127,33 +141,16 @@ public class UsuarioRegistradoServices extends Services
 		return Response.status( 200 ).entity( list ).build( );
 	}
 	
-	@GET
-	@Path( "{id_usuario}/lugares/{id_lugar}" )
-	public Response getLugarPreferido(
-			@PathParam( "id_usuario" ) Long idUsuario, @PathParam( "id_lugar" ) Long idLugar )
-	{
-		Lugar lugar;
-		PreferenciaLugarTM tm = new PreferenciaLugarTM( getPath( ) );
-		try
-		{
-			lugar = tm.getPreferedLugarByUsar( idUsuario, idLugar );
-		}
-		catch( SQLException e )
-		{
-			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
-		}
-		return Response.status( 200 ).entity( lugar ).build( );
-	}
-	
 	@POST
-	@Path( "{id_usuario}/lugares/{id_lugar}" )
-	public Response createLugarPreferido(
-			@PathParam( "id_usuario" ) Long idUsuario, @PathParam( "id_lugar" ) Long idLugar )
+	@Path( "{idUsuario}/{tipo}/generos/{idGenero}" )
+	public Response createEntryGeneroPreferido(
+			@PathParam( "idUsuario" ) Long idUsuario,
+			@PathParam( "tipo" ) String tipo, @PathParam( "idGenero" ) Long idGenero )
 	{
-		PreferenciaLugarTM tm = new PreferenciaLugarTM( getPath( ) );
+		PreferenciaGeneroTM tm = new PreferenciaGeneroTM( getPath( ) );
 		try
 		{
-			tm.createPreferenciaLugar( idUsuario, idLugar );
+			tm.createPreferenciaGenero( idUsuario, tipo, idGenero );
 		}
 		catch( SQLException e )
 		{
@@ -163,14 +160,89 @@ public class UsuarioRegistradoServices extends Services
 	}
 	
 	@DELETE
-	@Path( "{id_usuario}/lugares/{id_lugar}" )
-	public Response deleteLugarPreferido(
-			@PathParam( "id_usuario" ) Long idUsuario, @PathParam( "id_lugar" ) Long idLugar )
+	@Path( "{idUsuario}/{tipo}/generos/{idGenero}" )
+	public Response deleteEntryGeneroPreferido(
+			@PathParam( "idUsuario" ) Long idUsuario,
+			@PathParam( "tipo" ) String tipo, @PathParam( "idGenero" ) Long idGenero )
+	{
+		PreferenciaGeneroTM tm = new PreferenciaGeneroTM( getPath( ) );
+		try
+		{
+			tm.deletePreferenciaGenero( idUsuario, tipo, idGenero );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).build( );
+	}
+	
+	// PREFERENCIA - LUGARES
+	@GET
+	@Path( "{id_usuario}/{tipo}/lugares" )
+	public Response getLugaresPreferidos(
+			@PathParam( "id_usuario" ) Long idUsuario, @PathParam( "tipo" ) String tipo )
+	{
+		List<Lugar> list;
+		PreferenciaLugarTM tm = new PreferenciaLugarTM( getPath( ) );
+		try
+		{
+			list = tm.getLugaresPreferidosByUser( idUsuario, tipo );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	@GET
+	@Path( "{id_usuario}/{tipo}/lugares/{id_lugar}" )
+	public Response getLugarPreferido(
+			@PathParam( "id_usuario" ) Long idUsuario,
+			@PathParam( "tipo" ) String tipo, @PathParam( "id_lugar" ) Long idLugar )
+	{
+		Lugar lugar;
+		PreferenciaLugarTM tm = new PreferenciaLugarTM( getPath( ) );
+		try
+		{
+			lugar = tm.getPreferedLugarByUsar( idUsuario, tipo, idLugar );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( lugar ).build( );
+	}
+	
+	@POST
+	@Path( "{id_usuario}/{tipo}/lugares/{id_lugar}" )
+	public Response createLugarPreferido(
+			@PathParam( "id_usuario" ) Long idUsuario,
+			@PathParam( "tipo" ) String tipo, @PathParam( "id_lugar" ) Long idLugar )
 	{
 		PreferenciaLugarTM tm = new PreferenciaLugarTM( getPath( ) );
 		try
 		{
-			tm.deletePreferenciaLugar( idUsuario, idLugar );
+			tm.createPreferenciaLugar( idUsuario, tipo, idLugar );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).build( );
+	}
+	
+	@DELETE
+	@Path( "{id_usuario}/{tipo}/lugares/{id_lugar}" )
+	public Response deleteLugarPreferido(
+			@PathParam( "id_usuario" ) Long idUsuario,
+			@PathParam( "tipo" ) String tipo, @PathParam( "id_lugar" ) Long idLugar )
+	{
+		PreferenciaLugarTM tm = new PreferenciaLugarTM( getPath( ) );
+		try
+		{
+			tm.deletePreferenciaLugar( idUsuario, tipo, idLugar );
 		}
 		catch( SQLException e )
 		{

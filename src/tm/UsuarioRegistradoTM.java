@@ -1,6 +1,8 @@
 package tm;
 
+import dao.DAOUsuario;
 import dao.DAOUsuarioRegistrado;
+import vos.Usuario;
 import vos.UsuarioRegistrado;
 
 import java.sql.SQLException;
@@ -13,15 +15,20 @@ public class UsuarioRegistradoTM extends TransactionManager
 		super( contextPathP );
 	}
 	
-	public UsuarioRegistrado createUsuarioRegistrado( Long id, String password, UsuarioRegistrado accesibilidad ) throws SQLException
+	public UsuarioRegistrado createUsuarioRegistrado( Long id, String password, UsuarioRegistrado usuarioRegistrado ) throws SQLException
 	{
 		UsuarioRegistrado ur;
 		DAOUsuarioRegistrado dao = new DAOUsuarioRegistrado( );
+		DAOUsuario daoUsuario = new DAOUsuario( );
 		try
 		{
 			this.connection = getConnection( );
+			daoUsuario.setConnection( this.connection );
 			dao.setConnection( this.connection );
-			ur = dao.createUsuarioRegistrado( id, password, accesibilidad );
+			
+			usuarioRegistrado.setRol( Usuario.USUARIO_REGISTRADO );
+			daoUsuario.createUsuario( usuarioRegistrado );
+			ur = dao.createUsuarioRegistrado( usuarioRegistrado, id, password );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -38,6 +45,7 @@ public class UsuarioRegistradoTM extends TransactionManager
 		}
 		finally
 		{
+			closeDAO( daoUsuario );
 			closeDAO( dao );
 		}
 		return ur;

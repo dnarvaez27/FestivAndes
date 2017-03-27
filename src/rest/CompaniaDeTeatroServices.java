@@ -111,6 +111,7 @@ public class CompaniaDeTeatroServices extends Services
 		return Response.status( 200 ).build( );
 	}
 	
+	// ESPECTACULOS
 	@GET
 	@Path( "{id_compania}/espectaculos" )
 	public Response getEspectaculosFromCompania( @PathParam( "id_compania" ) Long idCompania )
@@ -119,14 +120,32 @@ public class CompaniaDeTeatroServices extends Services
 		OfrecenTM tm = new OfrecenTM( getPath( ) );
 		try
 		{
-			list = tm.getEspectaculoFrom( idCompania );
+			list = tm.getEspectaculosFrom( idCompania );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).entity( list ).build( );
-		
+	}
+	
+	@GET
+	@Path( "{id_compania}/espectaculos/{id_espectaculo}" )
+	public Response getEspectaculosFromCompania(
+			@PathParam( "id_compania" ) Long idCompania,
+			@PathParam( "id_espectaculo" ) Long idEspectaculo )
+	{
+		Espectaculo espectaculo;
+		OfrecenTM tm = new OfrecenTM( getPath( ) );
+		try
+		{
+			espectaculo = tm.getEspectaculoFrom( idCompania, idEspectaculo );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( espectaculo ).build( );
 	}
 	
 	@DELETE

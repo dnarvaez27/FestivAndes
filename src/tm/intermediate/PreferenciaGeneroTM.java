@@ -1,28 +1,29 @@
 package tm.intermediate;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import dao.intermediate.DAOPreferenciaGenero;
 import tm.TransactionManager;
 import vos.Genero;
 import vos.UsuarioRegistrado;
 
-public class PreferenciaGeneroTM extends TransactionManager{
+import java.sql.SQLException;
+import java.util.List;
 
+public class PreferenciaGeneroTM extends TransactionManager
+{
+	
 	public PreferenciaGeneroTM( String contextPathP )
 	{
 		super( contextPathP );
 	}
 	
-	public void createPreferenciaGenero( Long idUsuario, Long idGenero ) throws SQLException
+	public void createPreferenciaGenero( Long idUsuario, String tipo, Long idGenero ) throws SQLException
 	{
 		DAOPreferenciaGenero dao = new DAOPreferenciaGenero( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.createEntryPreferenciaGenero( idUsuario, idGenero );
+			dao.createEntryPreferenciaGenero( idUsuario, tipo, idGenero );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -43,7 +44,7 @@ public class PreferenciaGeneroTM extends TransactionManager{
 		}
 	}
 	
-	public List<Genero> getGeneroesPreferidosByUser( Long idUsuario ) throws SQLException
+	public List<Genero> getGenerosPreferidosByUser( Long idUsuario, String tipo ) throws SQLException
 	{
 		List<Genero> list;
 		DAOPreferenciaGenero dao = new DAOPreferenciaGenero( );
@@ -51,7 +52,7 @@ public class PreferenciaGeneroTM extends TransactionManager{
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			list = dao.getGeneroesPreferidosByUser( idUsuario );
+			list = dao.getGeneroesPreferidosByUser( idUsuario, tipo );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -81,7 +82,7 @@ public class PreferenciaGeneroTM extends TransactionManager{
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			list = dao.getUsersWhoPrefer( idGenero );
+			list = dao.getUsersWhoPreferGenero( idGenero );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -103,7 +104,7 @@ public class PreferenciaGeneroTM extends TransactionManager{
 		return list;
 	}
 	
-	public Genero getPreferedGeneroByUsar( Long idUsuario, Long idGenero ) throws SQLException
+	public Genero getPreferedGeneroByUsar( Long idUsuario, String tipo, Long idGenero ) throws SQLException
 	{
 		Genero genero;
 		DAOPreferenciaGenero dao = new DAOPreferenciaGenero( );
@@ -111,7 +112,7 @@ public class PreferenciaGeneroTM extends TransactionManager{
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			genero = dao.getGeneroPreferidoUser( idUsuario, idGenero );
+			genero = dao.getGeneroPreferidoUser( idUsuario, tipo, idGenero );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -133,14 +134,14 @@ public class PreferenciaGeneroTM extends TransactionManager{
 		return genero;
 	}
 	
-	public void deletePreferenciaGenero( Long idUsuario, Long idGenero ) throws SQLException
+	public void deletePreferenciaGenero( Long idUsuario, String tipo, Long idGenero ) throws SQLException
 	{
 		DAOPreferenciaGenero dao = new DAOPreferenciaGenero( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.deletePreferenciaGenero( idUsuario, idGenero );
+			dao.deletePreferenciaGenero( idUsuario, tipo, idGenero );
 			connection.commit( );
 		}
 		catch( SQLException e )

@@ -15,9 +15,9 @@ public class BoletaTM extends TransactionManager
 		super( contextPathP );
 	}
 	
-	private boolean checkUsuarioRegistrado( Long id, String password, DAOUsuario dao ) throws SQLException
+	private boolean checkUsuarioRegistrado( Long id, String tipo, DAOUsuario dao ) throws SQLException
 	{
-		if( dao.getUsuario( id ) == null || id == null || password == null )
+		if( dao.getUsuario( id, tipo ) == null || id == null || tipo == null )
 		{
 			Usuario nr = dao.getUsuarioNoRegistrado( );
 			if( nr == null )
@@ -30,7 +30,7 @@ public class BoletaTM extends TransactionManager
 		return true;
 	}
 	
-	public Boleta createBoleta( Long id, String password, Boleta boleta ) throws SQLException
+	public Boleta createBoleta( Long id, String tipo, Boleta boleta ) throws SQLException
 	{
 		Boleta ac;
 		DAOBoleta dao = new DAOBoleta( );
@@ -42,12 +42,12 @@ public class BoletaTM extends TransactionManager
 			daoUsuario.setConnection( this.connection );
 			dao.setConnection( this.connection );
 			
-			if( !checkUsuarioRegistrado( id, password, daoUsuario ) )
+			if( !checkUsuarioRegistrado( id, tipo, daoUsuario ) )
 			{
 				id = Usuario.UNREGISTERED_USER.getIdentificacion( );
-				password = Usuario.UNREGISTERED_USER.getPassword( );
+				tipo = Usuario.UNREGISTERED_USER.getTipoIdentificacion( );
 			}
-			ac = dao.createBoleta( id, password, boleta );
+			ac = dao.createBoleta( id, tipo, boleta );
 			
 			connection.commit( );
 		}
@@ -82,6 +82,36 @@ public class BoletaTM extends TransactionManager
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
 			list = dao.getBoletas( );
+			connection.commit( );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException: " + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException: " + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return list;
+	}
+	
+	public List<Boleta> getBoletasFrom( Long idUsuario, String tipo ) throws SQLException
+	{
+		List<Boleta> list;
+		DAOBoleta dao = new DAOBoleta( );
+		try
+		{
+			this.connection = getConnection( );
+			dao.setConnection( this.connection );
+			list = dao.getBoletasFrom( idUsuario, tipo );
 			connection.commit( );
 		}
 		catch( SQLException e )

@@ -15,14 +15,14 @@ public class PreferenciaLugarTM extends TransactionManager
 		super( contextPathP );
 	}
 	
-	public void createPreferenciaLugar( Long idUsuario, Long idLugar ) throws SQLException
+	public void createPreferenciaLugar( Long idUsuario, String tipo, Long idLugar ) throws SQLException
 	{
 		DAOPreferenciaLugar dao = new DAOPreferenciaLugar( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.createEntryPreferenciaLugar( idUsuario, idLugar );
+			dao.createEntryPreferenciaLugar( idLugar, idUsuario, tipo );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -43,7 +43,7 @@ public class PreferenciaLugarTM extends TransactionManager
 		}
 	}
 	
-	public List<Lugar> getLugaresPreferidosByUser( Long idUsuario ) throws SQLException
+	public List<Lugar> getLugaresPreferidosByUser( Long idUsuario, String tipo ) throws SQLException
 	{
 		List<Lugar> list;
 		DAOPreferenciaLugar dao = new DAOPreferenciaLugar( );
@@ -51,7 +51,7 @@ public class PreferenciaLugarTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			list = dao.getLugaresPreferidosByUser( idUsuario );
+			list = dao.getLugaresPreferidosByUser( idUsuario, tipo );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -81,7 +81,7 @@ public class PreferenciaLugarTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			list = dao.getUsersWhoPrefer( idLugar );
+			list = dao.getUsersWhoPreferLugar( idLugar );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -103,7 +103,7 @@ public class PreferenciaLugarTM extends TransactionManager
 		return list;
 	}
 	
-	public Lugar getPreferedLugarByUsar( Long idUsuario, Long idLugar ) throws SQLException
+	public Lugar getPreferedLugarByUsar( Long idUsuario, String tipo, Long idLugar ) throws SQLException
 	{
 		Lugar lugar;
 		DAOPreferenciaLugar dao = new DAOPreferenciaLugar( );
@@ -111,7 +111,7 @@ public class PreferenciaLugarTM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			lugar = dao.getLugarPreferidoUser( idUsuario, idLugar );
+			lugar = dao.getLugarPreferidoUser( idUsuario, tipo, idLugar );
 			connection.commit( );
 		}
 		catch( SQLException e )
@@ -133,14 +133,14 @@ public class PreferenciaLugarTM extends TransactionManager
 		return lugar;
 	}
 	
-	public void deletePreferenciaLugar( Long idUsuario, Long idLugar ) throws SQLException
+	public void deletePreferenciaLugar( Long idUsuario, String tipo, Long idLugar ) throws SQLException
 	{
 		DAOPreferenciaLugar dao = new DAOPreferenciaLugar( );
 		try
 		{
 			this.connection = getConnection( );
 			dao.setConnection( this.connection );
-			dao.deletePreferenciaLugar( idUsuario, idLugar );
+			dao.deletePreferenciaLugar( idUsuario, tipo, idLugar );
 			connection.commit( );
 		}
 		catch( SQLException e )

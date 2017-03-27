@@ -56,6 +56,28 @@ public class DAOOfrecen extends DAO
 		return list;
 	}
 	
+	public Espectaculo getEspectaculoFrom( Long idCompania, Long idEspectaculo ) throws SQLException
+	{
+		Espectaculo espectaculo = null;
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT * " );
+		sql.append( "FROM OFRECE O INNER JOIN ESPECTACULOS E " );
+		sql.append( "                ON O.id_espectaculo = E.id " );
+		sql.append( String.format( "WHERE O.id_compania_de_teatro = %s ", idCompania ) );
+		sql.append( String.format( "  AND E.id = %s ", idEspectaculo ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		while( rs.next( ) )
+		{
+			espectaculo = DAOEspectaculo.resultToEspectaculo( rs );
+		}
+		rs.close( );
+		s.close( );
+		return espectaculo;
+	}
+	
 	public List<CompaniaDeTeatro> getCompaniasWhoOffer( Long idEspectaculo ) throws SQLException
 	{
 		List<CompaniaDeTeatro> list = new LinkedList<>( );
