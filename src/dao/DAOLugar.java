@@ -2,10 +2,12 @@ package dao;
 
 import vos.Lugar;
 import vos.Usuario;
+import vos.reportes.RFC2;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -130,5 +132,93 @@ public class DAOLugar extends DAO
 		l.setEsAbierto( rs.getInt( "es_abierto" ) );
 		l.setTipo( rs.getString( "tipo_lugar" ) );
 		return l;
+	}
+	
+	public RFC2 generarReporte( Long idLugar ) throws SQLException
+	{
+		RFC2 rfc2 = new RFC2( );
+		Lugar l = getLugar( idLugar );
+		rfc2.setLugar( l.getNombre( ) );
+		rfc2.setTipoLugar( l.getTipo( ) );
+		rfc2.setEsAbierto( l.getEsAbierto( ) );
+		rfc2.setDisponibilidadInicio( l.getDisponibilidadInicio( ) );
+		rfc2.setDisponibilidadFin( l.getDisponibilidadFin( ) );
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT " );
+		sql.append( "  LOCALIDADES.NOMBRE                   AS localidad, " );
+		sql.append( "  LUGAR_LOCALIDAD.CAPACIDAD, " );
+		sql.append( "  LUGAR_LOCALIDAD.ES_NUMERADO, " );
+		sql.append( "  FUNCIONES.FECHA                      AS fecha_funcion, " );
+		sql.append( "  ESPECTACULOS.NOMBRE                  AS ESPECTACULO, " );
+		sql.append( "  COSTO_LOCALIDAD.COSTO, " );
+		sql.append( "  CAPACIDAD - NVL(BOLETAS_VENDIDAS, 0) AS BOLETERIA_DISPONIBLE " );
+		sql.append( "FROM " );
+		sql.append( "  LUGARES " );
+		sql.append( "  LEFT JOIN " );
+		sql.append( "  LUGAR_LOCALIDAD ON LUGARES.ID = LUGAR_LOCALIDAD.ID_LUGAR " );
+		sql.append( "  LEFT JOIN " );
+		sql.append( "  FUNCIONES ON LUGARES.ID = FUNCIONES.ID_LUGAR " );
+		sql.append( "  LEFT JOIN " );
+		sql.append( "  COSTO_LOCALIDAD " );
+		sql.append( "    ON FUNCIONES.ID_LUGAR = COSTO_LOCALIDAD.ID_LUGAR " );
+		sql.append( "       AND FUNCIONES.FECHA = COSTO_LOCALIDAD.FECHA " );
+		sql.append( "       AND LUGAR_LOCALIDAD.ID_LOCALIDAD = COSTO_LOCALIDAD.ID_LOCALIDAD " );
+		sql.append( "  LEFT JOIN " );
+		sql.append( "  ESPECTACULOS ON FUNCIONES.ID_ESPECTACULO = ESPECTACULOS.ID " );
+		sql.append( "  LEFT JOIN " );
+		sql.append( "  LOCALIDADES ON LUGAR_LOCALIDAD.ID_LOCALIDAD = LOCALIDADES.ID " );
+		sql.append( "  LEFT JOIN " );
+		sql.append( "  (SELECT " );
+		sql.append( "     BOLETAS.ID_LUGAR, " );
+		sql.append( "     BOLETAS.ID_LOCALIDAD, " );
+		sql.append( "     BOLETAS.FECHA, " );
+		sql.append( "     COUNT(BOLETAS.ID_LOCALIDAD) BOLETAS_VENDIDAS " );
+		sql.append( "   FROM " );
+		sql.append( "     FUNCIONES " );
+		sql.append( "     INNER JOIN " );
+		sql.append( "     BOLETAS ON FUNCIONES.ID_LUGAR = BOLETAS.ID_LUGAR AND FUNCIONES.FECHA = BOLETAS.FECHA " );
+		sql.append( "     INNER JOIN " );
+		sql.append( "     COSTO_LOCALIDAD " );
+		sql.append( "       ON FUNCIONES.ID_LUGAR = COSTO_LOCALIDAD.ID_LUGAR AND FUNCIONES.FECHA = COSTO_LOCALIDAD.FECHA " );
+		sql.append( "          AND BOLETAS.ID_LOCALIDAD = COSTO_LOCALIDAD.ID_LOCALIDAD " );
+		sql.append( "   GROUP BY BOLETAS.ID_LUGAR, BOLETAS.ID_LOCALIDAD, BOLETAS.FECHA) Z " );
+		sql.append( "    ON Z.ID_LUGAR = LUGARES.ID " );
+		sql.append( "       AND Z.ID_LOCALIDAD = COSTO_LOCALIDAD.ID_LOCALIDAD " );
+		sql.append( "       AND Z.FECHA = FUNCIONES.FECHA " );
+		sql.append( String.format( "WHERE LUGARES.ID = %s ", idLugar ) );
+		sql.append( "ORDER BY LUGARES.ID, FUNCIONES.FECHA, LUGAR_LOCALIDAD.ID_LOCALIDAD " );
+		
+		List<RFC2.Funcion> funciones = new LinkedList<>( );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		while( rs.next( ) )
+		{
+			RFC2.Funcion funcion = rfc2.new Funcion( );
+			
+			String localidad = rs.getString( "localidad" );
+			Integer capacidad = rs.getInt( "capacidad" );
+			Integer esNumerado = rs.getInt( "es_numerado" );
+			Date fechaFuncion = rs.getDate( "fecha_funcion" );
+			String espectaculo = rs.getString( "espectaculo" );
+			Double costo = rs.getDouble( "costo" );
+			Integer boleteriaDisponible = rs.getInt( "boleteria_disponible" );
+			
+			funcion.setLocalidad( localidad );
+			funcion.setCapacidad( capacidad );
+			funcion.setEsNumerado( esNumerado );
+			funcion.setFechaFuncion( fechaFuncion );
+			funcion.setEspectaculo( espectaculo );
+			funcion.setCosto( costo );
+			funcion.setBoleteriaDisponible( boleteriaDisponible );
+			
+			funciones.add( funcion );
+		}
+		rfc2.setLocalidades( funciones );
+		
+		rs.close( );
+		s.close( );
+		return rfc2;
 	}
 }

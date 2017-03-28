@@ -163,13 +163,7 @@ public class DAOEspectaculo extends DAO
 		object.setIdClasificacion( rs.getLong( "id_clasificacion" ) );
 		return object;
 	}
-	
-	/**
-	 * RFC4
-	 *
-	 * @return
-	 * @throws SQLException
-	 */
+
 	public RFC4 generarReporte( Long idFestival, Long idEspectaculo ) throws SQLException
 	{
 		RFC4 req = new RFC4( );

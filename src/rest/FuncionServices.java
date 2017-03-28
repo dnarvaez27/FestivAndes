@@ -7,6 +7,7 @@ import vos.Funcion;
 import vos.Localidad;
 import vos.Usuario;
 import vos.intermediate.CostoLocalidad;
+import vos.reportes.RFC3;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
@@ -49,7 +50,7 @@ public class FuncionServices extends Services
 	}
 	
 	@GET
-	public Response getFuncions( @PathParam( "idEspectaculo" ) Long idEspectaculo )
+	public Response getFunciones( @PathParam( "idEspectaculo" ) Long idEspectaculo )
 	{
 		List<Funcion> list;
 		FuncionTM tm = new FuncionTM( getPath( ) );
@@ -66,7 +67,7 @@ public class FuncionServices extends Services
 	
 	@GET
 	@Path( "all" )
-	public Response getFuncions( )
+	public Response getFunciones( )
 	{
 		List<Funcion> list;
 		FuncionTM tm = new FuncionTM( getPath( ) );
@@ -122,13 +123,13 @@ public class FuncionServices extends Services
 	@DELETE
 	@Path( "{lugar}/{fecha}" )
 	public Response deleteFuncion(
-			@PathParam( "lugar" ) Long idFecha, @PathParam( "fecha" ) String fecha )
+			@PathParam( "lugar" ) Long idLugar, @PathParam( "fecha" ) String fecha )
 	{
 		FuncionTM tm = new FuncionTM( getPath( ) );
 		
 		try
 		{
-			tm.deleteFuncion( DateFormatter.format( fecha ), idFecha );
+			tm.deleteFuncion( DateFormatter.format( fecha ), idLugar );
 		}
 		catch( SQLException e )
 		{
@@ -221,11 +222,11 @@ public class FuncionServices extends Services
 	@GET
 	@Path( "src" )
 	public Response generarReporte1(
-			@QueryParam( "nombre_categoria" ) String nombreCategoria,
-			@QueryParam( "nombre_compania" ) String nombreCompania,
+			@QueryParam( "genero" ) String nombreGenero,
+			@QueryParam( "compania" ) String nombreCompania,
 			@QueryParam( "ciudad" ) String ciudad,
 			@QueryParam( "pais" ) String pais,
-			@QueryParam( "nombre_espectaculo" ) String nombreEspectaculo,
+			@QueryParam( "espectaculo" ) String nombreEspectaculo,
 			@QueryParam( "idioma" ) String idioma,
 			@QueryParam( "fecha_inicio" ) String fechaInicio,
 			@QueryParam( "fecha_fin" ) String fechaFin,
@@ -241,12 +242,31 @@ public class FuncionServices extends Services
 		
 		try
 		{
-			list = tm.generarReporte1( nombreCategoria, nombreCompania, ciudad, pais, nombreEspectaculo, idioma, fechaInicio, fechaFin, duracionInicio, duracionFin, lugar, accesoEspecial, publicoObjetivo, order, asc == null || asc == 1 );
+			list = tm.generarReporte1( nombreGenero, nombreCompania, ciudad, pais, nombreEspectaculo, idioma, fechaInicio, fechaFin, duracionInicio, duracionFin, lugar, accesoEspecial, publicoObjetivo, order, asc == null || asc == 1 );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	@GET
+	@Path( "{lugar}/{fecha}/rfc2" )
+	public Response generarReporte3(
+			@PathParam( "lugar" ) Long idLugar, @PathParam( "fecha" ) String fecha )
+	{
+		RFC3 rfc3;
+		FuncionTM tm = new FuncionTM( getPath( ) );
+		
+		try
+		{
+			rfc3 = tm.generarReporte3( DateFormatter.format( fecha ), idLugar );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( rfc3 ).build( );
 	}
 }

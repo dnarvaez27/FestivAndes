@@ -6,6 +6,7 @@ import tm.intermediate.PreferenciaLugarTM;
 import vos.Lugar;
 import vos.RequerimientoTecnico;
 import vos.UsuarioRegistrado;
+import vos.reportes.RFC2;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
@@ -113,6 +114,24 @@ public class LugarServices extends Services
 		return Response.status( 200 ).build( );
 	}
 	
+	// REQUERIMIENTOS FUNCIONALES
+	@GET
+	@Path( "{idLugar}/rfc2" )
+	public Response rfc2( @PathParam( "idLugar" ) Long idLugar )
+	{
+		LugarTM tm = new LugarTM( getPath( ) );
+		RFC2 rfc2;
+		try
+		{
+			rfc2 = tm.generarReporte( idLugar );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( rfc2 ).build( );
+	}
+	
 	// PREFERENCIA USUARIOS
 	@GET
 	@Path( "{id_lugar}/usuariosprefieren" )
@@ -131,7 +150,7 @@ public class LugarServices extends Services
 		return Response.status( 200 ).entity( list ).build( );
 	}
 	
-	// REQUERIMIENTOS
+	// REQUERIMIENTOS_LUGAR
 	@GET
 	@Path( "{id_lugar}/requerimientos" )
 	public Response getRequerimientosFromLugar( @PathParam( "id_lugar" ) Long idLugar )

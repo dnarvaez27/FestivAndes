@@ -2,6 +2,7 @@ package tm;
 
 import dao.DAOFuncion;
 import vos.Funcion;
+import vos.reportes.RFC3;
 
 import java.sql.SQLException;
 import java.util.Date;
@@ -222,4 +223,33 @@ public class FuncionTM extends TransactionManager
 		return list;
 	}
 	
+	public RFC3 generarReporte3( Date fecha, Long idLugar ) throws SQLException
+	{
+		RFC3 rfc3;
+		DAOFuncion dao = new DAOFuncion( );
+		try
+		{
+			this.connection = getConnection( );
+			dao.setConnection( this.connection );
+			rfc3 = dao.RFC3( fecha, idLugar );
+			connection.commit( );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException:" + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException:" + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return rfc3;
+	}
 }

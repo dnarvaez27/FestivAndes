@@ -2,79 +2,139 @@ package vos.reportes;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-//TODO REVISAR
 public class RFC3
 {
-	@JsonProperty( value = "producido" )
-	private List<RFC3> req;
+	public class Localidad
+	{
+		@JsonProperty( value = "localidad" )
+		private String localidad;
+		
+		@JsonProperty( value = "tipoUsuario" )
+		private String tipoUsuario;
+		
+		@JsonProperty( value = "boletasVendidas" )
+		private Integer boletasVendidas;
+		
+		@JsonProperty( value = "totalProducido" )
+		private Double totalProducido;
+		
+		/**
+		 * Retrieves the localidad of the Localidad
+		 *
+		 * @return The localidad of the Localidad
+		 */
+		public String getLocalidad( )
+		{
+			return localidad;
+		}
+		
+		/**
+		 * Updates the localidad of the Localidad by the one given by parameter
+		 *
+		 * @param localidad The new localidad of the Localidad
+		 */
+		public void setLocalidad( String localidad )
+		{
+			this.localidad = localidad;
+		}
+		
+		/**
+		 * Retrieves the tipoUsuario of the Localidad
+		 *
+		 * @return The tipoUsuario of the Localidad
+		 */
+		public String getTipoUsuario( )
+		{
+			return tipoUsuario;
+		}
+		
+		/**
+		 * Updates the tipoUsuario of the Localidad by the one given by parameter
+		 *
+		 * @param tipoUsuario The new tipoUsuario of the Localidad
+		 */
+		public void setTipoUsuario( String tipoUsuario )
+		{
+			this.tipoUsuario = tipoUsuario;
+		}
+		
+		/**
+		 * Retrieves the boletasVendidas of the Localidad
+		 *
+		 * @return The boletasVendidas of the Localidad
+		 */
+		public Integer getBoletasVendidas( )
+		{
+			return boletasVendidas;
+		}
+		
+		/**
+		 * Updates the boletasVendidas of the Localidad by the one given by parameter
+		 *
+		 * @param boletasVendidas The new boletasVendidas of the Localidad
+		 */
+		public void setBoletasVendidas( Integer boletasVendidas )
+		{
+			this.boletasVendidas = boletasVendidas;
+		}
+		
+		/**
+		 * Retrieves the totalProducido of the Localidad
+		 *
+		 * @return The totalProducido of the Localidad
+		 */
+		public Double getTotalProducido( )
+		{
+			return totalProducido;
+		}
+		
+		/**
+		 * Updates the totalProducido of the Localidad by the one given by parameter
+		 *
+		 * @param totalProducido The new totalProducido of the Localidad
+		 */
+		public void setTotalProducido( Double totalProducido )
+		{
+			this.totalProducido = totalProducido;
+		}
+	}
 	
-	@JsonProperty( value = "nombre_espectaculo" )
-	private String nombreEspectaculo;
-	
-	@JsonProperty( value = "id_funcion" )
-	private Long idFuncion;
+	@JsonProperty( value = "fecha" )
+	private Date fecha;
 	
 	@JsonProperty( value = "lugar" )
 	private String lugar;
 	
-	@JsonProperty( value = "nombre_localidad" )
-	private String nombreLocalidad;
-	
-	@JsonProperty( value = "tipo_usuario" )
-	private String tipoUsuario;
-	
-	@JsonProperty( value = "numero_boletas_vendidas" )
-	private Integer numBoletasVendidas;
-	
-	@JsonProperty( value = "total_vendido" )
-	private Double totalVendido;
+	@JsonProperty( value = "localidades" )
+	private List<Localidad> localidades;
 	
 	public RFC3( )
 	{
-		req = new LinkedList<>( );
+		localidades = new LinkedList<>( );
 	}
 	
 	/**
-	 * Retrieves the nombreEspectaculo of the RFC3
+	 * Retrieves the fecha of the RFC3
 	 *
-	 * @return The nombreEspectaculo of the RFC3
+	 * @return The fecha of the RFC3
 	 */
-	public String getNombreEspectaculo( )
+	public Date getFecha( )
 	{
-		return nombreEspectaculo;
+		return fecha;
 	}
 	
 	/**
-	 * Updates the nombreEspectaculo of the RFC3 by the one given by parameter
+	 * Updates the fecha of the RFC3 by the one given by parameter
 	 *
-	 * @param nombreEspectaculo The new nombreEspectaculo of the RFC3
+	 * @param fecha The new fecha of the RFC3
 	 */
-	public void setNombreEspectaculo( String nombreEspectaculo )
+	public void setFecha( Date fecha )
 	{
-		this.nombreEspectaculo = nombreEspectaculo;
-	}
-	
-	/**
-	 * Retrieves the idFuncion of the RFC3
-	 *
-	 * @return The idFuncion of the RFC3
-	 */
-	public Long getIdFuncion( )
-	{
-		return idFuncion;
-	}
-	
-	/**
-	 * Updates the idFuncion of the RFC3 by the one given by parameter
-	 *
-	 * @param idFuncion The new idFuncion of the RFC3
-	 */
-	public void setIdFuncion( Long idFuncion )
-	{
-		this.idFuncion = idFuncion;
+		this.fecha = fecha;
 	}
 	
 	/**
@@ -98,102 +158,22 @@ public class RFC3
 	}
 	
 	/**
-	 * Retrieves the nombreLocalidad of the RFC3
+	 * Retrieves the localidades of the RFC3
 	 *
-	 * @return The nombreLocalidad of the RFC3
+	 * @return The localidades of the RFC3
 	 */
-	public String getNombreLocalidad( )
+	public List<Localidad> getLocalidades( )
 	{
-		return nombreLocalidad;
+		return localidades;
 	}
 	
 	/**
-	 * Updates the nombreLocalidad of the RFC3 by the one given by parameter
+	 * Updates the localidades of the RFC3 by the one given by parameter
 	 *
-	 * @param nombreLocalidad The new nombreLocalidad of the RFC3
+	 * @param localidades The new localidades of the RFC3
 	 */
-	public void setNombreLocalidad( String nombreLocalidad )
+	public void setLocalidades( List<Localidad> localidades )
 	{
-		this.nombreLocalidad = nombreLocalidad;
-	}
-	
-	/**
-	 * Retrieves the tipoUsuario of the RFC3
-	 *
-	 * @return The tipoUsuario of the RFC3
-	 */
-	public String getTipoUsuario( )
-	{
-		return tipoUsuario;
-	}
-	
-	/**
-	 * Updates the tipoUsuario of the RFC3 by the one given by parameter
-	 *
-	 * @param tipoUsuario The new tipoUsuario of the RFC3
-	 */
-	public void setTipoUsuario( String tipoUsuario )
-	{
-		this.tipoUsuario = tipoUsuario;
-	}
-	
-	/**
-	 * Retrieves the numBoletasVendidas of the RFC3
-	 *
-	 * @return The numBoletasVendidas of the RFC3
-	 */
-	public Integer getNumBoletasVendidas( )
-	{
-		return numBoletasVendidas;
-	}
-	
-	/**
-	 * Updates the numBoletasVendidas of the RFC3 by the one given by parameter
-	 *
-	 * @param numBoletasVendidas The new numBoletasVendidas of the RFC3
-	 */
-	public void setNumBoletasVendidas( Integer numBoletasVendidas )
-	{
-		this.numBoletasVendidas = numBoletasVendidas;
-	}
-	
-	/**
-	 * Retrieves the totalVendido of the RFC3
-	 *
-	 * @return The totalVendido of the RFC3
-	 */
-	public Double getTotalVendido( )
-	{
-		return totalVendido;
-	}
-	
-	/**
-	 * Updates the totalVendido of the RFC3 by the one given by parameter
-	 *
-	 * @param totalVendido The new totalVendido of the RFC3
-	 */
-	public void setTotalVendido( Double totalVendido )
-	{
-		this.totalVendido = totalVendido;
-	}
-	
-	/**
-	 * Retrieves the req of the RFC3
-	 *
-	 * @return The req of the RFC3
-	 */
-	public List<RFC3> getReq( )
-	{
-		return req;
-	}
-	
-	/**
-	 * Updates the req of the RFC3 by the one given by parameter
-	 *
-	 * @param req The new req of the RFC3
-	 */
-	public void setReq( List<RFC3> req )
-	{
-		this.req = req;
+		this.localidades = localidades;
 	}
 }

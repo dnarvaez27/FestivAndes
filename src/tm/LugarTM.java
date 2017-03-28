@@ -2,6 +2,7 @@ package tm;
 
 import dao.DAOLugar;
 import vos.Lugar;
+import vos.reportes.RFC2;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -158,5 +159,35 @@ public class LugarTM extends TransactionManager
 		{
 			closeDAO( dao );
 		}
+	}
+	
+	public RFC2 generarReporte( Long idLugar ) throws SQLException
+	{
+		RFC2 r;
+		DAOLugar dao = new DAOLugar( );
+		try
+		{
+			this.connection = getConnection( );
+			dao.setConnection( this.connection );
+			r = dao.generarReporte( idLugar );
+			connection.commit( );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException:" + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException:" + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return r;
 	}
 }
