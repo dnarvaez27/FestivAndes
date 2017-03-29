@@ -43,6 +43,22 @@ public class BoletaServices extends Services
 		return Response.status( 200 ).entity( boleta ).build( );
 	}
 	
+	@POST
+	@Path( "noreg" )
+	public Response createBoleta( Boleta boleta )
+	{
+		BoletaTM tm = new BoletaTM( getPath( ) );
+		try
+		{
+			boleta = tm.createBoleta( null, null, boleta );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( boleta ).build( );
+	}
+	
 	@GET
 	public Response getBoletasFrom(
 			@PathParam( "idUsuario" ) Long idUsuario, @PathParam( "idTipo" ) String tipo )

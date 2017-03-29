@@ -14,7 +14,7 @@ public class Usuario
 	
 	public static final String USUARIO_COMPANIA = "Compania De Teatro";
 	
-	public static final Usuario UNREGISTERED_USER = new Usuario( -1L, "NR", null, "1234", USUARIO_NO_REGISTRADO, USUARIO_NO_REGISTRADO, -1L );
+	public static final Usuario UNREGISTERED_USER = new Usuario( -1L, "NR", null, "1234", USUARIO_NO_REGISTRADO, USUARIO_NO_REGISTRADO, 1L );
 	
 	@JsonProperty( value = "identificacion" )
 	protected Long identificacion;
@@ -22,7 +22,7 @@ public class Usuario
 	@JsonProperty( value = "tipoIdentificacion" )
 	protected String tipoIdentificacion;
 	
-		@JsonProperty( value = "email" )
+	@JsonProperty( value = "email" )
 	protected String email;
 	
 	@JsonProperty( value = "password" )
