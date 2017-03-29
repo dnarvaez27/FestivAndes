@@ -163,7 +163,7 @@ public class DAOEspectaculo extends DAO
 		object.setIdClasificacion( rs.getLong( "id_clasificacion" ) );
 		return object;
 	}
-
+	
 	public RFC4 generarReporte( Long idFestival, Long idEspectaculo ) throws SQLException
 	{
 		RFC4 req = new RFC4( );
@@ -281,5 +281,51 @@ public class DAOEspectaculo extends DAO
 		req.setOcupacion( p2s );
 		
 		return req;
+	}
+	
+	public List<Espectaculo> getEspectaculosPopulares( Date fInicio, Date fFin ) throws SQLException
+	{
+		List<Espectaculo> list = new LinkedList<>( );
+		//TODO RFC6 toda la info?
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT ESPECTACULOS.*, NUM_ASISTENTES " );
+		sql.append( "FROM (SELECT " );
+		sql.append( "        ESPECTACULOS.ID, " );
+		sql.append( "        COUNT(ESPECTACULOS.NOMBRE) AS NUM_ASISTENTES " );
+		sql.append( "      FROM " );
+		sql.append( "        BOLETAS " );
+		sql.append( "        INNER JOIN " );
+		sql.append( "        FUNCIONES ON BOLETAS.ID_LUGAR = FUNCIONES.ID_LUGAR AND BOLETAS.FECHA = FUNCIONES.FECHA " );
+		sql.append( "        INNER JOIN " );
+		sql.append( "        ESPECTACULOS ON FUNCIONES.ID_ESPECTACULO = ESPECTACULOS.ID " );
+		sql.append( String.format( "      WHERE FUNCIONES.FECHA BETWEEN %s AND %s ", toDate( fInicio ), toDate( fFin ) ) );
+		sql.append( "      GROUP BY ESPECTACULOS.ID) B INNER JOIN ESPECTACULOS ON B.ID = ESPECTACULOS.ID " );
+		sql.append( "WHERE NUM_ASISTENTES = (SELECT MAX(NUM_ASISTENTES) " );
+		sql.append( "                        FROM (SELECT " );
+		sql.append( "                                ESPECTACULOS.NOMBRE, " );
+		sql.append( "                                COUNT(ESPECTACULOS.NOMBRE) AS NUM_ASISTENTES " );
+		sql.append( "                              FROM " );
+		sql.append( "                                BOLETAS " );
+		sql.append( "                                INNER JOIN " );
+		sql.append( "                                FUNCIONES ON BOLETAS.ID_LUGAR = FUNCIONES.ID_LUGAR AND " );
+		sql.append( "                                             BOLETAS.FECHA = FUNCIONES.FECHA " );
+		sql.append( "                                INNER JOIN " );
+		sql.append( "                                ESPECTACULOS ON FUNCIONES.ID_ESPECTACULO = ESPECTACULOS.ID " );
+		sql.append( String.format( "                              WHERE FUNCIONES.FECHA BETWEEN %s AND %s ", toDate( fInicio ), toDate( fFin ) ) );
+		sql.append( "                              GROUP BY ESPECTACULOS.NOMBRE)) " );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		while( rs.next( ) )
+		{
+			Espectaculo.EspectaculoExtended e = new Espectaculo.EspectaculoExtended( resultToEspectaculo( rs ) );
+			e.setNumAsistentes( rs.getInt( "num_asistentes" ) );
+			
+			list.add( e );
+		}
+		
+		rs.close( );
+		s.close( );
+		return list;
 	}
 }

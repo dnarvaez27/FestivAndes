@@ -6,6 +6,44 @@ import java.util.List;
 
 public class Espectaculo
 {
+	public static class EspectaculoExtended extends Espectaculo
+	{
+		@JsonProperty( value = "numAsistentes" )
+		private Integer numAsistentes;
+		
+		public EspectaculoExtended( Espectaculo e )
+		{
+			this.setId( e.getId( ) );
+			this.setNombre( e.getNombre( ) );
+			this.setDuracion( e.getDuracion( ) );
+			this.setIdioma( e.getIdioma( ) );
+			this.setCostoRealizacion( e.getCostoRealizacion( ) );
+			this.setDescripcion( e.getDescripcion( ) );
+			this.setIdFestival( e.getIdFestival( ) );
+			this.setIdClasificacion( e.getIdClasificacion( ) );
+		}
+		
+		/**
+		 * Retrieves the numAsistentes of the EspectaculoExtended
+		 *
+		 * @return The numAsistentes of the EspectaculoExtended
+		 */
+		public Integer getNumAsistentes( )
+		{
+			return numAsistentes;
+		}
+		
+		/**
+		 * Updates the numAsistentes of the EspectaculoExtended by the one given by parameter
+		 *
+		 * @param numAsistentes The new numAsistentes of the EspectaculoExtended
+		 */
+		public void setNumAsistentes( Integer numAsistentes )
+		{
+			this.numAsistentes = numAsistentes;
+		}
+	}
+	
 	@JsonProperty( value = "id" )
 	private Long id;
 	

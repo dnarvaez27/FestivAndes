@@ -7,6 +7,7 @@ import vos.Espectaculo;
 import vos.reportes.RFC4;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 public class EspectaculoTM extends TransactionManager
@@ -248,5 +249,35 @@ public class EspectaculoTM extends TransactionManager
 			closeDAO( dao );
 		}
 		return req;
+	}
+	
+	public List<Espectaculo> getEspectaculosPopulares( Date fInicio, Date fFin ) throws SQLException
+	{
+		List<Espectaculo> list;
+		DAOEspectaculo dao = new DAOEspectaculo( );
+		try
+		{
+			this.connection = getConnection( );
+			dao.setConnection( this.connection );
+			list = dao.getEspectaculosPopulares( fInicio, fFin );
+			connection.commit( );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException:" + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException:" + e.getMessage( ) );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return list;
 	}
 }

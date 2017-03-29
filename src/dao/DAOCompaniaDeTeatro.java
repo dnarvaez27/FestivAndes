@@ -135,7 +135,7 @@ public class DAOCompaniaDeTeatro extends DAO
 	public List<RFC5> rentabilidad( )
 	{
 		List<RFC5> list = new LinkedList<>( );
-		//TODO
+		//TODO RFC5
 		return list;
 	}
 	

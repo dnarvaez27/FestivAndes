@@ -27,7 +27,6 @@ public class EspectaculoGeneroTM extends TransactionManager
 			
 			daoGenero.setConnection( this.connection );
 			dao.setConnection( this.connection );
-			//TODO COMO SE CREA UN GENERO?
 			dao.createEntryEG( idEspectaculo, idGenero );
 			
 			connection.commit( );

@@ -3,6 +3,7 @@ package rest;
 import tm.EspectaculoTM;
 import tm.intermediate.EspectaculoGeneroTM;
 import tm.intermediate.OfrecenTM;
+import utilities.DateFormatter;
 import vos.CompaniaDeTeatro;
 import vos.Espectaculo;
 import vos.Genero;
@@ -184,7 +185,6 @@ public class EspectaculoServices extends Services
 	public Response createEntryGenero(
 			@PathParam( "id_espectaculo" ) Long idEspectaculo, Long idGenero )
 	{
-		// TODO Long idGenero por JSON o por URI?
 		EspectaculoGeneroTM tm = new EspectaculoGeneroTM( getPath( ) );
 		try
 		{
@@ -233,5 +233,23 @@ public class EspectaculoServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).entity( req ).build( );
+	}
+	
+	@GET
+	@Path( "popular" )
+	public Response getEspectaculosPopulares(
+			@QueryParam( "fecha_inicio" ) String fInicio, @QueryParam( "fecha_fin" ) String fFin )
+	{
+		List<Espectaculo> list;
+		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
+		try
+		{
+			list = tm.getEspectaculosPopulares( DateFormatter.format( fInicio ), DateFormatter.format( fFin ) );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
 	}
 }
