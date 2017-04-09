@@ -17,26 +17,31 @@ public class CostoLocalidadTM extends TransactionManager
 		super( contextPathP );
 	}
 	
-	public CostoLocalidad createCostoLocalidad( CostoLocalidad accesibilidad ) throws SQLException
+	public CostoLocalidad createCostoLocalidad( CostoLocalidad costoLocalidad ) throws SQLException
 	{
-		CostoLocalidad ac;
 		DAOCostoLocalidad dao = new DAOCostoLocalidad( );
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
-			ac = dao.createEntryCostoLocalidad( accesibilidad );
+			
+			costoLocalidad = dao.createEntryCostoLocalidad( costoLocalidad );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -44,7 +49,7 @@ public class CostoLocalidadTM extends TransactionManager
 		{
 			closeDAO( dao );
 		}
-		return ac;
+		return costoLocalidad;
 	}
 	
 	public List<Localidad> getCostoLocalidadesFromFuncion( Date fechaFuncion, Long idLugarFuncion ) throws SQLException
@@ -54,19 +59,25 @@ public class CostoLocalidadTM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			list = dao.getCostoLocalidadesFromFuncion( fechaFuncion, idLugarFuncion );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -83,17 +94,26 @@ public class CostoLocalidadTM extends TransactionManager
 		DAOCostoLocalidad dao = new DAOCostoLocalidad( );
 		try
 		{
+			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
+			dao.setConnection( this.connection );
+			
 			list = dao.getCostoLocalidadFromLocalidad( idLocalidad );
+			
+			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -106,23 +126,65 @@ public class CostoLocalidadTM extends TransactionManager
 	
 	public Localidad getCostoLocalidadFrom( Date fecha, Long idLugar, Long idLocalidad ) throws SQLException
 	{
-		Localidad costoLocalidad;
+		Localidad localidad;
 		DAOCostoLocalidad dao = new DAOCostoLocalidad( );
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
-			costoLocalidad = dao.getCostoLocalidadFromFuncion( fecha, idLugar, idLocalidad );
+			
+			localidad = dao.getCostoLocalidadFromFuncion( fecha, idLugar, idLocalidad );
+			
+			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return localidad;
+	}
+	
+	public CostoLocalidad updateCostoLocalidad( Date fecha, Long idLugar, Long idLocalidad, CostoLocalidad costoLocalidad ) throws SQLException
+	{
+		DAOCostoLocalidad dao = new DAOCostoLocalidad( );
+		try
+		{
+			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
+			dao.setConnection( this.connection );
+			
+			costoLocalidad = dao.updateCostoLocalidad( fecha, idLugar, idLocalidad, costoLocalidad );
+			
+			connection.commit( );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -133,54 +195,31 @@ public class CostoLocalidadTM extends TransactionManager
 		return costoLocalidad;
 	}
 	
-	public CostoLocalidad updateCostoLocalidad( Date fecha, Long idLugar, Long idLocalidad, CostoLocalidad costoLocalidad ) throws SQLException
-	{
-		CostoLocalidad ac;
-		DAOCostoLocalidad dao = new DAOCostoLocalidad( );
-		try
-		{
-			this.connection = getConnection( );
-			dao.setConnection( this.connection );
-			ac = dao.updateCostoLocalidad( fecha, idLugar, idLocalidad, costoLocalidad );
-			connection.commit( );
-		}
-		catch( SQLException e )
-		{
-			System.err.println( "SQLException:" + e.getMessage( ) );
-			e.printStackTrace( );
-			throw e;
-		}
-		catch( Exception e )
-		{
-			System.err.println( "GeneralException:" + e.getMessage( ) );
-			e.printStackTrace( );
-			throw e;
-		}
-		finally
-		{
-			closeDAO( dao );
-		}
-		return ac;
-	}
-	
 	public void deleteCostoLocalidad( Date fechaFuncion, Long idLugarFuncion, Long idLocalidad ) throws SQLException
 	{
 		DAOCostoLocalidad dao = new DAOCostoLocalidad( );
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			dao.deleteEntryCostoLocalidad( fechaFuncion, idLugarFuncion, idLocalidad );
+			
+			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}

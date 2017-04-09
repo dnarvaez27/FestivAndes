@@ -1,19 +1,19 @@
 package vos.intermediate;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LugarLocalidad
 {
-	@JsonProperty(value = "idLugar")
+	@JsonProperty( value = "idLugar" )
 	private Long idLugar;
 	
-	@JsonProperty(value = "idLocalidad")
+	@JsonProperty( value = "idLocalidad" )
 	private Long idLocalidad;
 	
-	@JsonProperty(value = "esNumerada")
+	@JsonProperty( value = "esNumerada" )
 	private Integer esNumerada;
 	
-	@JsonProperty(value = "capacidad")
+	@JsonProperty( value = "capacidad" )
 	private Integer capacidad;
 	
 	public LugarLocalidad( Long idLugar, Long idLocalidad, Integer esNumerada, Integer capacidad )

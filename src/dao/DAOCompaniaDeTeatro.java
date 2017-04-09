@@ -1,7 +1,6 @@
 package dao;
 
 import vos.CompaniaDeTeatro;
-import vos.Usuario;
 import vos.reportes.RFC5;
 
 import java.sql.PreparedStatement;
@@ -18,38 +17,26 @@ public class DAOCompaniaDeTeatro extends DAO
 		super( );
 	}
 	
-	public CompaniaDeTeatro createCompaniaDeTeatro( Long id, String password, CompaniaDeTeatro object ) throws SQLException
+	public CompaniaDeTeatro createCompaniaDeTeatro( CompaniaDeTeatro object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELECT * " );
-		sql.append( "FROM USUARIOS " );
-		sql.append( String.format( "WHERE identificacion = %s ", id ) );
-		sql.append( String.format( "AND password = '%s' ", password ) );
-		sql.append( String.format( "AND rol = '%s'", Usuario.USUARIO_ADMINISTRADOR ) );
+		sql.append( "INSERT INTO COMPANIAS_DE_TEATRO " );
+		sql.append( "( id, tipo_id, nombre, nombre_representante, pais_origen, pagina_web, fecha_llegada, fecha_salida ) " );
+		sql.append( "VALUES " );
+		sql.append( "( " );
+		sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
+		sql.append( String.format( "'%s', ", object.getTipoIdentificacion( ) ) );
+		sql.append( String.format( "'%s', ", object.getNombre( ) ) );
+		sql.append( String.format( "'%s', ", object.getNombreRepresentante( ) ) );
+		sql.append( String.format( "'%s', ", object.getPaisOrigen( ) ) );
+		sql.append( String.format( "'%s', ", object.getPaginaWeb( ) ) );
+		sql.append( String.format( "%s, ", toDate( object.getFechaLlegada( ) ) ) );
+		sql.append( String.format( "%s ", toDate( object.getFechaSalida( ) ) ) );
+		sql.append( ")" );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
-		ResultSet rs = s.executeQuery( );
-		if( rs.next( ) )
-		{
-			sql = new StringBuilder( );
-			sql.append( "INSERT INTO COMPANIAS_DE_TEATRO " );
-			sql.append( "( id, tipo_id, nombre, nombre_representante, pais_origen, pagina_web, fecha_llegada, fecha_salida ) " );
-			sql.append( "VALUES " );
-			sql.append( "( " );
-			sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
-			sql.append( String.format( "'%s', ", object.getTipoIdentificacion( ) ) );
-			sql.append( String.format( "'%s', ", object.getNombre( ) ) );
-			sql.append( String.format( "'%s', ", object.getNombreRepresentante( ) ) );
-			sql.append( String.format( "'%s', ", object.getPaisOrigen( ) ) );
-			sql.append( String.format( "'%s', ", object.getPaginaWeb( ) ) );
-			sql.append( String.format( "%s, ", toDate( object.getFechaLlegada( ) ) ) );
-			sql.append( String.format( "%s ", toDate( object.getFechaSalida( ) ) ) );
-			sql.append( ")" );
-			
-			s = connection.prepareStatement( sql.toString( ) );
-			recursos.add( s );
-			s.execute( );
-		}
+		recursos.add( s );
+		s.execute( );
 		s.close( );
 		return object;
 	}
@@ -71,6 +58,7 @@ public class DAOCompaniaDeTeatro extends DAO
 			list.add( resultToCompaniaDeTeatro( rs ) );
 		}
 		
+		rs.close( );
 		s.close( );
 		return list;
 	}
@@ -93,6 +81,7 @@ public class DAOCompaniaDeTeatro extends DAO
 		{
 			object = resultToCompaniaDeTeatro( rs );
 		}
+		rs.close( );
 		s.close( );
 		return object;
 	}
@@ -100,7 +89,6 @@ public class DAOCompaniaDeTeatro extends DAO
 	public CompaniaDeTeatro updateCompaniaDeTeatro( Long idCompania, CompaniaDeTeatro object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		
 		sql.append( "UPDATE COMPANIAS_DE_TEATRO " );
 		sql.append( "SET " );
 		sql.append( String.format( "nombre = '%s', ", object.getNombre( ) ) );
@@ -115,7 +103,7 @@ public class DAOCompaniaDeTeatro extends DAO
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		s.execute( );
-		s.clearParameters( );
+		s.close( );
 		return object;
 	}
 	
@@ -153,7 +141,7 @@ public class DAOCompaniaDeTeatro extends DAO
 		return object;
 	}
 	
-	public static CompaniaDeTeatro resultToCompaniaDeTeatro( ResultSet rs ) throws SQLException
+	private static CompaniaDeTeatro resultToCompaniaDeTeatro( ResultSet rs ) throws SQLException
 	{
 		CompaniaDeTeatro object = resultToBasicCompaniaDeTeatro( rs );
 		object.setEmail( rs.getString( "email" ) );

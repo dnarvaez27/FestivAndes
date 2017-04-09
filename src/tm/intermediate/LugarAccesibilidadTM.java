@@ -1,14 +1,15 @@
 package tm.intermediate;
 
+import dao.intermediate.DAOLugarAccesibilidad;
+import tm.TransactionManager;
+import vos.Accesibilidad;
+import vos.Lugar;
+
 import java.sql.SQLException;
 import java.util.List;
 
-import dao.intermediate.DAOLugarAccesibilidad;
-import tm.TransactionManager;
-import vos.Lugar;
-import vos.Accesibilidad;
-
-public class LugarAccesibilidadTM extends TransactionManager{
+public class LugarAccesibilidadTM extends TransactionManager
+{
 	public LugarAccesibilidadTM( String contextPathP )
 	{
 		super( contextPathP );
@@ -20,19 +21,25 @@ public class LugarAccesibilidadTM extends TransactionManager{
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			dao.createEntryLugarAccesibilidad( idLugar, idAccesibilidad );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -49,19 +56,25 @@ public class LugarAccesibilidadTM extends TransactionManager{
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			list = dao.getAccesibilidadesFromLugar( idLugar );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -79,19 +92,25 @@ public class LugarAccesibilidadTM extends TransactionManager{
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			list = dao.getLugaresWithAccesibilidad( idAccesibilidad );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -108,18 +127,25 @@ public class LugarAccesibilidadTM extends TransactionManager{
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			dao.deleteEntryLugarAccesibilidad( idLugar, idAccesibilidad );
+			
+			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}

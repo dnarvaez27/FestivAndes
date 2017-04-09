@@ -1,6 +1,6 @@
 package rest;
 
-import tm.UsuarioTM;
+import tm.UsuarioCM;
 import vos.Usuario;
 
 import javax.servlet.ServletContext;
@@ -27,7 +27,7 @@ public class UsuarioServices extends Services
 	@POST
 	public Response createUsuario( Usuario usuario )
 	{
-		UsuarioTM tm = new UsuarioTM( getPath( ) );
+		UsuarioCM tm = new UsuarioCM( getPath( ) );
 		try
 		{
 			usuario = tm.createUsuario( usuario );
@@ -40,10 +40,10 @@ public class UsuarioServices extends Services
 	}
 	
 	@GET
-	public Response getUsuario( )
+	public Response getUsuarios( )
 	{
 		List<Usuario> list;
-		UsuarioTM tm = new UsuarioTM( getPath( ) );
+		UsuarioCM tm = new UsuarioCM( getPath( ) );
 		try
 		{
 			list = tm.getUsuarios( );
@@ -60,7 +60,7 @@ public class UsuarioServices extends Services
 	public Response getUsuario( @PathParam( "id" ) Long id, @PathParam( "tipo" ) String tipo )
 	{
 		Usuario us;
-		UsuarioTM tm = new UsuarioTM( getPath( ) );
+		UsuarioCM tm = new UsuarioCM( getPath( ) );
 		try
 		{
 			us = tm.getUsuario( id, tipo );
@@ -74,26 +74,25 @@ public class UsuarioServices extends Services
 	
 	@PUT
 	@Path( "{id}" )
-	public Response updateUsuario( @PathParam( "id" ) Long id, Usuario us )
+	public Response updateUsuario( @PathParam( "id" ) Long id, Usuario usuario )
 	{
-		Usuario l;
-		UsuarioTM tm = new UsuarioTM( getPath( ) );
+		UsuarioCM tm = new UsuarioCM( getPath( ) );
 		try
 		{
-			l = tm.updateUsuario( id, us );
+			usuario = tm.updateUsuario( id, usuario );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( l ).build( );
+		return Response.status( 200 ).entity( usuario ).build( );
 	}
 	
 	@DELETE
 	@Path( "{id}/{tipo}" )
 	public Response deleteUsuario( @PathParam( "id" ) Long id, @PathParam( "tipo" ) String tipo )
 	{
-		UsuarioTM tm = new UsuarioTM( getPath( ) );
+		UsuarioCM tm = new UsuarioCM( getPath( ) );
 		try
 		{
 			tm.deleteUsuario( id, tipo );
@@ -103,5 +102,13 @@ public class UsuarioServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
+	}
+	
+	// REGISTRADOS
+	
+	@Path( "/registrados" )
+	public UsuarioRegistradoServices getRegistrados( )
+	{
+		return new UsuarioRegistradoServices( context );
 	}
 }

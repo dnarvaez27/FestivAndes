@@ -76,6 +76,7 @@ public class DAOLugarLocalidad extends DAO
 	
 	public Localidad getLocalidadFromLugar( Long idLugar, Long idLocalidad ) throws SQLException
 	{
+		Localidad loc = null;
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
 		sql.append( "FROM LUGAR_LOCALIDAD LL INNER JOIN LOCALIDADES L" );
@@ -87,13 +88,16 @@ public class DAOLugarLocalidad extends DAO
 		ResultSet rs = s.executeQuery( );
 		if( rs.next( ) )
 		{
-			return DAOLocalidad.resultToLocalidad( rs, 1 );
+			loc = DAOLocalidad.resultToLocalidad( rs, 1 );
 		}
-		return null;
+		rs.close( );
+		s.close( );
+		return loc;
 	}
 	
 	public Lugar getLugarWithLocalidad( Long idLugar, Long idLocalidad ) throws SQLException
 	{
+		Lugar lug = null;
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
 		sql.append( "FROM LUGAR_LOCALIDAD LL INNER JOIN LUGARES L " );
@@ -105,12 +109,14 @@ public class DAOLugarLocalidad extends DAO
 		ResultSet rs = s.executeQuery( );
 		if( rs.next( ) )
 		{
-			return DAOLugar.restultToAccesibildiad( rs );
+			lug = DAOLugar.restultToAccesibildiad( rs );
 		}
-		return null;
+		rs.close( );
+		s.close( );
+		return lug;
 	}
 	
-	public LugarLocalidad updateLugarLocalidad( Long idLugar, Long idLocalidad, LugarLocalidad lugarLocalidad )
+	public LugarLocalidad updateLugarLocalidad( Long idLugar, Long idLocalidad, LugarLocalidad lugarLocalidad ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE LUGAR_LOCALIDAD " );
@@ -120,8 +126,13 @@ public class DAOLugarLocalidad extends DAO
 		sql.append( String.format( "WHERE id_lugar = %s ", idLugar ) );
 		sql.append( String.format( "  AND id_localidad = %s ", idLocalidad ) );
 		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		s.execute( );
+		
 		lugarLocalidad.setIdLocalidad( idLocalidad );
 		lugarLocalidad.setIdLugar( idLugar );
+		
+		s.close( );
 		return lugarLocalidad;
 	}
 	

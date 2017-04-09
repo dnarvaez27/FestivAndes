@@ -1,7 +1,7 @@
 package rest;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import tm.SillaTM;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import tm.SillaCM;
 import vos.Silla;
 
 import javax.servlet.ServletContext;
@@ -32,7 +32,7 @@ public class SillaServices extends Services
 	@POST
 	public Response createSilla( Silla silla, @PathParam( "idLocalidad" ) Long idLocalidad )
 	{
-		SillaTM tm = new SillaTM( getPath( ) );
+		SillaCM tm = new SillaCM( getPath( ) );
 		try
 		{
 			silla.setIdLocalidad( idLocalidad );
@@ -50,7 +50,7 @@ public class SillaServices extends Services
 	public Response getSillasFrom( @PathParam( "idLocalidad" ) Long idLocalidad )
 	{
 		List<Silla> list;
-		SillaTM tm = new SillaTM( getPath( ) );
+		SillaCM tm = new SillaCM( getPath( ) );
 		try
 		{
 			list = tm.getSillasFrom( idLugar, idLocalidad );
@@ -67,7 +67,7 @@ public class SillaServices extends Services
 	public Response getSillas( )
 	{
 		List<Silla> list;
-		SillaTM tm = new SillaTM( getPath( ) );
+		SillaCM tm = new SillaCM( getPath( ) );
 		try
 		{
 			list = tm.getSillas( );
@@ -82,15 +82,14 @@ public class SillaServices extends Services
 	@GET
 	@Path( "{numero_fila}/{numero_silla}" )
 	public Response getSilla(
-			@PathParam( "idLocalidad" ) Long id_localidad,
-			@PathParam( "numero_fila" ) Integer numero_fila,
-			@PathParam( "numero_silla" ) Integer numero_silla )
+			@PathParam( "idLocalidad" ) Long idLocalidad,
+			@PathParam( "numero_fila" ) Integer numeroFila, @PathParam( "numero_silla" ) Integer numeroSilla )
 	{
 		Silla pSilla;
-		SillaTM tm = new SillaTM( getPath( ) );
+		SillaCM tm = new SillaCM( getPath( ) );
 		try
 		{
-			pSilla = tm.getSilla( numero_silla, numero_fila, idLugar, id_localidad );
+			pSilla = tm.getSilla( numeroSilla, numeroFila, idLugar, idLocalidad );
 		}
 		catch( SQLException e )
 		{
@@ -101,37 +100,34 @@ public class SillaServices extends Services
 	
 	@PUT
 	@Path( "{numero_fila}/{numero_silla}" )
-	public Response updateSilla(
-			@PathParam( "idLocalidad" ) Long id_localidad,
-			@PathParam( "numero_fila" ) Integer numero_fila,
-			@PathParam( "numero_silla" ) Integer numero_silla, Silla pSilla )
+	public Response updateSilla( Silla silla,
+	                             @PathParam( "idLocalidad" ) Long id_localidad,
+	                             @PathParam( "numero_fila" ) Integer numeroFila, @PathParam( "numero_silla" ) Integer numeroSilla )
 	{
-		Silla l;
-		SillaTM tm = new SillaTM( getPath( ) );
+		SillaCM tm = new SillaCM( getPath( ) );
 		try
 		{
-			pSilla.setIdLugar( idLugar );
-			pSilla.setIdLocalidad( id_localidad );
-			l = tm.updateSilla( numero_silla, numero_fila, idLugar, id_localidad, pSilla );
+			silla.setIdLugar( idLugar );
+			silla.setIdLocalidad( id_localidad );
+			silla = tm.updateSilla( numeroSilla, numeroFila, idLugar, id_localidad, silla );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( l ).build( );
+		return Response.status( 200 ).entity( silla ).build( );
 	}
 	
 	@DELETE
 	@Path( "{numero_fila}/{numero_silla}" )
 	public Response deleteSilla(
 			@PathParam( "idLocalidad" ) Long id_localidad,
-			@PathParam( "numero_fila" ) Integer numero_fila,
-			@PathParam( "numero_silla" ) Integer numero_silla )
+			@PathParam( "numero_fila" ) Integer numeroFila, @PathParam( "numero_silla" ) Integer numeroSilla )
 	{
-		SillaTM tm = new SillaTM( getPath( ) );
+		SillaCM tm = new SillaCM( getPath( ) );
 		try
 		{
-			tm.deleteSilla( numero_silla, numero_fila, idLugar, id_localidad );
+			tm.deleteSilla( numeroSilla, numeroFila, idLugar, id_localidad );
 		}
 		catch( SQLException e )
 		{

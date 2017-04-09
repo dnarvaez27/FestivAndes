@@ -22,6 +22,8 @@ public class LugarLocalidadTM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
 			
 			dao.createEntryLugarLocalidad( ll );
@@ -31,12 +33,14 @@ public class LugarLocalidadTM extends TransactionManager
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -53,19 +57,25 @@ public class LugarLocalidadTM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			list = dao.getLocalidadesFromLugar( idLugar );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -83,19 +93,25 @@ public class LugarLocalidadTM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			localidad = dao.getLocalidadFromLugar( idLugar, idLocalidad );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -113,19 +129,25 @@ public class LugarLocalidadTM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			list = dao.getLugaresWithLocalidad( idLocalidad );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -138,24 +160,29 @@ public class LugarLocalidadTM extends TransactionManager
 	
 	public LugarLocalidad updateLugarLocalidad( Long idLugar, Long idLocalidad, LugarLocalidad lugarLocalidad ) throws SQLException
 	{
-		LugarLocalidad l;
 		DAOLugarLocalidad dao = new DAOLugarLocalidad( );
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
-			l = dao.updateLugarLocalidad( idLugar, idLocalidad, lugarLocalidad );
+			
+			lugarLocalidad = dao.updateLugarLocalidad( idLugar, idLocalidad, lugarLocalidad );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -163,7 +190,7 @@ public class LugarLocalidadTM extends TransactionManager
 		{
 			closeDAO( dao );
 		}
-		return l;
+		return lugarLocalidad;
 	}
 	
 	public void deleteLugarLocalidad( Long idLugar, Long idLocalidad ) throws SQLException
@@ -172,18 +199,25 @@ public class LugarLocalidadTM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			dao.deleteEntryLugarLocalidad( idLugar, idLocalidad );
+			
+			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}

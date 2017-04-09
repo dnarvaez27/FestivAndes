@@ -48,6 +48,7 @@ public class DAOClasificacion extends DAO
 			list.add( restultToAccesibildiad( rs ) );
 		}
 		
+		rs.close( );
 		s.close( );
 		return list;
 	}
@@ -68,6 +69,7 @@ public class DAOClasificacion extends DAO
 		{
 			object = restultToAccesibildiad( rs );
 		}
+		rs.close( );
 		s.close( );
 		return object;
 	}
@@ -82,7 +84,7 @@ public class DAOClasificacion extends DAO
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		s.execute( );
-		s.clearParameters( );
+		s.close( );
 		return object;
 	}
 	
@@ -98,7 +100,7 @@ public class DAOClasificacion extends DAO
 		s.close( );
 	}
 	
-	public static Clasificacion restultToAccesibildiad( ResultSet rs ) throws SQLException
+	private static Clasificacion restultToAccesibildiad( ResultSet rs ) throws SQLException
 	{
 		Clasificacion clasificacion = new Clasificacion( );
 		clasificacion.setId( rs.getLong( "id" ) );

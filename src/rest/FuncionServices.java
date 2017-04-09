@@ -1,11 +1,10 @@
 package rest;
 
-import tm.FuncionTM;
+import tm.FuncionCM;
 import tm.intermediate.CostoLocalidadTM;
-import utilities.DateFormatter;
+import utilities.DateUtils;
 import vos.Funcion;
 import vos.Localidad;
-import vos.Usuario;
 import vos.intermediate.CostoLocalidad;
 import vos.reportes.RFC3;
 
@@ -33,16 +32,16 @@ public class FuncionServices extends Services
 	@POST
 	public Response createFuncion( Funcion funcion,
 	                               @HeaderParam( "id" ) Long id,
-	                               @HeaderParam( "password" ) String password,
-	                               @PathParam( "idEspectaculo" ) Long idEspectaculo )
+	                               @HeaderParam( "tipo" ) String tipo,
+	                               @HeaderParam( "password" ) String password, @PathParam( "idEspectaculo" ) Long idEspectaculo )
 	{
-		FuncionTM tm = new FuncionTM( getPath( ) );
+		FuncionCM tm = new FuncionCM( getPath( ) );
 		try
 		{
 			funcion.setIdEspectaculo( idEspectaculo );
-			funcion = tm.createFuncion( id, password, funcion );
+			funcion = tm.createFuncion( id, tipo, password, funcion );
 		}
-		catch( SQLException e )
+		catch( Exception e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
@@ -53,7 +52,7 @@ public class FuncionServices extends Services
 	public Response getFunciones( @PathParam( "idEspectaculo" ) Long idEspectaculo )
 	{
 		List<Funcion> list;
-		FuncionTM tm = new FuncionTM( getPath( ) );
+		FuncionCM tm = new FuncionCM( getPath( ) );
 		try
 		{
 			list = tm.getFuncionesFrom( idEspectaculo );
@@ -70,7 +69,7 @@ public class FuncionServices extends Services
 	public Response getFunciones( )
 	{
 		List<Funcion> list;
-		FuncionTM tm = new FuncionTM( getPath( ) );
+		FuncionCM tm = new FuncionCM( getPath( ) );
 		try
 		{
 			list = tm.getFunciones( );
@@ -84,52 +83,48 @@ public class FuncionServices extends Services
 	
 	@GET
 	@Path( "{lugar}/{fecha}" )
-	public Response getFuncion(
-			@PathParam( "lugar" ) Long idFecha, @PathParam( "fecha" ) String fecha )
+	public Response getFuncion( @PathParam( "lugar" ) Long idFecha, @PathParam( "fecha" ) String fecha )
 	{
-		Funcion ac;
-		FuncionTM tm = new FuncionTM( getPath( ) );
+		Funcion funcion;
+		FuncionCM tm = new FuncionCM( getPath( ) );
 		try
 		{
-			ac = tm.getFuncion( DateFormatter.format( fecha ), idFecha );
+			funcion = tm.getFuncion( DateUtils.format( fecha ), idFecha );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( ac ).build( );
+		return Response.status( 200 ).entity( funcion ).build( );
 	}
 	
 	@PUT
 	@Path( "{lugar}/{fecha}" )
 	public Response updateFuncion(
-			@PathParam( "lugar" ) Long idFecha,
-			@PathParam( "fecha" ) String fecha, Usuario usuario, Funcion accesibilidad )
+			@HeaderParam( "idUsuario" ) Long idUsuario,
+			@HeaderParam( "tipo" ) String tipoId,
+			@HeaderParam( "password" ) String password, @PathParam( "lugar" ) Long idFecha, @PathParam( "fecha" ) String fecha, Funcion funcion )
 	{
-		Funcion ac;
-		FuncionTM tm = new FuncionTM( getPath( ) );
+		FuncionCM tm = new FuncionCM( getPath( ) );
 		try
 		{
-			ac = tm.updateFuncion( usuario.getIdentificacion( ), usuario.getPassword( ), DateFormatter
-					.format( fecha ), idFecha, accesibilidad );
+			funcion = tm.updateFuncion( idUsuario, tipoId, password, DateUtils.format( fecha ), idFecha, funcion );
 		}
-		catch( SQLException e )
+		catch( Exception e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( ac ).build( );
+		return Response.status( 200 ).entity( funcion ).build( );
 	}
 	
 	@DELETE
 	@Path( "{lugar}/{fecha}" )
-	public Response deleteFuncion(
-			@PathParam( "lugar" ) Long idLugar, @PathParam( "fecha" ) String fecha )
+	public Response deleteFuncion( @PathParam( "lugar" ) Long idLugar, @PathParam( "fecha" ) String fecha )
 	{
-		FuncionTM tm = new FuncionTM( getPath( ) );
-		
+		FuncionCM tm = new FuncionCM( getPath( ) );
 		try
 		{
-			tm.deleteFuncion( DateFormatter.format( fecha ), idLugar );
+			tm.deleteFuncion( DateUtils.format( fecha ), idLugar );
 		}
 		catch( SQLException e )
 		{
@@ -142,11 +137,10 @@ public class FuncionServices extends Services
 	@POST
 	@Path( "{id_lugar}/{fecha_funcion}/localidades" )
 	public Response createEntryCostoLocalidad(
-			@PathParam( "id_lugar" ) Long idLugar,
-			@PathParam( "fecha_funcion" ) String fechaFuncion, CostoLocalidad costoLocalidad )
+			@PathParam( "id_lugar" ) Long idLugar, @PathParam( "fecha_funcion" ) String fechaFuncion, CostoLocalidad costoLocalidad )
 	{
 		costoLocalidad.setIdLugar( idLugar );
-		costoLocalidad.setFecha( DateFormatter.format( fechaFuncion ) );
+		costoLocalidad.setFecha( DateUtils.format( fechaFuncion ) );
 		
 		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
 		try
@@ -162,15 +156,13 @@ public class FuncionServices extends Services
 	
 	@GET
 	@Path( "{id_lugar}/{fecha_funcion}/localidades" )
-	public Response getCostoLocalidadesFrom(
-			@PathParam( "id_lugar" ) Long idLugar,
-			@PathParam( "fecha_funcion" ) String fechaFuncion )
+	public Response getCostoLocalidadesFrom( @PathParam( "id_lugar" ) Long idLugar, @PathParam( "fecha_funcion" ) String fechaFuncion )
 	{
 		List<Localidad> list;
 		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
 		try
 		{
-			list = tm.getCostoLocalidadesFromFuncion( DateFormatter.format( fechaFuncion ), idLugar );
+			list = tm.getCostoLocalidadesFromFuncion( DateUtils.format( fechaFuncion ), idLugar );
 		}
 		catch( SQLException e )
 		{
@@ -182,15 +174,13 @@ public class FuncionServices extends Services
 	@GET
 	@Path( "{id_lugar}/{fecha_funcion}/localidades/{id_localidad}" )
 	public Response getCostoLocalidadFrom(
-			@PathParam( "id_lugar" ) Long idLugar,
-			@PathParam( "fecha_funcion" ) String fechaFuncion,
-			@PathParam( "id_localidad" ) Long idLocalidad )
+			@PathParam( "id_lugar" ) Long idLugar, @PathParam( "fecha_funcion" ) String fechaFuncion, @PathParam( "id_localidad" ) Long idLocalidad )
 	{
 		Localidad costoLocalidad;
 		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
 		try
 		{
-			costoLocalidad = tm.getCostoLocalidadFrom( DateFormatter.format( fechaFuncion ), idLugar, idLocalidad );
+			costoLocalidad = tm.getCostoLocalidadFrom( DateUtils.format( fechaFuncion ), idLugar, idLocalidad );
 		}
 		catch( SQLException e )
 		{
@@ -203,13 +193,12 @@ public class FuncionServices extends Services
 	@Path( "{id_Lugar}/{fecha_funcion}/localidades/{id_localidad}" )
 	public Response updateCostoLocalidad( CostoLocalidad costoLocalidad,
 	                                      @PathParam( "id_Lugar" ) Long idLugar,
-	                                      @PathParam( "fecha_funcion" ) String fecha,
-	                                      @PathParam( "id_localidad" ) Long idLocalidad )
+	                                      @PathParam( "fecha_funcion" ) String fecha, @PathParam( "id_localidad" ) Long idLocalidad )
 	{
 		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
 		try
 		{
-			costoLocalidad = tm.updateCostoLocalidad( DateFormatter.format( fecha ), idLugar, idLocalidad, costoLocalidad );
+			costoLocalidad = tm.updateCostoLocalidad( DateUtils.format( fecha ), idLugar, idLocalidad, costoLocalidad );
 		}
 		catch( SQLException e )
 		{
@@ -219,6 +208,7 @@ public class FuncionServices extends Services
 	}
 	
 	// REPORTES
+	
 	@GET
 	@Path( "src" )
 	public Response generarReporte1(
@@ -234,11 +224,10 @@ public class FuncionServices extends Services
 			@QueryParam( "duracion_fin" ) Integer duracionFin,
 			@QueryParam( "lugar" ) String lugar,
 			@QueryParam( "accesibilidad" ) String accesoEspecial,
-			@QueryParam( "clasificacion" ) String publicoObjetivo,
-			@QueryParam( "orderBy" ) List<String> order, @QueryParam( "asc" ) Integer asc )
+			@QueryParam( "clasificacion" ) String publicoObjetivo, @QueryParam( "orderBy" ) List<String> order, @QueryParam( "asc" ) Integer asc )
 	{
 		List<Funcion> list;
-		FuncionTM tm = new FuncionTM( getPath( ) );
+		FuncionCM tm = new FuncionCM( getPath( ) );
 		
 		try
 		{
@@ -252,16 +241,15 @@ public class FuncionServices extends Services
 	}
 	
 	@GET
-	@Path( "{lugar}/{fecha}/rfc2" )
-	public Response generarReporte3(
-			@PathParam( "lugar" ) Long idLugar, @PathParam( "fecha" ) String fecha )
+	@Path( "{lugar}/{fecha}/rfc3" )
+	public Response generarReporte3( @PathParam( "lugar" ) Long idLugar, @PathParam( "fecha" ) String fecha )
 	{
 		RFC3 rfc3;
-		FuncionTM tm = new FuncionTM( getPath( ) );
+		FuncionCM tm = new FuncionCM( getPath( ) );
 		
 		try
 		{
-			rfc3 = tm.generarReporte3( DateFormatter.format( fecha ), idLugar );
+			rfc3 = tm.generarReporte3( DateUtils.format( fecha ), idLugar );
 		}
 		catch( SQLException e )
 		{

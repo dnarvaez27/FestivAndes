@@ -21,19 +21,25 @@ public class PreferenciaLugarTM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			dao.createEntryPreferenciaLugar( idLugar, idUsuario, tipo );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -50,19 +56,25 @@ public class PreferenciaLugarTM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			list = dao.getLugaresPreferidosByUser( idUsuario, tipo );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -80,19 +92,25 @@ public class PreferenciaLugarTM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			list = dao.getUsersWhoPreferLugar( idLugar );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -110,19 +128,25 @@ public class PreferenciaLugarTM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			lugar = dao.getLugarPreferidoUser( idUsuario, tipo, idLugar );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -139,19 +163,25 @@ public class PreferenciaLugarTM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			dao.deletePreferenciaLugar( idUsuario, tipo, idLugar );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}

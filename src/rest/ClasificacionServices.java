@@ -1,6 +1,6 @@
 package rest;
 
-import tm.ClasificacionTM;
+import tm.ClasificacionCM;
 import vos.Clasificacion;
 
 import javax.servlet.ServletContext;
@@ -27,7 +27,7 @@ public class ClasificacionServices extends Services
 	@POST
 	public Response createClasificacion( Clasificacion clasificacion )
 	{
-		ClasificacionTM tm = new ClasificacionTM( getPath( ) );
+		ClasificacionCM tm = new ClasificacionCM( getPath( ) );
 		try
 		{
 			clasificacion = tm.createClasificacion( clasificacion );
@@ -40,10 +40,10 @@ public class ClasificacionServices extends Services
 	}
 	
 	@GET
-	public Response getClasificacions( )
+	public Response getClasificaciones( )
 	{
 		List<Clasificacion> list;
-		ClasificacionTM tm = new ClasificacionTM( getPath( ) );
+		ClasificacionCM tm = new ClasificacionCM( getPath( ) );
 		try
 		{
 			list = tm.getClasificaciones( );
@@ -59,41 +59,40 @@ public class ClasificacionServices extends Services
 	@Path( "{id}" )
 	public Response getClasificacion( @PathParam( "id" ) Long id )
 	{
-		Clasificacion ac;
-		ClasificacionTM tm = new ClasificacionTM( getPath( ) );
+		Clasificacion clasificacion;
+		ClasificacionCM tm = new ClasificacionCM( getPath( ) );
 		try
 		{
-			ac = tm.getClasificacion( id );
+			clasificacion = tm.getClasificacion( id );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( ac ).build( );
+		return Response.status( 200 ).entity( clasificacion ).build( );
 	}
 	
 	@PUT
 	@Path( "{id}" )
 	public Response updateClasificacion( @PathParam( "id" ) Long id, Clasificacion clasificacion )
 	{
-		Clasificacion ac;
-		ClasificacionTM tm = new ClasificacionTM( getPath( ) );
+		ClasificacionCM tm = new ClasificacionCM( getPath( ) );
 		try
 		{
-			ac = tm.updateClasificacion( id, clasificacion );
+			clasificacion = tm.updateClasificacion( id, clasificacion );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( ac ).build( );
+		return Response.status( 200 ).entity( clasificacion ).build( );
 	}
 	
 	@DELETE
 	@Path( "{id}" )
 	public Response deleteClasificacion( Long id )
 	{
-		ClasificacionTM tm = new ClasificacionTM( getPath( ) );
+		ClasificacionCM tm = new ClasificacionCM( getPath( ) );
 		try
 		{
 			tm.deleteClasificacion( id );

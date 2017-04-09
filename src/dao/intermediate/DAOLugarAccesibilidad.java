@@ -1,18 +1,19 @@
 package dao.intermediate;
 
+import dao.DAO;
+import dao.DAOAccesibilidad;
+import dao.DAOLugar;
+import vos.Accesibilidad;
+import vos.Lugar;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import dao.DAO;
-import dao.DAOLugar;
-import dao.DAOAccesibilidad;
-import vos.Lugar;
-import vos.Accesibilidad;
-
-public class DAOLugarAccesibilidad extends DAO{
+public class DAOLugarAccesibilidad extends DAO
+{
 	public void createEntryLugarAccesibilidad( Long idLugar, Long idAccesibilidad ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
@@ -85,6 +86,8 @@ public class DAOLugarAccesibilidad extends DAO{
 		{
 			return DAOAccesibilidad.resultToAccesibilidad( rs );
 		}
+		rs.close( );
+		s.close( );
 		return null;
 	}
 	
@@ -103,6 +106,8 @@ public class DAOLugarAccesibilidad extends DAO{
 		{
 			return DAOLugar.restultToAccesibildiad( rs );
 		}
+		rs.close( );
+		s.close( );
 		return null;
 	}
 	

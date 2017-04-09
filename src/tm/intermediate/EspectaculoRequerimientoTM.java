@@ -21,19 +21,25 @@ public class EspectaculoRequerimientoTM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			dao.createEntryER( idEspectaculo, idRequerimiento );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -50,19 +56,25 @@ public class EspectaculoRequerimientoTM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			list = dao.getRequerimientoTecnicosFromEspectaculo( idEspectaculo );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -80,19 +92,25 @@ public class EspectaculoRequerimientoTM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
+			
 			list = dao.getEspectaculosFromRequerimientoTecnico( idRequerimiento );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
@@ -109,19 +127,25 @@ public class EspectaculoRequerimientoTM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
 			dao.setConnection( this.connection );
-			dao.deleteEntryEG( idEspectaculo, idRequerimiento );
+			
+			dao.deleteEntryER( idEspectaculo, idRequerimiento );
+			
 			connection.commit( );
 		}
 		catch( SQLException e )
 		{
 			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}
 		catch( Exception e )
 		{
 			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
 			e.printStackTrace( );
 			throw e;
 		}

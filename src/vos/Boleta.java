@@ -1,22 +1,24 @@
 package vos;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Dave on 20/03/2017.
  */
-public class Boleta
+public class Boleta implements Serializable
 {
 	@JsonProperty( value = "numBoleta" )
 	private Long numBoleta;
 	
-	@JsonProperty( value = "idNumeroSilla" )
-	private Long idNumeroSilla;
+	@JsonProperty( value = "numeroSilla" )
+	private Long numeroSilla;
 	
-	@JsonProperty( value = "idNumeroFila" )
-	private Long idNumeroFila;
+	@JsonProperty( value = "numeroFila" )
+	private Long numeroFila;
 	
 	@JsonProperty( value = "idLocalidad" )
 	private Long idLocalidad;
@@ -24,7 +26,7 @@ public class Boleta
 	@JsonProperty( value = "idLugar" )
 	private Long idLugar;
 	
-	@JsonProperty( value = "fecha" )
+	@JsonFormat( shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm" )
 	private Date fecha;
 	
 	@JsonProperty( value = "idUsuario" )
@@ -35,6 +37,19 @@ public class Boleta
 	
 	public Boleta( )
 	{
+	
+	}
+	
+	public Boleta( Boleta boleta )
+	{
+		this.numBoleta = boleta.numBoleta;
+		this.idLugar = boleta.idLugar;
+		this.idLocalidad = boleta.idLocalidad;
+		this.numeroFila = boleta.numeroFila;
+		this.numeroSilla = boleta.numeroSilla;
+		this.fecha = boleta.fecha;
+		this.idUsuario = boleta.idUsuario;
+		this.tipoIdUsuario = boleta.tipoIdUsuario;
 	}
 	
 	/**
@@ -78,43 +93,43 @@ public class Boleta
 	}
 	
 	/**
-	 * Retrieves the idNumeroSilla of the Boleta
+	 * Retrieves the numeroSilla of the Boleta
 	 *
-	 * @return The idNumeroSilla of the Boleta
+	 * @return The numeroSilla of the Boleta
 	 */
-	public Long getIdNumeroSilla( )
+	public Long getNumeroSilla( )
 	{
-		return idNumeroSilla;
+		return numeroSilla;
 	}
 	
 	/**
-	 * Updates the idNumeroSilla of the Boleta by the one given by parameter
+	 * Updates the numeroSilla of the Boleta by the one given by parameter
 	 *
-	 * @param idNumeroSilla The new idNumeroSilla of the Boleta
+	 * @param numeroSilla The new numeroSilla of the Boleta
 	 */
-	public void setIdNumeroSilla( Long idNumeroSilla )
+	public void setNumeroSilla( Long numeroSilla )
 	{
-		this.idNumeroSilla = idNumeroSilla;
+		this.numeroSilla = numeroSilla;
 	}
 	
 	/**
-	 * Retrieves the idNumeroFila of the Boleta
+	 * Retrieves the numeroFila of the Boleta
 	 *
-	 * @return The idNumeroFila of the Boleta
+	 * @return The numeroFila of the Boleta
 	 */
-	public Long getIdNumeroFila( )
+	public Long getNumeroFila( )
 	{
-		return idNumeroFila;
+		return numeroFila;
 	}
 	
 	/**
-	 * Updates the idNumeroFila of the Boleta by the one given by parameter
+	 * Updates the numeroFila of the Boleta by the one given by parameter
 	 *
-	 * @param idNumeroFila The new idNumeroFila of the Boleta
+	 * @param numeroFila The new numeroFila of the Boleta
 	 */
-	public void setIdNumeroFila( Long idNumeroFila )
+	public void setNumeroFila( Long numeroFila )
 	{
-		this.idNumeroFila = idNumeroFila;
+		this.numeroFila = numeroFila;
 	}
 	
 	/**

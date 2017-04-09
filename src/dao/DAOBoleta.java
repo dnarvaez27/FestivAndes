@@ -1,7 +1,6 @@
 package dao;
 
 import vos.Boleta;
-import vos.Usuario;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,66 +15,43 @@ public class DAOBoleta extends DAO
 		super( );
 	}
 	
-	public Boleta createBoleta( Long id, String tipo, Boleta object ) throws SQLException
+	public Boleta createBoleta( Boleta boleta ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELECT * " );
-		sql.append( "FROM USUARIOS " );
-		sql.append( String.format( "WHERE identificacion = %s ", id ) );
-		sql.append( String.format( "AND tipo_identificacion = '%s' ", tipo ) );
-		sql.append( String.format( "AND ( rol = '%s'", Usuario.USUARIO_REGISTRADO ) );
-		sql.append( String.format( " OR rol = '%s' )", Usuario.USUARIO_NO_REGISTRADO ) );
+		sql.append( "INSERT INTO BOLETAS " );
+		sql.append( "(NUM_BOLETA, NUM_SILLA, NUM_FILA, ID_LOCALIDAD, ID_LUGAR, FECHA, ID_USUARIO, ID_TIPO ) " );
+		sql.append( "VALUES " );
+		sql.append( "( " );
+		sql.append( String.format( "%s, ", boleta.getNumBoleta( ) ) );
+		sql.append( String.format( "%s, ", boleta.getNumeroSilla( ) ) );
+		sql.append( String.format( "%s, ", boleta.getNumeroFila( ) ) );
+		sql.append( String.format( "%s, ", boleta.getIdLocalidad( ) ) );
+		sql.append( String.format( "%s, ", boleta.getIdLugar( ) ) );
+		sql.append( String.format( "%s, ", toDateTime( boleta.getFecha( ) ) ) );
+		sql.append( String.format( "%s, ", boleta.getIdUsuario( ) ) );
+		sql.append( String.format( "'%s' ", boleta.getTipoIdUsuario( ) ) );
+		sql.append( ") " );
+		
+		System.out.println( sql.toString( ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
-		ResultSet rs = s.executeQuery( );
-		if( rs.next( ) && verificarCompraBoleta( object ) )
-		{
-			Usuario user = DAOUsuario.restultToAccesibildiad( rs );
-			
-			sql = new StringBuilder( );
-			sql.append( "INSERT INTO BOLETAS " );
-			sql.append( "( num_boleta, num_silla, num_fila, id_localidad, id_lugar, fecha, id_usuario, id_tipo ) " );
-			sql.append( "VALUES " );
-			sql.append( "( " );
-			sql.append( String.format( "%s, ", object.getNumBoleta( ) ) );
-			sql.append( String.format( "%s, ", object.getIdNumeroSilla( ) ) );
-			sql.append( String.format( "%s, ", object.getIdNumeroFila( ) ) );
-			sql.append( String.format( "%s, ", object.getIdLocalidad( ) ) );
-			sql.append( String.format( "%s, ", object.getIdLugar( ) ) );
-			sql.append( String.format( "%s, ", toDate( object.getFecha( ) ) ) );
-			sql.append( String.format( "%s, ", user.getIdentificacion( ) ) );
-			sql.append( String.format( "'%s' ", user.getTipoIdentificacion( ) ) );
-			sql.append( ")" );
-			
-			System.out.println( sql.toString( ) );
-			
-			s = connection.prepareStatement( sql.toString( ) );
-			recursos.add( s );
-			s.execute( );
-		}
-		rs.close( );
+		recursos.add( s );
+		s.execute( );
+		
 		s.close( );
-		return object;
+		return boleta;
 	}
 	
-	private boolean verificarCompraBoleta( Boleta boleta ) throws SQLException
+	public Long getNextBoleta( ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELECT * " );
+		sql.append( "SELECT MAX(NUM_BOLETA) AS bol_actual " );
 		sql.append( "FROM BOLETAS " );
-		sql.append( String.format( "WHERE NUM_SILLA = %s ", boleta.getIdNumeroSilla( ) ) );
-		sql.append( String.format( "  AND NUM_FILA = %s ", boleta.getIdNumeroFila( ) ) );
-		sql.append( String.format( "  AND ID_LUGAR = %s ", boleta.getIdLugar( ) ) );
-		sql.append( String.format( "  AND ID_LOCALIDAD = %s ", boleta.getIdLocalidad( ) ) );
-		sql.append( String.format( "  AND fecha = %s ", toDate( boleta.getFecha( ) ) ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		ResultSet rs = s.executeQuery( );
-		boolean rta = !rs.next( );
-		
-		rs.close( );
-		s.close( );
-		return rta;
+		rs.next( );
+		return rs.getLong( "bol_actual" ) + 1;
 	}
 	
 	public List<Boleta> getBoletas( ) throws SQLException
@@ -93,6 +69,7 @@ public class DAOBoleta extends DAO
 			list.add( resultToBoleta( rs ) );
 		}
 		
+		rs.close( );
 		s.close( );
 		return list;
 	}
@@ -114,6 +91,7 @@ public class DAOBoleta extends DAO
 			list.add( resultToBoleta( rs ) );
 		}
 		
+		rs.close( );
 		s.close( );
 		return list;
 	}
@@ -134,6 +112,7 @@ public class DAOBoleta extends DAO
 		{
 			object = resultToBoleta( rs );
 		}
+		rs.close( );
 		s.close( );
 		return object;
 	}
@@ -143,8 +122,8 @@ public class DAOBoleta extends DAO
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE BOLETAS " );
 		sql.append( "SET" );
-		sql.append( String.format( "num_silla = %s, ", object.getIdNumeroSilla( ) ) );
-		sql.append( String.format( "num_fila = %s, ", object.getIdNumeroFila( ) ) );
+		sql.append( String.format( "num_silla = %s, ", object.getNumeroSilla( ) ) );
+		sql.append( String.format( "num_fila = %s, ", object.getNumeroFila( ) ) );
 		sql.append( String.format( "id_localidad = %s, ", object.getIdLocalidad( ) ) );
 		sql.append( String.format( "id_lugar = %s, ", object.getIdLugar( ) ) );
 		sql.append( String.format( "fecha = %s, ", toDate( object.getFecha( ) ) ) );
@@ -154,7 +133,7 @@ public class DAOBoleta extends DAO
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		s.execute( );
-		s.clearParameters( );
+		s.close( );
 		return object;
 	}
 	
@@ -170,17 +149,37 @@ public class DAOBoleta extends DAO
 		s.close( );
 	}
 	
-	public static Boleta resultToBoleta( ResultSet rs ) throws SQLException
+	private static Boleta resultToBoleta( ResultSet rs ) throws SQLException
 	{
 		Boleta object = new Boleta( );
 		object.setNumBoleta( rs.getLong( "num_boleta" ) );
-		object.setIdNumeroSilla( rs.getLong( "num_silla" ) );
-		object.setIdNumeroFila( rs.getLong( "num_fila" ) );
+		object.setNumeroSilla( rs.getLong( "num_silla" ) );
+		object.setNumeroFila( rs.getLong( "num_fila" ) );
 		object.setIdLocalidad( rs.getLong( "id_localidad" ) );
 		object.setIdLugar( rs.getLong( "id_lugar" ) );
-		object.setFecha( rs.getDate( "fecha" ) );
+		object.setFecha( rs.getTimestamp( "fecha" ) );
 		object.setIdUsuario( rs.getLong( "id_usuario" ) );
 		object.setTipoIdUsuario( rs.getString( "id_tipo" ) );
 		return object;
+	}
+	
+	public boolean verificarCompraBoleta( Boleta boleta ) throws SQLException
+	{
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT * " );
+		sql.append( "FROM BOLETAS " );
+		sql.append( String.format( "WHERE NUM_SILLA = %s ", boleta.getNumeroSilla( ) ) );
+		sql.append( String.format( "  AND NUM_FILA = %s ", boleta.getNumeroFila( ) ) );
+		sql.append( String.format( "  AND ID_LUGAR = %s ", boleta.getIdLugar( ) ) );
+		sql.append( String.format( "  AND ID_LOCALIDAD = %s ", boleta.getIdLocalidad( ) ) );
+		sql.append( String.format( "  AND fecha = %s ", toDate( boleta.getFecha( ) ) ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		boolean rta = !rs.next( );
+		
+		rs.close( );
+		s.close( );
+		return rta;
 	}
 }

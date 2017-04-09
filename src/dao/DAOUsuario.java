@@ -15,6 +15,34 @@ public class DAOUsuario extends DAO
 		super( );
 	}
 	
+	public boolean isUserRole( Long id, String tipo, String password, String... roles ) throws SQLException
+	{
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT * " );
+		sql.append( "FROM USUARIOS " );
+		sql.append( String.format( "WHERE identificacion = %s ", id ) );
+		sql.append( String.format( "  AND tipo_identificacion = '%s' ", tipo ) );
+		sql.append( String.format( "  AND ( " ) );
+		
+		for( int i = 0; i < roles.length; i++ )
+		{
+			sql.append( String.format( "rol = '%s' ", roles[ i ] ) );
+			if( i + 1 < roles.length )
+			{
+				sql.append( " OR " );
+			}
+			sql.append( " ) " );
+		}
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		boolean is = rs.next( );
+		
+		rs.close( );
+		s.close( );
+		return is;
+	}
+	
 	public Usuario createUsuario( Usuario usuario ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
@@ -54,7 +82,7 @@ public class DAOUsuario extends DAO
 		{
 			list.add( restultToAccesibildiad( rs ) );
 		}
-		
+		rs.close( );
 		s.close( );
 		return list;
 	}
@@ -76,6 +104,7 @@ public class DAOUsuario extends DAO
 		{
 			usuario = restultToAccesibildiad( rs );
 		}
+		rs.close( );
 		s.close( );
 		return usuario;
 	}
@@ -96,6 +125,7 @@ public class DAOUsuario extends DAO
 		{
 			usuario = restultToAccesibildiad( rs );
 		}
+		rs.close( );
 		s.close( );
 		return usuario;
 	}
@@ -115,7 +145,7 @@ public class DAOUsuario extends DAO
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		s.execute( );
-		s.clearParameters( );
+		s.close( );
 		return usuario;
 	}
 	
@@ -132,7 +162,7 @@ public class DAOUsuario extends DAO
 		s.close( );
 	}
 	
-	public static Usuario restultToAccesibildiad( ResultSet rs ) throws SQLException
+	private static Usuario restultToAccesibildiad( ResultSet rs ) throws SQLException
 	{
 		Usuario u = new Usuario( );
 		u.setIdentificacion( rs.getLong( "identificacion" ) );

@@ -1,6 +1,6 @@
 package rest;
 
-import tm.UsuarioRegistradoTM;
+import tm.UsuarioRegistradoCM;
 import tm.intermediate.PreferenciaGeneroTM;
 import tm.intermediate.PreferenciaLugarTM;
 import vos.Genero;
@@ -30,10 +30,9 @@ public class UsuarioRegistradoServices extends Services
 	
 	@POST
 	public Response createUsuarioRegistrado( UsuarioRegistrado accesibilidad,
-	                                         @HeaderParam( "id" ) Long id,
-	                                         @HeaderParam( "password" ) String password )
+	                                         @HeaderParam( "id" ) Long id, @HeaderParam( "password" ) String password )
 	{
-		UsuarioRegistradoTM tm = new UsuarioRegistradoTM( getPath( ) );
+		UsuarioRegistradoCM tm = new UsuarioRegistradoCM( getPath( ) );
 		try
 		{
 			accesibilidad = tm.createUsuarioRegistrado( id, password, accesibilidad );
@@ -46,10 +45,10 @@ public class UsuarioRegistradoServices extends Services
 	}
 	
 	@GET
-	public Response getUsuarioRegistrados( )
+	public Response getUsuariosRegistrados( )
 	{
 		List<UsuarioRegistrado> list;
-		UsuarioRegistradoTM tm = new UsuarioRegistradoTM( getPath( ) );
+		UsuarioRegistradoCM tm = new UsuarioRegistradoCM( getPath( ) );
 		try
 		{
 			list = tm.getUsuarioRegistrados( );
@@ -63,11 +62,10 @@ public class UsuarioRegistradoServices extends Services
 	
 	@GET
 	@Path( "{id}/{tipo}" )
-	public Response getUsuarioRegistrado(
-			@PathParam( "id" ) Long id, @PathParam( "tipo" ) String tipo )
+	public Response getUsuarioRegistrado( @PathParam( "id" ) Long id, @PathParam( "tipo" ) String tipo )
 	{
 		UsuarioRegistrado ac;
-		UsuarioRegistradoTM tm = new UsuarioRegistradoTM( getPath( ) );
+		UsuarioRegistradoCM tm = new UsuarioRegistradoCM( getPath( ) );
 		try
 		{
 			ac = tm.getUsuarioRegistrado( id, tipo );
@@ -81,29 +79,25 @@ public class UsuarioRegistradoServices extends Services
 	
 	@PUT
 	@Path( "{id}/{tipo}" )
-	public Response updateUsuarioRegistrado(
-			@PathParam( "id" ) Long id,
-			@PathParam( "tipo" ) String tipo, UsuarioRegistrado accesibilidad )
+	public Response updateUsuarioRegistrado( @PathParam( "id" ) Long id, @PathParam( "tipo" ) String tipo, UsuarioRegistrado usuarioRegistrado )
 	{
-		UsuarioRegistrado ac;
-		UsuarioRegistradoTM tm = new UsuarioRegistradoTM( getPath( ) );
+		UsuarioRegistradoCM tm = new UsuarioRegistradoCM( getPath( ) );
 		try
 		{
-			ac = tm.updateUsuarioRegistrado( id, tipo, accesibilidad );
+			usuarioRegistrado = tm.updateUsuarioRegistrado( id, tipo, usuarioRegistrado );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( ac ).build( );
+		return Response.status( 200 ).entity( usuarioRegistrado ).build( );
 	}
 	
 	@DELETE
 	@Path( "{id}/{tipo}" )
-	public Response deleteUsuarioRegistrado(
-			@PathParam( "id" ) Long id, @PathParam( "tipo" ) String tipo )
+	public Response deleteUsuarioRegistrado( @PathParam( "id" ) Long id, @PathParam( "tipo" ) String tipo )
 	{
-		UsuarioRegistradoTM tm = new UsuarioRegistradoTM( getPath( ) );
+		UsuarioRegistradoCM tm = new UsuarioRegistradoCM( getPath( ) );
 		try
 		{
 			tm.deleteUsuarioRegistrado( id, tipo );
@@ -116,17 +110,26 @@ public class UsuarioRegistradoServices extends Services
 	}
 	
 	// BOLETAS
+	
 	@Path( "{idUsuario}/{idTipo}/boletas" )
 	public BoletaServices getBoletas( )
 	{
 		return new BoletaServices( context );
 	}
 	
+	// ABONOS
+	
+	@Path( "{idUsuario}/{idTipo}/abonos" )
+	public AbonoServices getAbonos( )
+	{
+		return new AbonoServices( context );
+	}
+	
 	// PREFERENCIA - GENERO
+	
 	@GET
 	@Path( "{idUsuario}/{tipo}/generos" )
-	public Response getGenerosPreferidos(
-			@PathParam( "idUsuario" ) Long idUsuario, @PathParam( "tipo" ) String tipo )
+	public Response getGenerosPreferidos( @PathParam( "idUsuario" ) Long idUsuario, @PathParam( "tipo" ) String tipo )
 	{
 		List<Genero> list;
 		PreferenciaGeneroTM tm = new PreferenciaGeneroTM( getPath( ) );
@@ -141,11 +144,11 @@ public class UsuarioRegistradoServices extends Services
 		return Response.status( 200 ).entity( list ).build( );
 	}
 	
+	// TODO: 8/04/2017 El nombre del genero por Json?
 	@POST
 	@Path( "{idUsuario}/{tipo}/generos/{idGenero}" )
 	public Response createEntryGeneroPreferido(
-			@PathParam( "idUsuario" ) Long idUsuario,
-			@PathParam( "tipo" ) String tipo, @PathParam( "idGenero" ) Long idGenero )
+			@PathParam( "idUsuario" ) Long idUsuario, @PathParam( "tipo" ) String tipo, @PathParam( "idGenero" ) Long idGenero )
 	{
 		PreferenciaGeneroTM tm = new PreferenciaGeneroTM( getPath( ) );
 		try
@@ -162,8 +165,7 @@ public class UsuarioRegistradoServices extends Services
 	@DELETE
 	@Path( "{idUsuario}/{tipo}/generos/{idGenero}" )
 	public Response deleteEntryGeneroPreferido(
-			@PathParam( "idUsuario" ) Long idUsuario,
-			@PathParam( "tipo" ) String tipo, @PathParam( "idGenero" ) Long idGenero )
+			@PathParam( "idUsuario" ) Long idUsuario, @PathParam( "tipo" ) String tipo, @PathParam( "idGenero" ) Long idGenero )
 	{
 		PreferenciaGeneroTM tm = new PreferenciaGeneroTM( getPath( ) );
 		try
@@ -180,8 +182,7 @@ public class UsuarioRegistradoServices extends Services
 	// PREFERENCIA - LUGARES
 	@GET
 	@Path( "{id_usuario}/{tipo}/lugares" )
-	public Response getLugaresPreferidos(
-			@PathParam( "id_usuario" ) Long idUsuario, @PathParam( "tipo" ) String tipo )
+	public Response getLugaresPreferidos( @PathParam( "id_usuario" ) Long idUsuario, @PathParam( "tipo" ) String tipo )
 	{
 		List<Lugar> list;
 		PreferenciaLugarTM tm = new PreferenciaLugarTM( getPath( ) );
@@ -199,8 +200,7 @@ public class UsuarioRegistradoServices extends Services
 	@GET
 	@Path( "{id_usuario}/{tipo}/lugares/{id_lugar}" )
 	public Response getLugarPreferido(
-			@PathParam( "id_usuario" ) Long idUsuario,
-			@PathParam( "tipo" ) String tipo, @PathParam( "id_lugar" ) Long idLugar )
+			@PathParam( "id_usuario" ) Long idUsuario, @PathParam( "tipo" ) String tipo, @PathParam( "id_lugar" ) Long idLugar )
 	{
 		Lugar lugar;
 		PreferenciaLugarTM tm = new PreferenciaLugarTM( getPath( ) );
@@ -215,11 +215,11 @@ public class UsuarioRegistradoServices extends Services
 		return Response.status( 200 ).entity( lugar ).build( );
 	}
 	
+	// TODO: 8/04/2017 Nombre del Lugar por Json?
 	@POST
 	@Path( "{id_usuario}/{tipo}/lugares/{id_lugar}" )
 	public Response createLugarPreferido(
-			@PathParam( "id_usuario" ) Long idUsuario,
-			@PathParam( "tipo" ) String tipo, @PathParam( "id_lugar" ) Long idLugar )
+			@PathParam( "id_usuario" ) Long idUsuario, @PathParam( "tipo" ) String tipo, @PathParam( "id_lugar" ) Long idLugar )
 	{
 		PreferenciaLugarTM tm = new PreferenciaLugarTM( getPath( ) );
 		try
@@ -236,8 +236,7 @@ public class UsuarioRegistradoServices extends Services
 	@DELETE
 	@Path( "{id_usuario}/{tipo}/lugares/{id_lugar}" )
 	public Response deleteLugarPreferido(
-			@PathParam( "id_usuario" ) Long idUsuario,
-			@PathParam( "tipo" ) String tipo, @PathParam( "id_lugar" ) Long idLugar )
+			@PathParam( "id_usuario" ) Long idUsuario, @PathParam( "tipo" ) String tipo, @PathParam( "id_lugar" ) Long idLugar )
 	{
 		PreferenciaLugarTM tm = new PreferenciaLugarTM( getPath( ) );
 		try

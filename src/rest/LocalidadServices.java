@@ -1,6 +1,6 @@
 package rest;
 
-import tm.LocalidadTM;
+import tm.LocalidadCM;
 import tm.intermediate.CostoLocalidadTM;
 import tm.intermediate.LugarLocalidadTM;
 import vos.Funcion;
@@ -33,7 +33,7 @@ public class LocalidadServices extends Services
 	@Path( "all" )
 	public Response createLocalidad( Localidad localidad )
 	{
-		LocalidadTM tm = new LocalidadTM( getPath( ) );
+		LocalidadCM tm = new LocalidadCM( getPath( ) );
 		try
 		{
 			localidad = tm.createLocalidad( localidad );
@@ -46,8 +46,7 @@ public class LocalidadServices extends Services
 	}
 	
 	@POST
-	public Response assignLocalidadToLugar( LugarLocalidad lugarLocalidad,
-	                                        @PathParam( "idLugar" ) Long idLugar )
+	public Response assignLocalidadToLugar( LugarLocalidad lugarLocalidad, @PathParam( "idLugar" ) Long idLugar )
 	{
 		LugarLocalidadTM tm = new LugarLocalidadTM( getPath( ) );
 		try
@@ -83,7 +82,7 @@ public class LocalidadServices extends Services
 	public Response getLocalidades( )
 	{
 		List<Localidad> list;
-		LocalidadTM tm = new LocalidadTM( getPath( ) );
+		LocalidadCM tm = new LocalidadCM( getPath( ) );
 		try
 		{
 			list = tm.getLocalidades( );
@@ -97,19 +96,19 @@ public class LocalidadServices extends Services
 	
 	@GET
 	@Path( "{id}" )
-	public Response getLocalidad( @PathParam( "idLugar" ) Long idLugar, @PathParam( "id" ) Long id )
+	public Response getLocalidadFromPlace( @PathParam( "idLugar" ) Long idLugar, @PathParam( "id" ) Long id )
 	{
-		Localidad l;
+		Localidad localidad;
 		LugarLocalidadTM tm = new LugarLocalidadTM( getPath( ) );
 		try
 		{
-			l = tm.getLocalidad( idLugar, id );
+			localidad = tm.getLocalidad( idLugar, id );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( l ).build( );
+		return Response.status( 200 ).entity( localidad ).build( );
 	}
 	
 	@GET
@@ -117,7 +116,7 @@ public class LocalidadServices extends Services
 	public Response getLocalidad( @PathParam( "id" ) Long id )
 	{
 		Localidad l;
-		LocalidadTM tm = new LocalidadTM( getPath( ) );
+		LocalidadCM tm = new LocalidadCM( getPath( ) );
 		try
 		{
 			l = tm.getLocalidad( id );
@@ -134,7 +133,7 @@ public class LocalidadServices extends Services
 	public Response updateLocalidad( @PathParam( "id" ) Long id, Localidad localidad )
 	{
 		Localidad l;
-		LocalidadTM tm = new LocalidadTM( getPath( ) );
+		LocalidadCM tm = new LocalidadCM( getPath( ) );
 		try
 		{
 			l = tm.updateLocalidad( id, localidad );
@@ -149,8 +148,7 @@ public class LocalidadServices extends Services
 	@PUT
 	@Path( "{idLocalidad}" )
 	public Response updateLugarLocalidad( LugarLocalidad lugarLocalidad,
-	                                      @PathParam( "idLugar" ) Long idLugar,
-	                                      @PathParam( "idLocalidad" ) Long idLocalidad )
+	                                      @PathParam( "idLugar" ) Long idLugar, @PathParam( "idLocalidad" ) Long idLocalidad )
 	{
 		LugarLocalidadTM tm = new LugarLocalidadTM( getPath( ) );
 		try
@@ -166,8 +164,7 @@ public class LocalidadServices extends Services
 	
 	@DELETE
 	@Path( "{idLocalidad}" )
-	public Response deleteLocalidadFromLugar(
-			@PathParam( "idLugar" ) Long idLugar, @PathParam( "idLocalidad" ) Long idLocalidad )
+	public Response deleteLocalidadFromLugar( @PathParam( "idLugar" ) Long idLugar, @PathParam( "idLocalidad" ) Long idLocalidad )
 	{
 		LugarLocalidadTM tm = new LugarLocalidadTM( getPath( ) );
 		try
@@ -185,7 +182,7 @@ public class LocalidadServices extends Services
 	@Path( "all/{id}" )
 	public Response deleteLocalidad( @PathParam( "id" ) Long id )
 	{
-		LocalidadTM tm = new LocalidadTM( getPath( ) );
+		LocalidadCM tm = new LocalidadCM( getPath( ) );
 		try
 		{
 			tm.deleteLocalidad( id );
@@ -235,7 +232,7 @@ public class LocalidadServices extends Services
 	
 	//SILLAS
 	@Path( "{idLocalidad}/sillas" )
-	public SillaServices getSillas( @PathParam( "idLugar" ) Long idLugar )
+	public SillaServices getSillas( @PathParam( "idLugar" ) Long idLugar, @PathParam( "idLocalidad" ) Long idLocalidad )
 	{
 		return new SillaServices( context, idLugar );
 	}

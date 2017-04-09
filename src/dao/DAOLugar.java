@@ -1,7 +1,6 @@
 package dao;
 
 import vos.Lugar;
-import vos.Usuario;
 import vos.reportes.RFC2;
 
 import java.sql.PreparedStatement;
@@ -18,36 +17,24 @@ public class DAOLugar extends DAO
 		super( );
 	}
 	
-	public Lugar createLugar( Long id, String password, Lugar lugar ) throws SQLException
+	public Lugar createLugar( Lugar lugar ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELECT * " );
-		sql.append( "FROM USUARIOS " );
-		sql.append( String.format( "WHERE identificacion = %s ", id ) );
-		sql.append( String.format( "AND password = '%s' ", password ) );
-		sql.append( String.format( "AND rol = '%s'", Usuario.USUARIO_ADMINISTRADOR ) );
+		sql.append( "INSERT INTO LUGARES " );
+		sql.append( "( id, nombre, disponibilidad_inicio, disponibilidad_fin, es_abierto, tipo_lugar ) " );
+		sql.append( "VALUES " );
+		sql.append( "( " );
+		sql.append( String.format( "%s, ", lugar.getId( ) ) );
+		sql.append( String.format( "'%s', ", lugar.getNombre( ) ) );
+		sql.append( String.format( "%s, ", toDate( lugar.getDisponibilidadInicio( ) ) ) );
+		sql.append( String.format( "%s, ", toDate( lugar.getDisponibilidadFin( ) ) ) );
+		sql.append( String.format( "%s, ", lugar.getEsAbierto( ) ) );
+		sql.append( String.format( "'%s' ", lugar.getTipo( ) ) );
+		sql.append( ")" );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
-		ResultSet rs = s.executeQuery( );
-		if( rs.next( ) )
-		{
-			sql = new StringBuilder( );
-			sql.append( "INSERT INTO LUGARES " );
-			sql.append( "( id, nombre, disponibilidad_inicio, disponibilidad_fin, es_abierto, tipo_lugar ) " );
-			sql.append( "VALUES " );
-			sql.append( "( " );
-			sql.append( String.format( "%s, ", lugar.getId( ) ) );
-			sql.append( String.format( "'%s', ", lugar.getNombre( ) ) );
-			sql.append( String.format( "%s, ", toDate( lugar.getDisponibilidadInicio( ) ) ) );
-			sql.append( String.format( "%s, ", toDate( lugar.getDisponibilidadFin( ) ) ) );
-			sql.append( String.format( "%s, ", lugar.getEsAbierto( ) ) );
-			sql.append( String.format( "'%s' ", lugar.getTipo( ) ) );
-			sql.append( ")" );
-			
-			s = connection.prepareStatement( sql.toString( ) );
-			recursos.add( s );
-			s.execute( );
-		}
+		recursos.add( s );
+		s.execute( );
 		s.close( );
 		return lugar;
 	}
@@ -67,6 +54,7 @@ public class DAOLugar extends DAO
 			list.add( restultToAccesibildiad( rs ) );
 		}
 		
+		rs.close( );
 		s.close( );
 		return list;
 	}
@@ -87,6 +75,7 @@ public class DAOLugar extends DAO
 		{
 			lugar = restultToAccesibildiad( rs );
 		}
+		rs.close( );
 		s.close( );
 		return lugar;
 	}

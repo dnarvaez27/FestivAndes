@@ -1,6 +1,7 @@
 package rest;
 
-import tm.BoletaTM;
+import tm.BoletaCM;
+import utilities.DateUtils;
 import vos.Boleta;
 
 import javax.servlet.ServletContext;
@@ -11,12 +12,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Path( "boletas" )
-@Produces( { MediaType.APPLICATION_JSON } )
-@Consumes( { MediaType.APPLICATION_JSON } )
+@Produces( MediaType.APPLICATION_JSON )
+@Consumes( MediaType.APPLICATION_JSON )
 public class BoletaServices extends Services
 {
 	public BoletaServices( )
 	{
+	
 	}
 	
 	public BoletaServices( ServletContext context )
@@ -27,14 +29,14 @@ public class BoletaServices extends Services
 	@POST
 	public Response createBoleta( Boleta boleta,
 	                              @PathParam( "idUsuario" ) Long idUsuario,
-	                              @PathParam( "idTipo" ) String tipo )
+	                              @PathParam( "idTipo" ) String tipo, @HeaderParam( "password" ) String password )
 	{
-		BoletaTM tm = new BoletaTM( getPath( ) );
+		BoletaCM tm = new BoletaCM( getPath( ) );
 		try
 		{
 			boleta.setTipoIdUsuario( tipo );
 			boleta.setIdUsuario( idUsuario );
-			boleta = tm.createBoleta( idUsuario, tipo, boleta );
+			boleta = tm.createBoleta( idUsuario, tipo, password, boleta );
 		}
 		catch( SQLException e )
 		{
@@ -44,27 +46,33 @@ public class BoletaServices extends Services
 	}
 	
 	@POST
-	@Path( "noreg" )
-	public Response createBoleta( Boleta boleta )
+	@Path( "multi" )
+	public Response createBoletas(
+			@PathParam( "idUsuario" ) Long idUsuario,
+			@PathParam( "idTipo" ) String tipo,
+			@HeaderParam( "password" ) String password,
+			@QueryParam( "cant" ) Integer cantBoletas,
+			@QueryParam( "fecha" ) Long fechaMilis, @QueryParam( "idLugar" ) Long idLugar, @QueryParam( "idLocalidad" ) Long idLocalidad )
 	{
-		BoletaTM tm = new BoletaTM( getPath( ) );
+		List<Boleta> list;
+		BoletaCM tm = new BoletaCM( getPath( ) );
 		try
 		{
-			boleta = tm.createBoleta( null, null, boleta );
+			// TODO: 8/04/2017 Fecha milis...
+			list = tm.createBoletas( idUsuario, tipo, DateUtils.milisToDate( fechaMilis ), idLugar, idLocalidad, cantBoletas );
 		}
-		catch( SQLException e )
+		catch( Exception e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( boleta ).build( );
+		return Response.status( 200 ).entity( list ).build( );
 	}
 	
 	@GET
-	public Response getBoletasFrom(
-			@PathParam( "idUsuario" ) Long idUsuario, @PathParam( "idTipo" ) String tipo )
+	public Response getBoletasFrom( @PathParam( "idUsuario" ) Long idUsuario, @PathParam( "idTipo" ) String tipo )
 	{
 		List<Boleta> list;
-		BoletaTM tm = new BoletaTM( getPath( ) );
+		BoletaCM tm = new BoletaCM( getPath( ) );
 		try
 		{
 			list = tm.getBoletasFrom( idUsuario, tipo );
@@ -81,7 +89,7 @@ public class BoletaServices extends Services
 	public Response getBoletas( )
 	{
 		List<Boleta> list;
-		BoletaTM tm = new BoletaTM( getPath( ) );
+		BoletaCM tm = new BoletaCM( getPath( ) );
 		try
 		{
 			list = tm.getBoletas( );
@@ -97,46 +105,45 @@ public class BoletaServices extends Services
 	@Path( "{id}" )
 	public Response getBoleta( @PathParam( "id" ) Long id )
 	{
-		Boleta ac;
-		BoletaTM tm = new BoletaTM( getPath( ) );
+		Boleta boleta;
+		BoletaCM tm = new BoletaCM( getPath( ) );
 		try
 		{
-			ac = tm.getBoleta( id );
+			boleta = tm.getBoleta( id );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( ac ).build( );
+		return Response.status( 200 ).entity( boleta ).build( );
 	}
 	
 	@PUT
 	@Path( "{id}" )
-	public Response updateBoleta( @PathParam( "id" ) Long numBoleta, Boleta accesibilidad )
+	public Response updateBoleta( @PathParam( "id" ) Long numBoleta, Boleta boleta )
 	{
-		Boleta ac;
-		BoletaTM tm = new BoletaTM( getPath( ) );
+		BoletaCM tm = new BoletaCM( getPath( ) );
 		try
 		{
-			ac = tm.updateBoleta( numBoleta, accesibilidad );
+			boleta = tm.updateBoleta( numBoleta, boleta );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( ac ).build( );
+		return Response.status( 200 ).entity( boleta ).build( );
 	}
 	
 	@DELETE
 	@Path( "{id}" )
 	public Response deleteBoleta( @PathParam( "id" ) Long id )
 	{
-		BoletaTM tm = new BoletaTM( getPath( ) );
+		BoletaCM tm = new BoletaCM( getPath( ) );
 		try
 		{
 			tm.deleteBoleta( id );
 		}
-		catch( SQLException e )
+		catch( Exception e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}

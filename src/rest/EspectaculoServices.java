@@ -1,9 +1,9 @@
 package rest;
 
-import tm.EspectaculoTM;
+import tm.EspectaculoCM;
 import tm.intermediate.EspectaculoGeneroTM;
 import tm.intermediate.OfrecenTM;
-import utilities.DateFormatter;
+import utilities.DateUtils;
 import vos.CompaniaDeTeatro;
 import vos.Espectaculo;
 import vos.Genero;
@@ -35,16 +35,16 @@ public class EspectaculoServices extends Services
 	@POST
 	public Response createEspectaculo( Espectaculo espectaculo,
 	                                   @HeaderParam( "id" ) Long id,
-	                                   @HeaderParam( "password" ) String password,
-	                                   @PathParam( "idFestival" ) Long idFestival )
+	                                   @HeaderParam( "tipo" ) String tipo,
+	                                   @HeaderParam( "password" ) String password, @PathParam( "idFestival" ) Long idFestival )
 	{
-		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
+		EspectaculoCM tm = new EspectaculoCM( getPath( ) );
 		try
 		{
 			espectaculo.setIdFestival( idFestival );
-			espectaculo = tm.createEspectaculo( id, password, espectaculo );
+			espectaculo = tm.createEspectaculo( id, tipo, password, espectaculo );
 		}
-		catch( SQLException e )
+		catch( Exception e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
@@ -55,7 +55,7 @@ public class EspectaculoServices extends Services
 	public Response getEspectaculos( @PathParam( "idFestival" ) Long idFestival )
 	{
 		List<Espectaculo> list;
-		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
+		EspectaculoCM tm = new EspectaculoCM( getPath( ) );
 		try
 		{
 			list = tm.getEspectaculos( idFestival );
@@ -72,7 +72,7 @@ public class EspectaculoServices extends Services
 	public Response getEspectaculos( )
 	{
 		List<Espectaculo> list;
-		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
+		EspectaculoCM tm = new EspectaculoCM( getPath( ) );
 		try
 		{
 			list = tm.getEspectaculos( );
@@ -86,11 +86,10 @@ public class EspectaculoServices extends Services
 	
 	@GET
 	@Path( "{id}" )
-	public Response getEspectaculo(
-			@PathParam( "idFestival" ) Long idFestival, @PathParam( "id" ) Long id )
+	public Response getEspectaculo( @PathParam( "idFestival" ) Long idFestival, @PathParam( "id" ) Long id )
 	{
 		Espectaculo es;
-		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
+		EspectaculoCM tm = new EspectaculoCM( getPath( ) );
 		try
 		{
 			es = tm.getEspectaculo( idFestival, id );
@@ -104,29 +103,25 @@ public class EspectaculoServices extends Services
 	
 	@PUT
 	@Path( "{id}" )
-	public Response updateEspectaculo(
-			@PathParam( "idFestival" ) Long idFestival,
-			@PathParam( "id" ) Long id, Espectaculo espectaculo )
+	public Response updateEspectaculo( @PathParam( "idFestival" ) Long idFestival, @PathParam( "id" ) Long id, Espectaculo espectaculo )
 	{
-		Espectaculo es;
-		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
+		EspectaculoCM tm = new EspectaculoCM( getPath( ) );
 		try
 		{
-			es = tm.updateEspectaculo( idFestival, id, espectaculo );
+			espectaculo = tm.updateEspectaculo( idFestival, id, espectaculo );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( es ).build( );
+		return Response.status( 200 ).entity( espectaculo ).build( );
 	}
 	
 	@DELETE
 	@Path( "{id}" )
-	public Response deleteEspectaculo(
-			@PathParam( "idFestival" ) Long idFestival, @PathParam( "id" ) Long id )
+	public Response deleteEspectaculo( @PathParam( "idFestival" ) Long idFestival, @PathParam( "id" ) Long id )
 	{
-		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
+		EspectaculoCM tm = new EspectaculoCM( getPath( ) );
 		try
 		{
 			tm.deleteEspectaculo( idFestival, id );
@@ -138,6 +133,8 @@ public class EspectaculoServices extends Services
 		return Response.status( 200 ).build( );
 	}
 	
+	// FUNCIONES
+	
 	@Path( "{idEspectaculo}/funciones" )
 	public FuncionServices getFunciones( )
 	{
@@ -145,6 +142,7 @@ public class EspectaculoServices extends Services
 	}
 	
 	// GENEROS
+	
 	@GET
 	@Path( "{id}/generos" )
 	public Response getGenerosFrom( @PathParam( "id" ) Long idEspectaculo )
@@ -164,9 +162,7 @@ public class EspectaculoServices extends Services
 	
 	@DELETE
 	@Path( "{id_espectaculo}/generos/{id_genero}" )
-	public Response deleteGenero(
-			@PathParam( "id_espectaculo" ) Long idEspectaculo,
-			@PathParam( "id_genero" ) Long idGenero )
+	public Response deleteGenero( @PathParam( "id_espectaculo" ) Long idEspectaculo, @PathParam( "id_genero" ) Long idGenero )
 	{
 		EspectaculoGeneroTM tm = new EspectaculoGeneroTM( getPath( ) );
 		try
@@ -182,8 +178,7 @@ public class EspectaculoServices extends Services
 	
 	@POST
 	@Path( "{id_espectaculo}/generos" )
-	public Response createEntryGenero(
-			@PathParam( "id_espectaculo" ) Long idEspectaculo, Long idGenero )
+	public Response createEntryGenero( @PathParam( "id_espectaculo" ) Long idEspectaculo, Long idGenero )
 	{
 		EspectaculoGeneroTM tm = new EspectaculoGeneroTM( getPath( ) );
 		try
@@ -198,6 +193,7 @@ public class EspectaculoServices extends Services
 	}
 	
 	// COMPANIAS
+	
 	@GET
 	@Path( "{id_espectaculo}/companias" )
 	public Response getCompaniasFromEspectaculo( @PathParam( "id_espectaculo" ) Long idEspectaculo )
@@ -216,14 +212,13 @@ public class EspectaculoServices extends Services
 	}
 	
 	// REPORTES
+	
 	@GET
 	@Path( "{id_espectaculo}/rfc4" )
-	public Response generarReporteRFC4(
-			@PathParam( "idFestival" ) Long idFestival,
-			@PathParam( "id_espectaculo" ) Long idEspectaculo )
+	public Response generarReporteRFC4( @PathParam( "idFestival" ) Long idFestival, @PathParam( "id_espectaculo" ) Long idEspectaculo )
 	{
 		RFC4 req;
-		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
+		EspectaculoCM tm = new EspectaculoCM( getPath( ) );
 		try
 		{
 			req = tm.generarReporte( idFestival, idEspectaculo );
@@ -237,14 +232,13 @@ public class EspectaculoServices extends Services
 	
 	@GET
 	@Path( "popular" )
-	public Response getEspectaculosPopulares(
-			@QueryParam( "fecha_inicio" ) String fInicio, @QueryParam( "fecha_fin" ) String fFin )
+	public Response getEspectaculosPopulares( @QueryParam( "fecha_inicio" ) String fInicio, @QueryParam( "fecha_fin" ) String fFin )
 	{
 		List<Espectaculo> list;
-		EspectaculoTM tm = new EspectaculoTM( getPath( ) );
+		EspectaculoCM tm = new EspectaculoCM( getPath( ) );
 		try
 		{
-			list = tm.getEspectaculosPopulares( DateFormatter.format( fInicio ), DateFormatter.format( fFin ) );
+			list = tm.getEspectaculosPopulares( DateUtils.format( fInicio ), DateUtils.format( fFin ) );
 		}
 		catch( SQLException e )
 		{

@@ -1,6 +1,6 @@
 package rest;
 
-import tm.GeneroTM;
+import tm.GeneroCM;
 import tm.intermediate.EspectaculoGeneroTM;
 import vos.Espectaculo;
 import vos.Genero;
@@ -29,7 +29,7 @@ public class GeneroServices extends Services
 	@POST
 	public Response createGenero( Genero genero )
 	{
-		GeneroTM tm = new GeneroTM( getPath( ) );
+		GeneroCM tm = new GeneroCM( getPath( ) );
 		try
 		{
 			genero = tm.createGenero( genero );
@@ -45,7 +45,7 @@ public class GeneroServices extends Services
 	public Response getGenero( )
 	{
 		List<Genero> list;
-		GeneroTM tm = new GeneroTM( getPath( ) );
+		GeneroCM tm = new GeneroCM( getPath( ) );
 		try
 		{
 			list = tm.getGeneros( );
@@ -61,17 +61,17 @@ public class GeneroServices extends Services
 	@Path( "{id}" )
 	public Response getGenero( @PathParam( "id" ) Long id )
 	{
-		Genero gen;
-		GeneroTM tm = new GeneroTM( getPath( ) );
+		Genero genero;
+		GeneroCM tm = new GeneroCM( getPath( ) );
 		try
 		{
-			gen = tm.getGenero( id );
+			genero = tm.getGenero( id );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( gen ).build( );
+		return Response.status( 200 ).entity( genero ).build( );
 	}
 	
 	@GET

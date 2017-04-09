@@ -49,6 +49,7 @@ public class DAOSilla extends DAO
 			list.add( resultToSilla( rs ) );
 		}
 		
+		rs.close( );
 		s.close( );
 		return list;
 	}
@@ -92,6 +93,7 @@ public class DAOSilla extends DAO
 		{
 			silla = resultToSilla( rs );
 		}
+		rs.close( );
 		s.close( );
 		return silla;
 	}
@@ -111,7 +113,7 @@ public class DAOSilla extends DAO
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		s.execute( );
-		s.clearParameters( );
+		s.close( );
 		return silla;
 	}
 	
@@ -133,10 +135,10 @@ public class DAOSilla extends DAO
 	public static Silla resultToSilla( ResultSet rs ) throws SQLException
 	{
 		Silla pSilla = new Silla( );
-		pSilla.setNumSilla( rs.getInt( "num_silla" ) );
-		pSilla.setNumFila( rs.getInt( "num_fila" ) );
 		pSilla.setIdLugar( rs.getLong( "id_lugar" ) );
 		pSilla.setIdLocalidad( rs.getLong( "id_localidad" ) );
+		pSilla.setNumFila( rs.getInt( "num_fila" ) );
+		pSilla.setNumSilla( rs.getInt( "num_silla" ) );
 		return pSilla;
 	}
 }

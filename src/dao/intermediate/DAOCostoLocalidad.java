@@ -165,7 +165,7 @@ public class DAOCostoLocalidad extends DAO
 		s.close( );
 	}
 	
-	private CostoLocalidad resultToCostoLocalidad( ResultSet rs ) throws SQLException
+	public static CostoLocalidad resultToCostoLocalidad( ResultSet rs ) throws SQLException
 	{
 		CostoLocalidad costoLocalidad = new CostoLocalidad( );
 		costoLocalidad.setFecha( rs.getDate( "fecha" ) );

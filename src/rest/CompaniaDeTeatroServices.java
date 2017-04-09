@@ -1,6 +1,6 @@
 package rest;
 
-import tm.CompaniaDeTeatroTM;
+import tm.CompaniaDeTeatroCM;
 import tm.intermediate.OfrecenTM;
 import vos.CompaniaDeTeatro;
 import vos.Espectaculo;
@@ -29,14 +29,12 @@ public class CompaniaDeTeatroServices extends Services
 	@POST
 	public Response createCompaniaDeTeatro( CompaniaDeTeatro compania,
 	                                        @HeaderParam( "id" ) Long id,
-	                                        @HeaderParam( "password" ) String password )
+	                                        @HeaderParam( "tipo" ) String tipo, @HeaderParam( "password" ) String password )
 	{
-		System.out.println( compania.getFechaLlegada( ) );
-		
-		CompaniaDeTeatroTM tm = new CompaniaDeTeatroTM( getPath( ) );
+		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM( getPath( ) );
 		try
 		{
-			compania = tm.createCompaniaDeTeatro( id, password, compania );
+			compania = tm.createCompaniaDeTeatro( id, tipo, password, compania );
 		}
 		catch( SQLException e )
 		{
@@ -49,7 +47,7 @@ public class CompaniaDeTeatroServices extends Services
 	public Response getCompaniaDeTeatros( )
 	{
 		List<CompaniaDeTeatro> list;
-		CompaniaDeTeatroTM tm = new CompaniaDeTeatroTM( getPath( ) );
+		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM( getPath( ) );
 		try
 		{
 			list = tm.getCompaniaDeTeatros( );
@@ -65,28 +63,27 @@ public class CompaniaDeTeatroServices extends Services
 	@Path( "{id}" )
 	public Response getCompaniaDeTeatro( @PathParam( "id" ) Long id )
 	{
-		CompaniaDeTeatro ac;
-		CompaniaDeTeatroTM tm = new CompaniaDeTeatroTM( getPath( ) );
+		CompaniaDeTeatro companiaDeTeatro;
+		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM( getPath( ) );
 		try
 		{
-			ac = tm.getCompaniaDeTeatro( id );
+			companiaDeTeatro = tm.getCompaniaDeTeatro( id );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( ac ).build( );
+		return Response.status( 200 ).entity( companiaDeTeatro ).build( );
 	}
 	
 	@PUT
 	@Path( "{id}" )
-	public Response updateCompaniaDeTeatro(
-			@PathParam( "id" ) Long id, CompaniaDeTeatro companiaDeTeatro )
+	public Response updateCompaniaDeTeatro( @PathParam( "id" ) Long id, CompaniaDeTeatro companiaDeTeatro )
 	{
-		CompaniaDeTeatroTM tm = new CompaniaDeTeatroTM( getPath( ) );
+		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM( getPath( ) );
 		try
 		{
-			tm.updateCompaniaDeTeatro( id, companiaDeTeatro );
+			companiaDeTeatro = tm.updateCompaniaDeTeatro( id, companiaDeTeatro );
 		}
 		catch( SQLException e )
 		{
@@ -99,7 +96,7 @@ public class CompaniaDeTeatroServices extends Services
 	@Path( "{id}" )
 	public Response deleteCompaniaDeTeatro( @PathParam( "id" ) Long id )
 	{
-		CompaniaDeTeatroTM tm = new CompaniaDeTeatroTM( getPath( ) );
+		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM( getPath( ) );
 		try
 		{
 			tm.deleteCompaniaDeTeatro( id );
@@ -131,9 +128,7 @@ public class CompaniaDeTeatroServices extends Services
 	
 	@GET
 	@Path( "{id_compania}/espectaculos/{id_espectaculo}" )
-	public Response getEspectaculosFromCompania(
-			@PathParam( "id_compania" ) Long idCompania,
-			@PathParam( "id_espectaculo" ) Long idEspectaculo )
+	public Response getEspectaculosFromCompania( @PathParam( "id_compania" ) Long idCompania, @PathParam( "id_espectaculo" ) Long idEspectaculo )
 	{
 		Espectaculo espectaculo;
 		OfrecenTM tm = new OfrecenTM( getPath( ) );
@@ -150,9 +145,7 @@ public class CompaniaDeTeatroServices extends Services
 	
 	@DELETE
 	@Path( "{id_compania}/espectaculos/{id_espectaculo}" )
-	public Response deleteEspectaculoFromCompania(
-			@PathParam( "id_compania" ) Long idCompania,
-			@PathParam( "id_espectaculo" ) Long idEspectaculo )
+	public Response deleteEspectaculoFromCompania( @PathParam( "id_compania" ) Long idCompania, @PathParam( "id_espectaculo" ) Long idEspectaculo )
 	{
 		OfrecenTM tm = new OfrecenTM( getPath( ) );
 		try
@@ -168,9 +161,7 @@ public class CompaniaDeTeatroServices extends Services
 	
 	@POST
 	@Path( "{id_compania}/espectaculos/{id_espectaculo}" )
-	public Response assignEspectaculoToCompania(
-			@PathParam( "id_compania" ) Long idCompania,
-			@PathParam( "id_espectaculo" ) Long idEspectaculo )
+	public Response assignEspectaculoToCompania( @PathParam( "id_compania" ) Long idCompania, @PathParam( "id_espectaculo" ) Long idEspectaculo )
 	{
 		OfrecenTM tm = new OfrecenTM( getPath( ) );
 		try

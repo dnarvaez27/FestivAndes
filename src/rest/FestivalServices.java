@@ -1,6 +1,6 @@
 package rest;
 
-import tm.FestivalTM;
+import tm.FestivalCM;
 import vos.Festival;
 
 import javax.servlet.ServletContext;
@@ -25,25 +25,25 @@ public class FestivalServices extends Services
 	}
 	
 	@POST
-	public Response createFestival( Festival object )
+	public Response createFestival( Festival festival )
 	{
-		FestivalTM tm = new FestivalTM( getPath( ) );
+		FestivalCM tm = new FestivalCM( getPath( ) );
 		try
 		{
-			object = tm.createFestival( object );
+			festival = tm.createFestival( festival );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( object ).build( );
+		return Response.status( 200 ).entity( festival ).build( );
 	}
 	
 	@GET
 	public Response getFestivals( )
 	{
 		List<Festival> list;
-		FestivalTM tm = new FestivalTM( getPath( ) );
+		FestivalCM tm = new FestivalCM( getPath( ) );
 		try
 		{
 			list = tm.getFestivals( );
@@ -59,41 +59,40 @@ public class FestivalServices extends Services
 	@Path( "{id}" )
 	public Response getFestival( @PathParam( "id" ) Long id )
 	{
-		Festival ac;
-		FestivalTM tm = new FestivalTM( getPath( ) );
+		Festival festival;
+		FestivalCM tm = new FestivalCM( getPath( ) );
 		try
 		{
-			ac = tm.getFestival( id );
+			festival = tm.getFestival( id );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( ac ).build( );
+		return Response.status( 200 ).entity( festival ).build( );
 	}
 	
 	@PUT
 	@Path( "{id}" )
-	public Response updateFestival( @PathParam( "id" ) Long id, Festival object )
+	public Response updateFestival( @PathParam( "id" ) Long id, Festival festival )
 	{
-		Festival ac;
-		FestivalTM tm = new FestivalTM( getPath( ) );
+		FestivalCM tm = new FestivalCM( getPath( ) );
 		try
 		{
-			ac = tm.updateFestival( id, object );
+			festival = tm.updateFestival( id, festival );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( ac ).build( );
+		return Response.status( 200 ).entity( festival ).build( );
 	}
 	
 	@DELETE
 	@Path( "{id}" )
 	public Response deleteFestival( @PathParam( "id" ) Long id )
 	{
-		FestivalTM tm = new FestivalTM( getPath( ) );
+		FestivalCM tm = new FestivalCM( getPath( ) );
 		try
 		{
 			tm.deleteFestival( id );
@@ -104,6 +103,8 @@ public class FestivalServices extends Services
 		}
 		return Response.status( 200 ).build( );
 	}
+	
+	// ESPECTACULOS
 	
 	@Path( "{idFestival}/espectaculos" )
 	public EspectaculoServices getCustomer( )

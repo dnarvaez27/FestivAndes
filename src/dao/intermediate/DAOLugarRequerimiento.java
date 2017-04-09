@@ -76,6 +76,7 @@ public class DAOLugarRequerimiento extends DAO
 	
 	public RequerimientoTecnico getRequerimientoFromLugar( Long idLugar, Long idRequerimiento ) throws SQLException
 	{
+		RequerimientoTecnico req = null;
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
 		sql.append( "FROM LUGAR_REQUERIMIENTO LR INNER JOIN REQUERIMIENTOS_TECNICOS R" );
@@ -87,13 +88,16 @@ public class DAOLugarRequerimiento extends DAO
 		ResultSet rs = s.executeQuery( );
 		if( rs.next( ) )
 		{
-			return DAORequerimientoTecnico.resultToRequerimientoTecnico( rs );
+			req = DAORequerimientoTecnico.resultToRequerimientoTecnico( rs );
 		}
-		return null;
+		rs.close( );
+		s.close( );
+		return req;
 	}
 	
 	public Lugar getLugarWithRequerimiento( Long idLugar, Long idRequerimiento ) throws SQLException
 	{
+		Lugar lug = null;
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
 		sql.append( "FROM LUGAR_REQUERIMIENTO LR INNER JOIN LUGARES L " );
@@ -105,9 +109,9 @@ public class DAOLugarRequerimiento extends DAO
 		ResultSet rs = s.executeQuery( );
 		if( rs.next( ) )
 		{
-			return DAOLugar.restultToAccesibildiad( rs );
+			lug = DAOLugar.restultToAccesibildiad( rs );
 		}
-		return null;
+		return lug;
 	}
 	
 	public void deleteEntryLugarRequerimiento( Long idLugar, Long idRequerimiento ) throws SQLException

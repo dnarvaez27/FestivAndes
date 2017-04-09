@@ -68,6 +68,7 @@ public class DAOLocalidad extends DAO
 		{
 			localidad = resultToBasicLocalidad( rs );
 		}
+		rs.close( );
 		s.close( );
 		return localidad;
 	}
@@ -82,7 +83,7 @@ public class DAOLocalidad extends DAO
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		s.execute( );
-		s.clearParameters( );
+		s.close( );
 		return localidad;
 	}
 	
@@ -98,7 +99,7 @@ public class DAOLocalidad extends DAO
 		s.close( );
 	}
 	
-	public static Localidad resultToBasicLocalidad( ResultSet rs ) throws SQLException
+	private static Localidad resultToBasicLocalidad( ResultSet rs ) throws SQLException
 	{
 		Localidad l = new Localidad( );
 		l.setId( rs.getLong( "id" ) );

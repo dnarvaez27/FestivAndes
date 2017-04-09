@@ -1,6 +1,5 @@
 package dao;
 
-import vos.Usuario;
 import vos.UsuarioRegistrado;
 
 import java.sql.PreparedStatement;
@@ -16,37 +15,21 @@ public class DAOUsuarioRegistrado extends DAO
 		super( );
 	}
 	
-	public UsuarioRegistrado createUsuarioRegistrado( UsuarioRegistrado object, Long id, String password ) throws SQLException
+	public UsuarioRegistrado createUsuarioRegistrado( UsuarioRegistrado object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELECT * " );
-		sql.append( "FROM USUARIOS " );
-		sql.append( String.format( "WHERE identificacion = %s ", id ) );
-		sql.append( String.format( "AND password = '%s' ", password ) );
-		sql.append( String.format( "AND rol = '%s' ", Usuario.USUARIO_ADMINISTRADOR ) );
+		sql.append( "INSERT INTO USUARIOS_REGISTRADOS " );
+		sql.append( "( id_usuario, tipo_id, edad ) " );
+		sql.append( "VALUES " );
+		sql.append( "( " );
+		sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
+		sql.append( String.format( "'%s', ", object.getTipoIdentificacion( ) ) );
+		sql.append( String.format( "%s ", object.getEdad( ) ) );
+		sql.append( ") " );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
-		ResultSet rs = s.executeQuery( );
-		if( rs.next( ) )
-		{
-			sql = new StringBuilder( );
-			sql.append( "INSERT INTO USUARIOS_REGISTRADOS " );
-			sql.append( "( id_usuario, tipo_id, edad ) " );
-			sql.append( "VALUES " );
-			sql.append( "( " );
-			sql.append( String.format( "%s, ", object.getIdentificacion( ) ) );
-			sql.append( String.format( "'%s', ", object.getTipoIdentificacion( ) ) );
-			sql.append( String.format( "%s ", object.getEdad( ) ) );
-			sql.append( ") " );
-			
-			s = connection.prepareStatement( sql.toString( ) );
-			recursos.add( s );
-			s.execute( );
-		}
-		else
-		{
-			throw new SQLException( "No tiene permisos para agregar usuarios" );
-		}
+		recursos.add( s );
+		s.execute( );
 		s.close( );
 		return object;
 	}
@@ -68,7 +51,7 @@ public class DAOUsuarioRegistrado extends DAO
 		{
 			list.add( restultToAccesibildiad( rs ) );
 		}
-		
+		rs.close( );
 		s.close( );
 		return list;
 	}
@@ -92,6 +75,7 @@ public class DAOUsuarioRegistrado extends DAO
 		{
 			object = restultToAccesibildiad( rs );
 		}
+		rs.close( );
 		s.close( );
 		return object;
 	}

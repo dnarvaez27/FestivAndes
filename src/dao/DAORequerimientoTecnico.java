@@ -48,6 +48,7 @@ public class DAORequerimientoTecnico extends DAO
 			list.add( resultToRequerimientoTecnico( rs ) );
 		}
 		
+		rs.close( );
 		s.close( );
 		return list;
 	}
@@ -68,6 +69,7 @@ public class DAORequerimientoTecnico extends DAO
 		{
 			req = resultToRequerimientoTecnico( rs );
 		}
+		rs.close( );
 		s.close( );
 		return req;
 	}
@@ -82,7 +84,7 @@ public class DAORequerimientoTecnico extends DAO
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		s.execute( );
-		s.clearParameters( );
+		s.close( );
 		return req;
 	}
 	

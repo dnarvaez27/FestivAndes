@@ -50,6 +50,8 @@ public class DAOPreferenciaLugar extends DAO
 		{
 			list.add( DAOLugar.restultToAccesibildiad( rs ) );
 		}
+		rs.close( );
+		s.close( );
 		return list;
 	}
 	
@@ -69,11 +71,14 @@ public class DAOPreferenciaLugar extends DAO
 		{
 			list.add( DAOUsuarioRegistrado.restultToAccesibildiad( rs ) );
 		}
+		rs.close( );
+		s.close( );
 		return list;
 	}
 	
 	public Lugar getLugarPreferidoUser( Long idUsuario, String tipo, Long idLugar ) throws SQLException
 	{
+		Lugar lug = null;
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
 		sql.append( "FROM PREFERENCIA_LUGARES P INNER JOIN LUGARES L " );
@@ -86,9 +91,11 @@ public class DAOPreferenciaLugar extends DAO
 		ResultSet rs = s.executeQuery( );
 		if( rs.next( ) )
 		{
-			return DAOLugar.restultToAccesibildiad( rs );
+			lug = DAOLugar.restultToAccesibildiad( rs );
 		}
-		return null;
+		rs.close( );
+		s.close( );
+		return lug;
 	}
 	
 	public void deletePreferenciaLugar( Long idUsuario, String tipo, Long idLugar ) throws SQLException

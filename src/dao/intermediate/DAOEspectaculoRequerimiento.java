@@ -11,7 +11,8 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class DAOEspectaculoRequerimiento extends DAO{
+public class DAOEspectaculoRequerimiento extends DAO
+{
 	public List<RequerimientoTecnico> getRequerimientoTecnicosFromEspectaculo( Long idEspectaculo ) throws SQLException
 	{
 		List<RequerimientoTecnico> list = new LinkedList<>( );
@@ -67,7 +68,7 @@ public class DAOEspectaculoRequerimiento extends DAO{
 		s.close( );
 	}
 	
-	public void deleteEntryEG( Long idEspectaculo, Long idRequerimientoTecnico ) throws SQLException
+	public void deleteEntryER( Long idEspectaculo, Long idRequerimientoTecnico ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "DELETE FROM ESPECTACULO_REQUERIMIENTO " );

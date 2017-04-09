@@ -48,6 +48,7 @@ public class DAOGenero extends DAO
 			list.add( resultToGenero( rs ) );
 		}
 		
+		rs.close( );
 		s.close( );
 		return list;
 	}
@@ -68,6 +69,7 @@ public class DAOGenero extends DAO
 		{
 			genero = resultToGenero( rs );
 		}
+		rs.close( );
 		s.close( );
 		return genero;
 	}
@@ -82,7 +84,7 @@ public class DAOGenero extends DAO
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		s.execute( );
-		s.clearParameters( );
+		s.close( );
 		return genero;
 	}
 	

@@ -1,7 +1,6 @@
 package dao;
 
 import vos.Espectaculo;
-import vos.Usuario;
 import vos.reportes.RFC4;
 
 import java.sql.PreparedStatement;
@@ -18,38 +17,26 @@ public class DAOEspectaculo extends DAO
 		super( );
 	}
 	
-	public Espectaculo createEspectaculo( Long id, String password, Espectaculo object ) throws SQLException
+	public Espectaculo createEspectaculo( Espectaculo object ) throws SQLException
 	{
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELECT * " );
-		sql.append( "FROM USUARIOS " );
-		sql.append( String.format( "WHERE identificacion = %s", id ) );
-		sql.append( String.format( "AND password = '%s' ", password ) );
-		sql.append( String.format( "AND rol = '%s' ", Usuario.USUARIO_ADMINISTRADOR ) );
+		sql.append( "INSERT INTO ESPECTACULOS " );
+		sql.append( "( id, nombre, duracion, idioma, costo_realizacion, descripcion, id_festival, id_clasificacion ) " );
+		sql.append( "VALUES " );
+		sql.append( "( " );
+		sql.append( String.format( "%s, ", object.getId( ) ) );
+		sql.append( String.format( "'%s', ", object.getNombre( ) ) );
+		sql.append( String.format( "%s, ", object.getDuracion( ) ) );
+		sql.append( String.format( "'%s', ", object.getIdioma( ) ) );
+		sql.append( String.format( "%s, ", object.getCostoRealizacion( ) ) );
+		sql.append( String.format( "'%s', ", object.getDescripcion( ) ) );
+		sql.append( String.format( "%s, ", object.getIdFestival( ) ) );
+		sql.append( String.format( "%s ", object.getIdClasificacion( ) ) );
+		sql.append( ") " );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
-		ResultSet rs = s.executeQuery( );
-		if( rs.next( ) )
-		{
-			sql = new StringBuilder( );
-			sql.append( "INSERT INTO ESPECTACULOS " );
-			sql.append( "( id, nombre, duracion, idioma, costo_realizacion, descripcion, id_festival, id_clasificacion ) " );
-			sql.append( "VALUES " );
-			sql.append( "( " );
-			sql.append( String.format( "%s, ", object.getId( ) ) );
-			sql.append( String.format( "'%s', ", object.getNombre( ) ) );
-			sql.append( String.format( "%s, ", object.getDuracion( ) ) );
-			sql.append( String.format( "'%s', ", object.getIdioma( ) ) );
-			sql.append( String.format( "%s, ", object.getCostoRealizacion( ) ) );
-			sql.append( String.format( "'%s', ", object.getDescripcion( ) ) );
-			sql.append( String.format( "%s, ", object.getIdFestival( ) ) );
-			sql.append( String.format( "%s ", object.getIdClasificacion( ) ) );
-			sql.append( ")" );
-			
-			s = connection.prepareStatement( sql.toString( ) );
-			recursos.add( s );
-			s.execute( );
-		}
+		recursos.add( s );
+		s.execute( );
 		s.close( );
 		return object;
 	}
@@ -69,7 +56,7 @@ public class DAOEspectaculo extends DAO
 		{
 			list.add( resultToEspectaculo( rs ) );
 		}
-		
+		rs.close( );
 		s.close( );
 		return list;
 	}
@@ -89,6 +76,7 @@ public class DAOEspectaculo extends DAO
 			list.add( resultToEspectaculo( rs ) );
 		}
 		
+		rs.close( );
 		s.close( );
 		return list;
 	}
@@ -110,6 +98,28 @@ public class DAOEspectaculo extends DAO
 		{
 			object = resultToEspectaculo( rs );
 		}
+		rs.close( );
+		s.close( );
+		return object;
+	}
+	
+	public Espectaculo getEspectaculo( Long id ) throws SQLException
+	{
+		Espectaculo object = null;
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT * " );
+		sql.append( "FROM ESPECTACULOS " );
+		sql.append( String.format( "WHERE id = %s ", id ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		recursos.add( s );
+		ResultSet rs = s.executeQuery( );
+		if( rs.next( ) )
+		{
+			object = resultToEspectaculo( rs );
+		}
+		rs.close( );
 		s.close( );
 		return object;
 	}
@@ -133,7 +143,7 @@ public class DAOEspectaculo extends DAO
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		s.execute( );
-		s.clearParameters( );
+		s.close( );
 		return object;
 	}
 	
@@ -280,13 +290,14 @@ public class DAOEspectaculo extends DAO
 		req.setProducido( p1s );
 		req.setOcupacion( p2s );
 		
+		rs.close( );
+		s.close( );
 		return req;
 	}
 	
 	public List<Espectaculo> getEspectaculosPopulares( Date fInicio, Date fFin ) throws SQLException
 	{
 		List<Espectaculo> list = new LinkedList<>( );
-		//TODO RFC6 toda la info?
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT ESPECTACULOS.*, NUM_ASISTENTES " );
 		sql.append( "FROM (SELECT " );

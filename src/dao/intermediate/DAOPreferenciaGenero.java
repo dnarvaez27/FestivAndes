@@ -47,6 +47,8 @@ public class DAOPreferenciaGenero extends DAO
 		{
 			list.add( DAOGenero.resultToGenero( rs ) );
 		}
+		rs.close( );
+		s.close( );
 		return list;
 	}
 	
@@ -67,11 +69,14 @@ public class DAOPreferenciaGenero extends DAO
 		{
 			list.add( DAOUsuarioRegistrado.restultToAccesibildiad( rs ) );
 		}
+		rs.close( );
+		s.close( );
 		return list;
 	}
 	
 	public Genero getGeneroPreferidoUser( Long idUsuario, String tipo, Long idGenero ) throws SQLException
 	{
+		Genero gen = null;
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
 		sql.append( "FROM PREFERENCIA_GENEROS P INNER JOIN GENEROS G " );
@@ -84,9 +89,11 @@ public class DAOPreferenciaGenero extends DAO
 		ResultSet rs = s.executeQuery( );
 		if( rs.next( ) )
 		{
-			return DAOGenero.resultToGenero( rs );
+			gen = DAOGenero.resultToGenero( rs );
 		}
-		return null;
+		rs.close( );
+		s.close( );
+		return gen;
 	}
 	
 	public void deletePreferenciaGenero( Long idUsuario, String tipo, Long idGenero ) throws SQLException

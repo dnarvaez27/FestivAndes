@@ -1,6 +1,6 @@
 package vos;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by Dave on 20/03/2017.

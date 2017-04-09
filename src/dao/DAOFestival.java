@@ -50,6 +50,7 @@ public class DAOFestival extends DAO
 			list.add( resultToFestival( rs ) );
 		}
 		
+		rs.close( );
 		s.close( );
 		return list;
 	}
@@ -70,6 +71,7 @@ public class DAOFestival extends DAO
 		{
 			object = resultToFestival( rs );
 		}
+		rs.close( );
 		s.close( );
 		return object;
 	}
@@ -87,7 +89,7 @@ public class DAOFestival extends DAO
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
 		s.execute( );
-		s.clearParameters( );
+		s.close( );
 		return object;
 	}
 	
@@ -103,7 +105,7 @@ public class DAOFestival extends DAO
 		s.close( );
 	}
 	
-	public static Festival resultToFestival( ResultSet rs ) throws SQLException
+	private static Festival resultToFestival( ResultSet rs ) throws SQLException
 	{
 		Festival object = new Festival( );
 		object.setFechaInicio( rs.getDate( "fecha_inicio" ) );

@@ -1,6 +1,6 @@
 package rest;
 
-import tm.LugarTM;
+import tm.LugarCM;
 import tm.intermediate.LugarRequerimientoTM;
 import tm.intermediate.PreferenciaLugarTM;
 import vos.Lugar;
@@ -30,16 +30,14 @@ public class LugarServices extends Services
 		super( context );
 	}
 	
-	// Usuario Administrador
 	@POST
 	public Response createLugar( Lugar lugar,
-	                             @HeaderParam( "id" ) Long id,
-	                             @HeaderParam( "password" ) String password )
+	                             @HeaderParam( "id" ) Long id, @HeaderParam( "tipo" ) String tipo, @HeaderParam( "password" ) String password )
 	{
-		LugarTM tm = new LugarTM( getPath( ) );
+		LugarCM tm = new LugarCM( getPath( ) );
 		try
 		{
-			lugar = tm.createLugar( id, password, lugar );
+			lugar = tm.createLugar( id, tipo, password, lugar );
 		}
 		catch( SQLException e )
 		{
@@ -52,7 +50,7 @@ public class LugarServices extends Services
 	public Response getLugares( )
 	{
 		List<Lugar> list;
-		LugarTM tm = new LugarTM( getPath( ) );
+		LugarCM tm = new LugarCM( getPath( ) );
 		try
 		{
 			list = tm.getLugares( );
@@ -69,7 +67,7 @@ public class LugarServices extends Services
 	public Response getLugar( @PathParam( "id" ) Long id )
 	{
 		Lugar l;
-		LugarTM tm = new LugarTM( getPath( ) );
+		LugarCM tm = new LugarCM( getPath( ) );
 		try
 		{
 			l = tm.getLugar( id );
@@ -85,24 +83,23 @@ public class LugarServices extends Services
 	@Path( "{id}" )
 	public Response updateLugar( @PathParam( "id" ) Long id, Lugar lugar )
 	{
-		Lugar l;
-		LugarTM tm = new LugarTM( getPath( ) );
+		LugarCM tm = new LugarCM( getPath( ) );
 		try
 		{
-			l = tm.updateLugar( id, lugar );
+			lugar = tm.updateLugar( id, lugar );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( l ).build( );
+		return Response.status( 200 ).entity( lugar ).build( );
 	}
 	
 	@DELETE
 	@Path( "{id}" )
 	public Response deleteLugar( @PathParam( "id" ) Long id )
 	{
-		LugarTM tm = new LugarTM( getPath( ) );
+		LugarCM tm = new LugarCM( getPath( ) );
 		try
 		{
 			tm.deleteLugar( id );
@@ -115,11 +112,12 @@ public class LugarServices extends Services
 	}
 	
 	// REQUERIMIENTOS FUNCIONALES
+	
 	@GET
 	@Path( "{idLugar}/rfc2" )
 	public Response rfc2( @PathParam( "idLugar" ) Long idLugar )
 	{
-		LugarTM tm = new LugarTM( getPath( ) );
+		LugarCM tm = new LugarCM( getPath( ) );
 		RFC2 rfc2;
 		try
 		{
@@ -133,8 +131,9 @@ public class LugarServices extends Services
 	}
 	
 	// PREFERENCIA USUARIOS
+	
 	@GET
-	@Path( "{id_lugar}/usuariosprefieren" )
+	@Path( "{id_lugar}/preferedBy" )
 	public Response getUsuariosWhoPrefers( @PathParam( "id_lugar" ) Long idLugar )
 	{
 		List<UsuarioRegistrado> list;
@@ -151,6 +150,7 @@ public class LugarServices extends Services
 	}
 	
 	// REQUERIMIENTOS_LUGAR
+	
 	@GET
 	@Path( "{id_lugar}/requerimientos" )
 	public Response getRequerimientosFromLugar( @PathParam( "id_lugar" ) Long idLugar )
@@ -168,10 +168,10 @@ public class LugarServices extends Services
 		return Response.status( 200 ).entity( list ).build( );
 	}
 	
+	// TODO: 8/04/2017 Json con el nombre del req?
 	@POST
 	@Path( "{id_lugar}/requerimientos/{id_req}" )
-	public Response createRequerimientoFromLugar(
-			@PathParam( "id_lugar" ) Long idLugar, @PathParam( "id_req" ) Long idRequerimiento )
+	public Response createRequerimientoFromLugar( @PathParam( "id_lugar" ) Long idLugar, @PathParam( "id_req" ) Long idRequerimiento )
 	{
 		LugarRequerimientoTM tm = new LugarRequerimientoTM( getPath( ) );
 		try
@@ -187,8 +187,7 @@ public class LugarServices extends Services
 	
 	@DELETE
 	@Path( "{id_lugar}/requerimientos/{id_req}" )
-	public Response deleteRequerimientoFromLugar(
-			@PathParam( "id_lugar" ) Long idLugar, @PathParam( "id_req" ) Long idRequerimiento )
+	public Response deleteRequerimientoFromLugar( @PathParam( "id_lugar" ) Long idLugar, @PathParam( "id_req" ) Long idRequerimiento )
 	{
 		LugarRequerimientoTM tm = new LugarRequerimientoTM( getPath( ) );
 		try
@@ -203,11 +202,14 @@ public class LugarServices extends Services
 	}
 	
 	// LOCALIDADES
+	
 	@Path( "{idLugar}/localidades" )
 	public LocalidadServices getLocalidades( @PathParam( "idLugar" ) Long idLugar )
 	{
 		return new LocalidadServices( context );
 	}
+	
+	// ACCESIBILIDADES
 	
 	@Path( "{idLugar}/accesibilidades" )
 	public AccesibilidadServices getAccesibilidades( )
