@@ -2,6 +2,7 @@ package rest;
 
 import tm.UsuarioCM;
 import vos.Usuario;
+import vos.reportes.RFC7;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
@@ -111,4 +112,22 @@ public class UsuarioServices extends Services
 	{
 		return new UsuarioRegistradoServices( context );
 	}
+
+	@GET
+	@Path("/asistencia")
+	public Response asistenciaUsuario( @HeaderParam("id") Long id, @HeaderParam("tipo") String tipo, @HeaderParam("password") String password)
+	{
+		UsuarioCM tm = new UsuarioCM(getPath());
+		List<RFC7> rfc7;
+		try{
+
+			rfc7 = tm.asistenciaClientesRegistrados(id, tipo, password);
+		}
+		catch(Exception e)
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status(200).entity(rfc7).build();
+	}
+
 }

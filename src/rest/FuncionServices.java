@@ -263,7 +263,7 @@ public class FuncionServices extends Services
 	public Response cancelarFuncion(@PathParam( "lugar" ) Long idLugar, @PathParam( "fecha" ) String fecha, @HeaderParam("id") Long id, @HeaderParam("tipo") String tipo, @HeaderParam("password") String password)
 	{
 		FuncionCM tm = new FuncionCM(getPath());
-		Double d = -1D;
+		Double d;
 		try{
 			Date laFecha = DateUtils.format(fecha);
 			d = tm.cancelarFuncion(id, tipo, password, laFecha, idLugar);

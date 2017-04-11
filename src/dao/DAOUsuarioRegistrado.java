@@ -167,7 +167,7 @@ public class DAOUsuarioRegistrado extends DAO {
         List<RFC7.FuncionEspectaculo> enCurso = new LinkedList<>();
         List<RFC7.FuncionEspectaculo> previstas = new LinkedList<>();
         List<RFC7.FuncionEspectaculo> canceladas = new LinkedList<>();
-        while (rs.next()) {
+        if (rs.next()) {
             RFC7.FuncionEspectaculo f = req.new FuncionEspectaculo();
             f.setCantidad(rs.getInt("TOTAL"));
             f.setFuncion(DAOFuncion.resultToFuncion(rs));

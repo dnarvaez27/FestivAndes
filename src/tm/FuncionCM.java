@@ -275,9 +275,8 @@ public class FuncionCM extends TransactionManager {
 	public Double cancelarFuncion(Long id, String tipo, String password, Date fecha, Long idLugar) throws Exception {
 		DAOUsuario daoUsuario = new DAOUsuario();
 		DAOFuncion dao = new DAOFuncion();
-		Funcion funcion = new Funcion();
-		funcion.setSeRealiza(2);
-		double plata = -1;
+
+		double plata;
 		try {
 			daoUsuario.setConnection(this.connection);
 			dao.setConnection(this.connection);
@@ -288,13 +287,14 @@ public class FuncionCM extends TransactionManager {
 				if (dao.validarCancelacion(fecha, idLugar)) {
 					plata = dao.cantidadDevuelta(fecha, idLugar);
 					dao.devolverPlata(fecha, idLugar);
+					dao.setCancelada(fecha, idLugar);
 				}
 				else
 				{
 					throw new Exception("La funcion no se puede cancelar porque ya termino o porque no existe");
 
 				}
-		
+
 				connection.commit();
 			}
 			else{

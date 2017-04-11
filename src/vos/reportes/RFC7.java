@@ -83,14 +83,6 @@ public class RFC7 {
             this.funcion = funcion;
         }
 
-        public Long getIdEspectaculo() {
-            return idEspectaculo;
-        }
-
-        public void setIdEspectaculo(Long idEspectaculo) {
-            this.idEspectaculo = idEspectaculo;
-        }
-
         public String getNombreEspectaculo() {
             return nombreEspectaculo;
         }

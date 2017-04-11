@@ -350,7 +350,17 @@ public class DAOFuncion extends DAO {
 		recursos.add(s);
 		s.execute();
 	}
-
+public void setCancelada(Date fecha, Long idLugar) throws SQLException {
+	StringBuilder sql = new StringBuilder();
+	sql = new StringBuilder();
+	sql.append("UPDATE FROM FUNCIONES ");
+	sql.append("SET SE_REALIZA = 2 ");
+	sql.append(String.format("WHERE fecha = %s ", toDate(fecha)));
+	sql.append(String.format("  AND id_lugar = %s ", idLugar));
+	PreparedStatement s = connection.prepareStatement(sql.toString());
+	recursos.add(s);
+	s.execute();
+}
 	public boolean validarCancelacion(Date fecha, Long idLugar) throws SQLException {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT FROM FUNCIONES F ");
