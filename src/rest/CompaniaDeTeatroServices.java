@@ -4,6 +4,7 @@ import tm.CompaniaDeTeatroCM;
 import tm.intermediate.OfrecenTM;
 import vos.CompaniaDeTeatro;
 import vos.Espectaculo;
+import vos.reportes.RFC8;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
@@ -173,5 +174,38 @@ public class CompaniaDeTeatroServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
+	}
+
+	@GET
+	@Path("{id_compania}/informacion")
+	public Response infoCompania(@HeaderParam("id_compania")Long idCompania, @HeaderParam("tipo") String tipo, @HeaderParam("password") String password)
+	{
+		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM(getPath());
+		RFC8 rfc8;
+		try{
+
+			rfc8 = tm.informacionCompania(idCompania, tipo, password);
+		}
+		catch(Exception e)
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status(200).entity(rfc8).build();
+	}
+	@GET
+	@Path("companias/informacion")
+	public Response infoTodasCompanias(@HeaderParam("id_compania")Long id, @HeaderParam("tipo") String tipo, @HeaderParam("password") String password)
+	{
+		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM(getPath());
+		List<RFC8> rfc8;
+		try{
+
+			rfc8 = tm.informacionTodasCompanias(id, tipo, password);
+		}
+		catch(Exception e)
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status(200).entity(rfc8).build();
 	}
 }
