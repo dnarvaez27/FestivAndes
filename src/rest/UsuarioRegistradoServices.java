@@ -1,11 +1,13 @@
 package rest;
 
+import tm.UsuarioCM;
 import tm.UsuarioRegistradoCM;
 import tm.intermediate.PreferenciaGeneroTM;
 import tm.intermediate.PreferenciaLugarTM;
 import vos.Genero;
 import vos.Lugar;
 import vos.UsuarioRegistrado;
+import vos.reportes.RFC7;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
@@ -248,5 +250,20 @@ public class UsuarioRegistradoServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
+	}
+	@GET
+	@Path("{id_usuario}/{tipo}/asistencia")
+	public Response asistenciaUsuario( @HeaderParam("id") Long id, @HeaderParam("tipo") String tipo, @HeaderParam("password") String password)
+	{
+		UsuarioRegistradoCM tm = new UsuarioRegistradoCM(getPath());
+		RFC7 rfc7;
+		try{
+			rfc7 = tm.asistenciaRegistrado(id, tipo, password);
+		}
+		catch(Exception e)
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status(200).entity(rfc7).build();
 	}
 }
