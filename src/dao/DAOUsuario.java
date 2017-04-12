@@ -23,7 +23,7 @@ public class DAOUsuario extends DAO
 		sql.append( String.format( "WHERE identificacion = %s ", id ) );
 		sql.append( String.format( "  AND tipo_identificacion = '%s' ", tipo ) );
 		sql.append( String.format( "  AND ( " ) );
-		
+		// TODO: 10/04/2017
 		for( int i = 0; i < roles.length; i++ )
 		{
 			sql.append( String.format( "rol = '%s' ", roles[ i ] ) );

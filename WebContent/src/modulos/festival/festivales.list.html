@@ -1,0 +1,13 @@
+<div class="container-fluid">
+    <div class="row pre-scrollable style-3">
+        <div class="list-group">
+            <div ng-repeat="festival in festivalesRecords | orderBy: 'fechaInicio'">
+                <a class="list-group-item" ui-sref="fetivalesDetail({festivalId: festival.id})">
+                    <span>{{festival.ciudad}}</span><br>
+                    <span class="label label-primary pull-left">{{festival.fechaInicio | date}}</span>
+                    <span class="label label-danger pull-right">{{festival.fechaFin | date}}</span><br>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

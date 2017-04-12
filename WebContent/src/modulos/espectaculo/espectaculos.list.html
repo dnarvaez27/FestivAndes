@@ -1,0 +1,20 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="panel-group">
+            <div ng-repeat="espectaculo in espectaculosRecords">
+                <div class="panel panel-default">
+                    <div href="#" data-toggle="collapse" data-target="#{{'description'+espectaculo.id}}">
+                        <div class="panel-heading">
+                            <span>{{espectaculo.nombre}}</span>
+                        </div>
+                    </div>
+                    <div id="{{'description'+espectaculo.id}}" class="panel-body collapse">
+                        <span>{{espectaculo.descripcion}}</span>
+                        <br>
+                        <a class="btn btn-sm btn-see-espectaculo" ui-sref="espectaculoDetail({espectaculoId: espectaculo.id})">Ver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

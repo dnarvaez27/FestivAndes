@@ -1,10 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" ng-app="mainApp">
 <head>
-    <meta charset="UTF-8">
     <title>FestivAndes</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="src/bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="src/utils/style.css"/>
+
+    <script src="src/bower_components/angular/angular.js"></script>
+    <script src="src/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="src/modulos/festival/festivales.mod.js" type="text/javascript"></script>
+    <script src="src/modulos/espectaculo/espectaculos.mod.js" type="text/javascript"></script>
+
+    <script src="src/app.js" type="text/javascript"></script>
 </head>
 <body>
-    <h1>FestivAndes REST</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <!--SIDEBAR-->
+            <div class="col-md-2 sidebar">
+                <input type="text" class="form-control" placeholder="Search">
+                <!--LOGO-->
+                <div class="panel-body">
+                    <img src="src/utils/imgs/Logo.png" class="img-responsive img-circle"/>
+                </div>
+                <!--MENU-->
+                <div class="pre-scrollable style-2" >
+                    <ul class="nav navbar-default">
+                        <li role="presentation">
+                            <button class="btn btn-default col-lg-12 big-button">
+                                <a ui-sref="festivalesList">
+                                    <i class="glyphicon glyphicon-star"></i><br>
+                                    <span>Festivales</span>
+                                </a>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="btn btn-default col-lg-12 big-button" data-toggle="collapse" href="#usuarios_col">
+                                <i class="glyphicon glyphicon-user"></i><br>
+                                Usuarios
+                            </button>
+                            <div id="usuarios_col" class="panel-collapse collapse">
+                                <ul class="nav link">
+                                    <li>
+                                        <button class="btn btn-default col-lg-12"><a class="text-left col-lg-12 ">Administradores</a></button>
+                                    </li>
+                                    <li>
+                                        <button class="btn btn-default col-lg-12"><a class="text-left col-lg-12 ">Compañias de Teatro</a></button>
+                                    </li>
+                                    <li>
+                                        <button class="btn btn-default col-lg-12"><a class="text-left col-lg-12 ">Organizadores</a></button>
+                                    </li>
+                                    <li>
+                                        <button class="btn btn-default col-lg-12"><a class="text-left col-lg-12 ">Espectadores</a></button>
+                                    </li>
+                                </ul>
+                                <!--<div class="panel-body">Panel Body</div>-->
+                            </div>
+                        </li>
+                        <li>
+                            <button class="btn btn-default col-lg-12 big-button">
+                                <i class="glyphicon glyphicon-globe"></i><br>
+                                <span>Lugares</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <!--LOWER SIDE-->
+                <div class="">
+                    <div class="downside navbar-fixed-bottom col-md-2">
+                        <div class="col-lg-6">
+                            <a href="#">
+                                <button class="btn btn-default">
+                                    <i class="glyphicon glyphicon-user"></i><br>
+                                    <span>Sign up</span>
+                                </button>
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="#">
+                                <button class="btn btn-default">
+                                    <i class="glyphicon glyphicon-log-in"></i><br>
+                                    <span>Sign in</span>
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--MAIN VIEW-->
+            <div class="col-md-offset-2 col-md-10 container" ui-view="mainView"></div>
+        </div>
+    </div>
 </body>
 </html>

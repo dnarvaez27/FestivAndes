@@ -31,7 +31,8 @@ public class DateUtils
 	{
 		try
 		{
-			Calendar c = dateToCalendar( dateFormat.parse( date ) );
+			date = date.replace( "T", " " );
+			Calendar c = dateToCalendar( dateTimeFormat.parse( date ) );
 			c.add( Calendar.DATE, -1 );
 			return c.getTime( );
 		}
@@ -67,6 +68,6 @@ public class DateUtils
 	public static boolean isDateBetween( Date date, Date begining, Date end )
 	{
 		Calendar c = dateToCalendar( date );
-		return ( dateToCalendar( begining ).before( c ) && dateToCalendar( end ).after( c ) ) || date.equals( c );
+		return ( dateToCalendar( begining ).before( c ) && dateToCalendar( end ).after( c ) ) || dateToCalendar( date ).equals( c );
 	}
 }
