@@ -1,10 +1,13 @@
 package dao;
 
+import utilities.DateUtils;
 import vos.Usuario;
+import vos.reportes.RFC7;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -173,5 +176,91 @@ public class DAOUsuario extends DAO
 		u.setRol( rs.getString( "rol" ) );
 		u.setIdFestival( rs.getLong( "id_festival" ) );
 		return u;
+	}
+	
+	public List<RFC7> asistenciaUsuariosRegistrados( ) throws SQLException
+	{
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT " );
+		sql.append( "  B.FECHA, " );
+		sql.append( "  B.ID_LUGAR, " );
+		sql.append( "  E.NOMBRE AS NOMBRE_ESPECTACULO, " );
+		sql.append( "  COUNT(*) AS TOTAL, " );
+		sql.append( "  F.SE_REALIZA, " );
+		sql.append( "  F.ID_ESPECTACULO, " );
+		sql.append( "  E.DURACION, " );
+		sql.append( "  U.IDENTIFICACION, " );
+		sql.append( "  U.TIPO_IDENTIFICACION " );
+		sql.append( "FROM " );
+		sql.append( "  BOLETAS B " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  FUNCIONES F " );
+		sql.append( "    ON F.FECHA = B.FECHA " );
+		sql.append( "       AND F.ID_LUGAR = B.ID_LUGAR " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  ESPECTACULOS E " );
+		sql.append( "    ON F.ID_ESPECTACULO = E.ID " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  USUARIOS U " );
+		sql.append( "    ON B.ID_USUARIO = U.IDENTIFICACION " );
+		sql.append( "       AND B.ID_TIPO = U.TIPO_IDENTIFICACION " );
+		sql.append( String.format( "WHERE U.ROL = '%s' ", Usuario.USUARIO_REGISTRADO ) );
+		sql.append( "GROUP BY F.FECHA, F.ID_LUGAR, U.IDENTIFICACION, U.TIPO_IDENTIFICACION, B.FECHA, B.ID_LUGAR, E.NOMBRE, F.SE_REALIZA, F.ID_ESPECTACULO, E.DURACION " );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		recursos.add( s );
+		ResultSet rs = s.executeQuery( );
+		List<RFC7> resp = new LinkedList<>( );
+		
+		while( rs.next( ) )
+		{
+			RFC7 req = new RFC7( );
+			List<RFC7.FuncionEspectaculo> terminadas = new LinkedList<>( );
+			List<RFC7.FuncionEspectaculo> enCurso = new LinkedList<>( );
+			List<RFC7.FuncionEspectaculo> previstas = new LinkedList<>( );
+			List<RFC7.FuncionEspectaculo> canceladas = new LinkedList<>( );
+			RFC7.FuncionEspectaculo f = req.new FuncionEspectaculo( );
+			f.setCantidad( rs.getInt( "TOTAL" ) );
+			f.setFuncion( DAOFuncion.resultToFuncion( rs ) );
+			f.setNombreEspectaculo( rs.getString( "NOMBRE_ESPECTACULO" ) );
+			
+			if( rs.getInt( "SE_REALIZA" ) == 2 )
+			{
+				canceladas.add( f );
+			}
+			else
+			{
+				Calendar c = Calendar.getInstance( );
+				Calendar d = DateUtils.dateToCalendar( rs.getDate( "FECHA" ) );
+				Calendar e = DateUtils.dateToCalendar( rs.getDate( "FECHA" ) );
+				e.add( Calendar.MINUTE, rs.getInt( "DURACION" ) );
+				
+				if( c.getTimeInMillis( ) < d.getTimeInMillis( ) )
+				{
+					previstas.add( f );
+				}
+				else
+				{
+					if( c.getTimeInMillis( ) < e.getTimeInMillis( ) )
+					{
+						enCurso.add( f );
+					}
+					else
+					{
+						terminadas.add( f );
+					}
+				}
+			}
+			
+			req.setCanceladas( canceladas );
+			req.setEnCurso( enCurso );
+			req.setPrevistas( previstas );
+			req.setTerminadas( terminadas );
+			req.setIdUsuario( rs.getLong( "IDENTIFICACION" ) );
+			req.setTipo( rs.getString( "TIPO_IDENTIFICACION" ) );
+			
+			resp.add( req );
+		}
+		return resp;
 	}
 }

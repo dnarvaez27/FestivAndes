@@ -175,37 +175,41 @@ public class CompaniaDeTeatroServices extends Services
 		}
 		return Response.status( 200 ).build( );
 	}
-
+	
 	@GET
-	@Path("{id_compania}/informacion")
-	public Response infoCompania(@HeaderParam("id_compania")Long idCompania, @HeaderParam("tipo") String tipo, @HeaderParam("password") String password)
+	@Path( "{id_compania}/informacion" )
+	public Response infoCompania(
+			@HeaderParam( "id_compania" ) Long idCompania, @HeaderParam( "tipo" ) String tipo, @HeaderParam( "password" ) String password )
 	{
-		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM(getPath());
+		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM( getPath( ) );
 		RFC8 rfc8;
-		try{
-
-			rfc8 = tm.informacionCompania(idCompania, tipo, password);
+		try
+		{
+			
+			rfc8 = tm.informacionCompania( idCompania, tipo, password );
 		}
-		catch(Exception e)
+		catch( Exception e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status(200).entity(rfc8).build();
+		return Response.status( 200 ).entity( rfc8 ).build( );
 	}
+	
 	@GET
-	@Path("companias/informacion")
-	public Response infoTodasCompanias(@HeaderParam("id_compania")Long id, @HeaderParam("tipo") String tipo, @HeaderParam("password") String password)
+	@Path( "informacion" )
+	public Response infoTodasCompanias(
+			@HeaderParam( "id" ) Long id, @HeaderParam( "tipo" ) String tipo, @HeaderParam( "password" ) String password )
 	{
-		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM(getPath());
+		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM( getPath( ) );
 		List<RFC8> rfc8;
-		try{
-
-			rfc8 = tm.informacionTodasCompanias(id, tipo, password);
+		try
+		{
+			rfc8 = tm.informacionTodasCompanias( id, tipo, password );
 		}
-		catch(Exception e)
+		catch( Exception e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status(200).entity(rfc8).build();
+		return Response.status( 200 ).entity( rfc8 ).build( );
 	}
 }

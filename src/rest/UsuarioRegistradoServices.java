@@ -1,6 +1,5 @@
 package rest;
 
-import tm.UsuarioCM;
 import tm.UsuarioRegistradoCM;
 import tm.intermediate.PreferenciaGeneroTM;
 import tm.intermediate.PreferenciaLugarTM;
@@ -251,19 +250,23 @@ public class UsuarioRegistradoServices extends Services
 		}
 		return Response.status( 200 ).build( );
 	}
+	
 	@GET
-	@Path("{id_usuario}/{tipo}/asistencia")
-	public Response asistenciaUsuario( @HeaderParam("id") Long id, @HeaderParam("tipo") String tipo, @HeaderParam("password") String password)
+	@Path( "{id_usuario}/{tipo}/asistencia" )
+	public Response asistenciaUsuario(
+			@PathParam( "id_usuario" ) Long id, @PathParam( "tipo" ) String tipo, @HeaderParam( "password" ) String password )
 	{
-		UsuarioRegistradoCM tm = new UsuarioRegistradoCM(getPath());
+		UsuarioRegistradoCM tm = new UsuarioRegistradoCM( getPath( ) );
 		RFC7 rfc7;
-		try{
-			rfc7 = tm.asistenciaRegistrado(id, tipo, password);
-		}
-		catch(Exception e)
+		try
 		{
+			rfc7 = tm.asistenciaRegistrado( id, tipo, password );
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace( );
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status(200).entity(rfc7).build();
+		return Response.status( 200 ).entity( rfc7 ).build( );
 	}
 }

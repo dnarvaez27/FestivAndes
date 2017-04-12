@@ -355,7 +355,7 @@ public class FuncionCM extends TransactionManager
 				if( dao.validarCancelacion( fecha, idLugar ) )
 				{
 					plata = dao.cantidadDevuelta( fecha, idLugar );
-					dao.devolverPlata( fecha, idLugar );
+					// dao.devolverPlata( fecha, idLugar );
 					dao.updateFuncion( fecha, idLugar, funcion );
 					connection.commit( );
 				}

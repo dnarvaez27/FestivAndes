@@ -2,7 +2,7 @@ html, body, .container-fluid, .row {
     height: 100%;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 900px) {
     .sidebar {
         position: fixed;
         top: 0;
@@ -55,6 +55,9 @@ button, .btn-default, .btn-default > a {
 .dark-container {
     background-color: #151515;
     color: #FFFFFF;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
 }
 
 /*HOVER*/

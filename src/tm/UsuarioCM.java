@@ -5,7 +5,6 @@ import vos.Usuario;
 import vos.reportes.RFC7;
 
 import java.sql.SQLException;
-import java.util.LinkedList;
 import java.util.List;
 
 public class UsuarioCM extends TransactionManager
@@ -190,23 +189,26 @@ public class UsuarioCM extends TransactionManager
 			closeDAO( dao );
 		}
 	}
-	public List<RFC7> asistenciaClientesRegistrados(Long id, String tipo, String password) throws Exception {
-		DAOUsuario dao = new DAOUsuario();
+	
+	public List<RFC7> asistenciaClientesRegistrados( Long id, String tipo, String password ) throws Exception
+	{
+		DAOUsuario dao = new DAOUsuario( );
 		List<RFC7> resp;
-		try{
-			if (dao.isUserRole(id, tipo, password, Usuario.USUARIO_ADMINISTRADOR)) {
-				this.connection = getConnection( );
-				this.connection.setAutoCommit( false );
-
-				dao.setConnection( this.connection );
-				resp = dao.asistenciaUsuariosRegistrados();
-
-				connection.commit();
+		try
+		{
+			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
+			dao.setConnection( this.connection );
+			if( dao.isUserRole( id, tipo, password, Usuario.USUARIO_ADMINISTRADOR ) )
+			{
+				resp = dao.asistenciaUsuariosRegistrados( );
+				connection.commit( );
 			}
-			else{
-				throw new Exception("Este usuario no tiene permisos para cancelar funciones");
+			else
+			{
+				throw new Exception( "Este usuario no tiene permisos para ver la asistencia de los usuarios" );
 			}
-
 		}
 		catch( SQLException e )
 		{

@@ -45,7 +45,7 @@
         },
         resolve: {
           espectaculos: ['$http', 'festivalesContext', '$stateParams', function ($http, festivalesContext, $stateParams) {
-            return $http.get( festivalesContext + '/' + $stateParams.festivalId + '/espectaculos')
+            return $http.get(festivalesContext + '/' + $stateParams.festivalId + '/espectaculos')
           }]
         },
         views: {
