@@ -258,22 +258,29 @@ public class FuncionServices extends Services
 		}
 		return Response.status( 200 ).entity( rfc3 ).build( );
 	}
+	
 	@PUT
-	@Path("{lugar}/{fecha}/cancelar")
-	public Response cancelarFuncion(@PathParam( "lugar" ) Long idLugar, @PathParam( "fecha" ) String fecha, @HeaderParam("id") Long id, @HeaderParam("tipo") String tipo, @HeaderParam("password") String password)
+	@Path( "{lugar}/{fecha}/cancelar" )
+	public Response cancelarFuncion(
+			@PathParam( "lugar" ) Long idLugar,
+			@PathParam( "fecha" ) String fecha,
+			@HeaderParam( "id" ) Long id, @HeaderParam( "tipo" ) String tipo, @HeaderParam( "password" ) String password )
 	{
-		FuncionCM tm = new FuncionCM(getPath());
-		Double d;
-		try{
-			Date laFecha = DateUtils.format(fecha);
-			d = tm.cancelarFuncion(id, tipo, password, laFecha, idLugar);
-			if(d == -1)
+		FuncionCM tm = new FuncionCM( getPath( ) );
+		Double d = -1D;
+		try
+		{
+			Date laFecha = DateUtils.format( fecha );
+			d = tm.cancelarFuncion( id, tipo, password, laFecha, idLugar );
+			if( d == -1 )
+			{
 				return Response.status( 403 ).build( );
+			}
 		}
-		catch(Exception e)
+		catch( Exception e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status(200).entity(d).build();
+		return Response.status( 200 ).entity( d ).build( );
 	}
 }
