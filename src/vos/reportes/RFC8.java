@@ -8,55 +8,74 @@ import java.util.List;
  */
 public class RFC8
 {
-    private String nombreEspectaculo;
 
-    public String getNombreEspectaculo() {
-        return nombreEspectaculo;
+    private List<RFC8aux> espectaculos;
+
+    public List<RFC8aux> getEspectaculos()
+    {
+        return espectaculos;
     }
-
-    public void setNombreespectaculo(String nombreespectaculo) {
-        this.nombreEspectaculo = nombreespectaculo;
+    public void setEspectaculos(List<RFC8aux> param)
+    {
+        this.espectaculos = param;
     }
-
-    private Integer asistencia;
-    private Integer asistenciaRegistrados;
-    private Double dinero;
-    private List<FuncionOcupacion> ocupaciones;
-
     public RFC8()
     {
 
     }
-    public Integer getAsistencia() {
-        return asistencia;
-    }
 
-    public void setAsistencia(Integer asistencia) {
-        this.asistencia = asistencia;
-    }
+    public class RFC8aux {
+        public RFC8aux()
+        {
 
-    public Integer getAsistenciaRegistrados() {
-        return asistenciaRegistrados;
-    }
+        }
+        private String nombreEspectaculo;
 
-    public void setAsistenciaRegistrados(Integer asistenciaRegistrados) {
-        this.asistenciaRegistrados = asistenciaRegistrados;
-    }
+        public String getNombreEspectaculo() {
+            return nombreEspectaculo;
+        }
 
-    public Double getDinero() {
-        return dinero;
-    }
+        public void setNombreespectaculo(String nombreespectaculo) {
+            this.nombreEspectaculo = nombreespectaculo;
+        }
 
-    public void setDinero(Double dinero) {
-        this.dinero = dinero;
-    }
+        private Integer asistencia;
+        private Integer asistenciaRegistrados;
+        private Double dinero;
+        private List<FuncionOcupacion> ocupaciones;
 
-    public List<FuncionOcupacion> getOcupaciones() {
-        return ocupaciones;
-    }
 
-    public void setOcupaciones(List<FuncionOcupacion> ocupaciones) {
-        this.ocupaciones = ocupaciones;
+        public Integer getAsistencia() {
+            return asistencia;
+        }
+
+        public void setAsistencia(Integer asistencia) {
+            this.asistencia = asistencia;
+        }
+
+        public Integer getAsistenciaRegistrados() {
+            return asistenciaRegistrados;
+        }
+
+        public void setAsistenciaRegistrados(Integer asistenciaRegistrados) {
+            this.asistenciaRegistrados = asistenciaRegistrados;
+        }
+
+        public Double getDinero() {
+            return dinero;
+        }
+
+        public void setDinero(Double dinero) {
+            this.dinero = dinero;
+        }
+
+        public List<FuncionOcupacion> getOcupaciones() {
+            return ocupaciones;
+        }
+
+        public void setOcupaciones(List<FuncionOcupacion> ocupaciones) {
+            this.ocupaciones = ocupaciones;
+        }
     }
 
     public class FuncionOcupacion
@@ -91,6 +110,34 @@ public class RFC8
         }
         private Long idFuncion;
 
+        public Integer getAsistencia() {
+            return asistencia;
+        }
+
+        public void setAsistencia(Integer asistencia) {
+            this.asistencia = asistencia;
+        }
+
+        public Integer getAsistencia_registrados() {
+            return asistencia_registrados;
+        }
+
+        public void setAsistencia_registrados(Integer asistencia_registrados) {
+            this.asistencia_registrados = asistencia_registrados;
+        }
+
+        private Integer asistencia;
+        private Integer asistencia_registrados;
+
+        public Double getTotalPlata() {
+            return totalPlata;
+        }
+
+        public void setTotalPlata(Double totalPlata) {
+            this.totalPlata = totalPlata;
+        }
+
+        private Double totalPlata;
         private Date fecha;
         private Double porcentaje;
     }

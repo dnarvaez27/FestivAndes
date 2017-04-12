@@ -1,6 +1,7 @@
 package dao;
 
 import vos.CompaniaDeTeatro;
+import vos.Usuario;
 import vos.reportes.RFC5;
 import vos.reportes.RFC8;
 
@@ -141,41 +142,132 @@ public class DAOCompaniaDeTeatro extends DAO {
     }
 
     public RFC8 informacionCompania(Long idCompania) throws SQLException {
-        //StringBuilder sql = new StringBuilder();
-        //sql.append("SELECT E.NOMBRE, ");
-        //	sql.append("FROM ");
-//		sql.append("  BOLETAS B ");
-//		sql.append("  INNER JOIN ");
-//		sql.append("  COSTO_LOCALIDAD CL ");
-//		sql.append("    ON B.FECHA = CL.FECHA ");
-//		sql.append("       AND B.ID_LUGAR = CL.ID_LUGAR ");
-//		sql.append("       AND B.ID_LOCALIDAD = CL.ID_LOCALIDAD ");
-//		sql.append("  INNER JOIN ");
-//		sql.append("  LUGARES L ");
-//		sql.append("    ON L.ID = B.ID_LUGAR ");
-//		sql.append("       AND B.ID_LUGAR = CL.ID_LUGAR ");
-//		sql.append("       AND B.ID_LOCALIDAD = CL.ID_LOCALIDAD ");
-//		sql.append("  INNER JOIN FUNCIONES F");
-//		sql.append("    ON F.FECHA = B.FECHA ");
-//		sql.append("       AND F.ID_LUGAR = B.ID_LUGAR ");
-//		sql.append("  INNER JOIN ESPECTACULOS E");
-//		sql.append("    ON F.ID_ESPECTACULO = E.ID ");
-//		sql.append("  INNER JOIN OFRECEN O");
-//		sql.append("    ON O.ID_ESPECTACULO = E.ID ");
-//		sql.append("  INNER JOIN COMPANIA_TEATRO CT ");
-//		sql.append("  	ON   O.ID_COMPANIA_TEATRO = CT.ID ");
-//		sql.append(String.format("WHERE CT.ID = %s ", idCompania));
+        StringBuilder sql = new StringBuilder();
+        sql.append( "SELECT " );
+        sql.append( "  ID_ESPECTACULO, " );
+        sql.append( "  NOMBRE_ESPECTACULO, " );
+        sql.append( "  ID_COMPANIA, " );
+        sql.append( "  NOMBRE_COMPANIA, " );
+        sql.append( "  FECHA_FUNCION, " );
+        sql.append( "  LUGAR_FUNCION, " );
+        sql.append( "  ASISTENCIA * 100 / TOTAL_CAPACIDAD AS OCUPACION, " );
+        sql.append( "  ASISTENCIA, " );
+        sql.append( "  ASISTENCIA_REGISTRADOS, " );
+        sql.append( "  TOTAL " );
+        sql.append( "FROM (SELECT " );
+        sql.append( "        E.ID          AS ID_ESPECTACULO, " );
+        sql.append( "        E.NOMBRE      AS NOMBRE_ESPECTACULO, " );
+        sql.append( "        CT.ID         AS ID_COMPANIA, " );
+        sql.append( "        CT.NOMBRE     AS NOMBRE_COMPANIA, " );
+        sql.append( "        F.FECHA       AS FECHA_FUNCION, " );
+        sql.append( "        F.ID_LUGAR    AS LUGAR_FUNCION, " );
+        sql.append( "        COUNT(*)      AS ASISTENCIA, " );
+        sql.append( "        SUM(CL.COSTO) AS TOTAL " );
+        sql.append( "      FROM " );
+        sql.append( "        BOLETAS B " );
+        sql.append( "        INNER JOIN USUARIOS U " );
+        sql.append( "          ON U.IDENTIFICACION = B.ID_USUARIO " );
+        sql.append( "             AND B.ID_TIPO = U.TIPO_IDENTIFICACION " );
+        sql.append( "        INNER JOIN " );
+        sql.append( "        COSTO_LOCALIDAD CL " );
+        sql.append( "          ON B.FECHA = CL.FECHA " );
+        sql.append( "             AND B.ID_LUGAR = CL.ID_LUGAR " );
+        sql.append( "             AND B.ID_LOCALIDAD = CL.ID_LOCALIDAD " );
+        sql.append( "        INNER JOIN " );
+        sql.append( "        LUGARES L " );
+        sql.append( "          ON L.ID = B.ID_LUGAR " );
+        sql.append( "        INNER JOIN FUNCIONES F " );
+        sql.append( "          ON F.FECHA = B.FECHA " );
+        sql.append( "             AND F.ID_LUGAR = B.ID_LUGAR " );
+        sql.append( "        INNER JOIN ESPECTACULOS E " );
+        sql.append( "          ON F.ID_ESPECTACULO = E.ID " );
+        sql.append( "        INNER JOIN OFRECE O " );
+        sql.append( "          ON O.ID_ESPECTACULO = E.ID " );
+        sql.append( "        INNER JOIN COMPANIAS_DE_TEATRO CT " );
+        sql.append( "          ON O.ID_COMPANIA_DE_TEATRO = CT.ID " );
+        sql.append( "      WHERE CT.ID = 0 " );
+        sql.append( "      GROUP BY E.ID, E.NOMBRE, CT.ID, CT.NOMBRE, F.FECHA, F.ID_LUGAR " );
+        sql.append( "      ORDER BY E.ID) Z " );
+        sql.append( "  LEFT JOIN " );
+        sql.append( "  (SELECT " );
+        sql.append( "     CL.FECHA, " );
+        sql.append( "     CL.ID_LUGAR, " );
+        sql.append( "     COUNT(*) AS ASISTENCIA_REGISTRADOS " );
+        sql.append( "   FROM " );
+        sql.append( "     BOLETAS B " );
+        sql.append( "     INNER JOIN " );
+        sql.append( "     COSTO_LOCALIDAD CL " );
+        sql.append( "       ON B.FECHA = CL.FECHA " );
+        sql.append( "          AND B.ID_LUGAR = CL.ID_LUGAR " );
+        sql.append( "          AND B.ID_LOCALIDAD = CL.ID_LOCALIDAD " );
+        sql.append( "     INNER JOIN " );
+        sql.append( "     USUARIOS U " );
+        sql.append( "       ON B.ID_USUARIO = U.IDENTIFICACION " );
+        sql.append( "          AND B.ID_TIPO = U.TIPO_IDENTIFICACION " );
+        sql.append(String.format("   WHERE U.ROL = '%s' ", Usuario.USUARIO_REGISTRADO) );
+        sql.append( "   GROUP BY CL.FECHA, CL.ID_LUGAR, U.ROL) B " );
+        sql.append( "    ON Z.FECHA_FUNCION = B.FECHA " );
+        sql.append( "       AND Z.LUGAR_FUNCION = B.ID_LUGAR " );
+        sql.append( "  LEFT JOIN " );
+        sql.append( "  (SELECT " );
+        sql.append( "     L.ID, " );
+        sql.append( "     SUM(CAPACIDAD) AS TOTAL_CAPACIDAD " );
+        sql.append( "   FROM LUGARES L " );
+        sql.append( "     INNER JOIN LUGAR_LOCALIDAD LL " );
+        sql.append( "       ON L.ID = LL.ID_LUGAR " );
+        sql.append( "   GROUP BY L.ID) C " );
+        sql.append( "    ON C.ID = Z.LUGAR_FUNCION " );
+        sql.append(String.format("WHERE ID_COMPANIA = %s ",idCompania));
+        PreparedStatement s = connection.prepareStatement(sql.toString());
+        recursos.add(s);
+        ResultSet rs = s.executeQuery();
 
+        RFC8 resp = new RFC8();
+        List<RFC8.RFC8aux> list = new LinkedList<>();
+        Long idActual = -1l;
+        boolean algo = false;
 
-//		PreparedStatement s = connection.prepareStatement(sql.toString());
-//		recursos.add(s);
-//		ResultSet rs = s.executeQuery();
+        while (rs.next()) {
+            RFC8.RFC8aux aux = resp.new RFC8aux();
+            List<RFC8.FuncionOcupacion> temp = new LinkedList<>();
+            aux.setNombreespectaculo("NOMBRE_ESPECTACULO");
+            idActual = idActual ==-1? rs.getLong("ID_ESPECTACULO"):idActual;
+            while (rs.getLong("ID_ESPECTACULO") == (idActual)) {
+                RFC8.FuncionOcupacion fo = resp.new FuncionOcupacion();
+                fo.setAsistencia(rs.getInt("ASISTENCIA"));
+                fo.setAsistencia_registrados(rs.getInt("ASISTENCIA_REGISTRADOS"));
+                fo.setFecha(rs.getDate("FECHA_FUNCION"));
+                fo.setIdFuncion(rs.getLong("LUGAR_FUNCION"));
+                fo.setPorcentaje(rs.getDouble("OCUPACION"));
+                fo.setTotalPlata(rs.getDouble("TOTAL"));
+                temp.add(fo);
+                if(!rs.next())
+                {
+                    algo = true;
+                    break;
+                }
 
-        return null;
+            }
+            aux.setOcupaciones(temp);
+            Integer asistencia = 0;
+            Integer asistenciaRegistrados = 0;
+            Double plataTotal = 0d;
 
-    }
-
-    public List<RFC8> informacionTodasCompanias() {
-        return null;
+            for (RFC8.FuncionOcupacion fo : temp) {
+                asistencia += fo.getAsistencia();
+                asistenciaRegistrados += fo.getAsistencia_registrados();
+                plataTotal += fo.getTotalPlata();
+            }
+            aux.setAsistencia(asistencia);
+            aux.setAsistenciaRegistrados(asistenciaRegistrados);
+            aux.setDinero(plataTotal);
+            list.add(aux);
+            if(algo)
+                break;
+            idActual = rs.getLong("ID_ESPECTACULO");
+            rs.previous();
+        }
+        resp.setEspectaculos(list);
+        return resp;
     }
 }

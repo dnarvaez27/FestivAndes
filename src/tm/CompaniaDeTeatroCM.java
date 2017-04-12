@@ -7,6 +7,7 @@ import vos.Usuario;
 import vos.reportes.RFC8;
 
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 public class CompaniaDeTeatroCM extends TransactionManager {
@@ -218,7 +219,14 @@ public class CompaniaDeTeatroCM extends TransactionManager {
 
 
             if (daoUsuario.isUserRole(id, tipo, password, Usuario.USUARIO_ADMINISTRADOR)) {
-                resp = dao.informacionTodasCompanias();
+                List<CompaniaDeTeatro> ct = dao.getCompaniaDeTeatros();
+
+                resp = new LinkedList<>();
+                for(CompaniaDeTeatro c:ct)
+                {
+                    resp.add(dao.informacionCompania(c.getIdentificacion()));
+                }
+
                 connection.commit();
             }
             else{
