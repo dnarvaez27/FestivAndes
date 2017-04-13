@@ -60,6 +60,11 @@ button, .btn-default, .btn-default > a {
     border: 0px;
 }
 
+.just {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
 /*HOVER*/
 button:hover > a,
 .btn-default:hover,

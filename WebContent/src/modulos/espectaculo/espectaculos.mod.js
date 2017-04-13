@@ -9,7 +9,7 @@
 
     $stateProvider
       .state('espectaculos', {
-        url: '/espectaculos',
+        url: '/detail',
         abstract: true,
         parent: 'fetivalesDetail',
         views: {
