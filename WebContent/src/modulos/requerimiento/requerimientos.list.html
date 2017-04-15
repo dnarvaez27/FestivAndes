@@ -1,0 +1,11 @@
+<div class="container-fluid">
+    <div class="row">
+        <h2>Requerimientos</h2>
+        <div ng-repeat="requerimiento in requerimientosRecords">
+            <div class="col-lg-3">
+                <img class="img-responsive" ng-src="{{requerimiento.imagen}}" alt="{{requerimiento.nombre}}">
+                <span class="center-block text-center caption">{{requerimiento.nombre}}</span>
+            </div>
+        </div>
+    </div>
+</div>

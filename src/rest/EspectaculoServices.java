@@ -2,11 +2,13 @@ package rest;
 
 import tm.EspectaculoCM;
 import tm.intermediate.EspectaculoGeneroTM;
+import tm.intermediate.EspectaculoRequerimientoTM;
 import tm.intermediate.OfrecenTM;
 import utilities.DateUtils;
 import vos.CompaniaDeTeatro;
 import vos.Espectaculo;
 import vos.Genero;
+import vos.RequerimientoTecnico;
 import vos.reportes.RFC4;
 
 import javax.servlet.ServletContext;
@@ -178,12 +180,63 @@ public class EspectaculoServices extends Services
 	
 	@POST
 	@Path( "{id_espectaculo}/generos" )
-	public Response createEntryGenero( @PathParam( "id_espectaculo" ) Long idEspectaculo, Long idGenero )
+	public Response createEntryGenero( Genero genero, @PathParam( "id_espectaculo" ) Long idEspectaculo )
 	{
 		EspectaculoGeneroTM tm = new EspectaculoGeneroTM( getPath( ) );
 		try
 		{
-			tm.createEspectaculoGenero( idEspectaculo, idGenero );
+			tm.createEspectaculoGenero( idEspectaculo, genero.getId( ) );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).build( );
+	}
+	
+	// REQUERIMIENTOS
+	
+	@GET
+	@Path( "{id}/requerimientos" )
+	public Response getRequerimientosFrom( @PathParam( "id" ) Long idEspectaculo )
+	{
+		List<RequerimientoTecnico> list;
+		EspectaculoRequerimientoTM tm = new EspectaculoRequerimientoTM( getPath( ) );
+		try
+		{
+			list = tm.getRequerimientosFrom( idEspectaculo );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	@POST
+	@Path( "{id}/requerimientos" )
+	public Response createEntryRequerimiento( RequerimientoTecnico requerimientoTecnico, @PathParam( "id" ) Long idEspectaculo )
+	{
+		EspectaculoRequerimientoTM tm = new EspectaculoRequerimientoTM( getPath( ) );
+		try
+		{
+			tm.createEspectaculoRequerimiento( idEspectaculo, requerimientoTecnico.getId( ) );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).build( );
+	}
+	
+	@DELETE
+	@Path( "{id}/requerimientos/{id_req}" )
+	public Response deleteRequerimiento( @PathParam( "id" ) Long idEspectaculo, @PathParam( "id_req" ) Long idRequerimiento )
+	{
+		EspectaculoRequerimientoTM tm = new EspectaculoRequerimientoTM( getPath( ) );
+		try
+		{
+			tm.deleteEspectaculoRequerimiento( idEspectaculo, idRequerimiento );
 		}
 		catch( SQLException e )
 		{

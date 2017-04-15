@@ -1,14 +1,14 @@
 (function (ng) {
-  var mod = ng.module('festivalesModule', ['ui.router'])
+  var mod = ng.module('festivalesModule', ['ui.router']);
 
-  mod.constant('festivalesContext', 'rest/festivales')
+  mod.constant('festivalesContext', 'rest/festivales/');
 
   mod.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
 
-    var basePath = 'src/modulos/festival/'
-    var basePathEspectaculo = 'src/modulos/espectaculo/'
+    var basePath = 'src/modulos/festival/';
+    var basePathEspectaculo = 'src/modulos/espectaculo/';
 
-    $urlRouterProvider.otherwise('/festivales/list')
+    $urlRouterProvider.otherwise('/festivales/list');
 
     $stateProvider
       .state('festivales', {
@@ -16,14 +16,14 @@
         abstract: true,
         resolve: {
           festivales: ['$http', 'festivalesContext', function ($http, festivalesContext) {
-            return $http.get(festivalesContext)
+            return $http.get(festivalesContext);
           }]
         },
         views: {
           'mainView': {
             templateUrl: basePath + 'festivales.html',
             controller: ['$scope', 'festivales', function ($scope, festivales) {
-              $scope.festivalesRecords = festivales.data
+              $scope.festivalesRecords = festivales.data;
             }]
           }
         }
@@ -44,9 +44,10 @@
           festivalId: null
         },
         resolve: {
-          espectaculos: ['$http', 'festivalesContext', '$stateParams', function ($http, festivalesContext, $stateParams) {
-            return $http.get(festivalesContext + '/' + $stateParams.festivalId + '/espectaculos')
-          }]
+          espectaculos: ['$http', 'festivalesContext', 'espectaculoContext', '$stateParams',
+            function ($http, festivalesContext, espectaculoContext, $stateParams) {
+              return $http.get(festivalesContext + $stateParams.festivalId + espectaculoContext);
+            }]
         },
         views: {
           'listView': {
@@ -54,11 +55,12 @@
           },
           'detailView': {
             templateUrl: basePathEspectaculo + 'espectaculos.list.html',
-            controller: ['$scope', 'espectaculos', function ($scope, espectaculos) {
-              $scope.espectaculosRecords = espectaculos.data
-            }]
+            controller: ['$scope', 'espectaculos',
+              function ($scope, espectaculos) {
+                $scope.espectaculosRecords = espectaculos.data;
+              }]
           }
         }
-      })
-  }])
-})(window.angular)
+      });
+  }]);
+})(window.angular);

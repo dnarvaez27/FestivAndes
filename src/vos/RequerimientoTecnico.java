@@ -10,6 +10,29 @@ public class RequerimientoTecnico
 	@JsonProperty( value = "nombre" )
 	private String nombre;
 	
+	@JsonProperty( value = "imagen" )
+	private String imagen;
+	
+	/**
+	 * Retrieves the imagen of the RequerimientoTecnico
+	 *
+	 * @return The imagen of the RequerimientoTecnico
+	 */
+	public String getImagen( )
+	{
+		return imagen;
+	}
+	
+	/**
+	 * Updates the imagen of the RequerimientoTecnico by the one given by parameter
+	 *
+	 * @param imagen The new imagen of the RequerimientoTecnico
+	 */
+	public void setImagen( String imagen )
+	{
+		this.imagen = imagen;
+	}
+	
 	public Long getId( )
 	{
 		return id;

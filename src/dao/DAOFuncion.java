@@ -195,7 +195,7 @@ public class DAOFuncion extends DAO
 	public static Funcion resultToFuncion( ResultSet rs ) throws SQLException
 	{
 		Funcion funcion = new Funcion( );
-		funcion.setFecha( rs.getDate( "fecha" ) );
+		funcion.setFecha( rs.getTimestamp( "fecha" ) );
 		funcion.setIdLugar( rs.getLong( "id_lugar" ) );
 		funcion.setIdEspectaculo( rs.getLong( "id_espectaculo" ) );
 		funcion.setSeRealiza( rs.getInt( "se_realiza" ) );

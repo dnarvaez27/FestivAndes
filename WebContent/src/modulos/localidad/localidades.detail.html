@@ -1,0 +1,15 @@
+<div class="container-fluid">
+    <div class="row">
+        <h3 class="text-center">{{currentLocalidad.nombre}}</h3>
+        <span class="label label-warning center-block">{{currentLocalidad.costo | currency}}</span>
+        <div ng-controller="operacionesBoletas">
+            <table align="center" id="sillasLocalidad">
+                <tr ng-repeat="fila in currentLocalidad.sillas">
+                    <td ng-repeat="silla in fila">
+                        <silla-status silla="silla"></silla-status>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

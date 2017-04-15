@@ -1,0 +1,5 @@
+<button class="btn btn-default silla" ng-controller="operacionesBoletas" ng-click="seleccionarSilla(silla)">
+    <img src="src/utils/imgs/Silla-Ocup.png" class="img-responsive silla-ocup" ng-if="silla.disponibilidad === 1" width="50px">
+    <img src="src/utils/imgs/Silla-Disp.png" class="img-responsive silla-disp" ng-if="silla.disponibilidad === 0" width="50px">
+    {{silla.numFila}} - {{silla.numSilla}}
+</button>

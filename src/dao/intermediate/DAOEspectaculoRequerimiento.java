@@ -2,6 +2,7 @@ package dao.intermediate;
 
 import dao.DAO;
 import dao.DAOEspectaculo;
+import dao.DAORequerimientoTecnico;
 import vos.Espectaculo;
 import vos.RequerimientoTecnico;
 
@@ -19,14 +20,14 @@ public class DAOEspectaculoRequerimiento extends DAO
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM ESPECTACULO_REQUERIMIENTO ER INNER JOIN REQUERIMIENTOS R ON ER.id_requerimiento = R.id " );
+		sql.append( "FROM ESPECTACULO_REQUERIMIENTO ER INNER JOIN REQUERIMIENTOS_TECNICOS R ON ER.id_requerimiento = R.id " );
 		sql.append( String.format( "WHERE id_espectaculo = %s ", idEspectaculo ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		ResultSet rs = s.executeQuery( );
 		while( rs.next( ) )
 		{
-			list.add( resultToRequerimientoTecnico( rs ) );
+			list.add( DAORequerimientoTecnico.resultToRequerimientoTecnico( rs ) );
 		}
 		rs.close( );
 		s.close( );
@@ -39,7 +40,7 @@ public class DAOEspectaculoRequerimiento extends DAO
 		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT * " );
-		sql.append( "FROM ESPECTACULO_REQUERIMIENTO ER INNER JOIN REQUERIMIENTOS E ON EG.id_espectaculo = E.id " );
+		sql.append( "FROM ESPECTACULO_REQUERIMIENTO ER INNER JOIN REQUERIMIENTOS_TECNICOS E ON EG.id_espectaculo = E.id " );
 		sql.append( String.format( "WHERE ER.id_requerimiento = %s ", idRequerimientoTecnico ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
@@ -78,13 +79,5 @@ public class DAOEspectaculoRequerimiento extends DAO
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		s.execute( );
 		s.close( );
-	}
-	
-	private RequerimientoTecnico resultToRequerimientoTecnico( ResultSet rs ) throws SQLException
-	{
-		RequerimientoTecnico req = new RequerimientoTecnico( );
-		req.setNombre( rs.getString( "nombre" ) );
-		req.setId( rs.getLong( "id" ) );
-		return req;
 	}
 }

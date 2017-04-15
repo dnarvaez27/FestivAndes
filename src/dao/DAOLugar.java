@@ -44,7 +44,8 @@ public class DAOLugar extends DAO
 		List<Lugar> list = new LinkedList<>( );
 		
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELECT * FROM LUGARES" );
+		sql.append( "SELECT * FROM LUGARES " );
+		sql.append( "ORDER BY ID " );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
@@ -116,8 +117,8 @@ public class DAOLugar extends DAO
 		Lugar l = new Lugar( );
 		l.setId( rs.getLong( "id" ) );
 		l.setNombre( rs.getString( "nombre" ) );
-		l.setDisponibilidadInicio( rs.getDate( "disponibilidad_inicio" ) );
-		l.setDisponibilidadFin( rs.getDate( "disponibilidad_fin" ) );
+		l.setDisponibilidadInicio( rs.getTime( "disponibilidad_inicio" ) );
+		l.setDisponibilidadFin( rs.getTime( "disponibilidad_fin" ) );
 		l.setEsAbierto( rs.getInt( "es_abierto" ) );
 		l.setTipo( rs.getString( "tipo_lugar" ) );
 		return l;

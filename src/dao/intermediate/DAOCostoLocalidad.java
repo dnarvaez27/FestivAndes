@@ -3,8 +3,10 @@ package dao.intermediate;
 import dao.DAO;
 import dao.DAOFuncion;
 import dao.DAOLocalidad;
+import dao.DAOSilla;
 import vos.Funcion;
 import vos.Localidad;
+import vos.Silla;
 import vos.intermediate.CostoLocalidad;
 
 import java.sql.PreparedStatement;
@@ -25,7 +27,7 @@ public class DAOCostoLocalidad extends DAO
 		sql.append( "INSERT INTO COSTO_LOCALIDAD " );
 		sql.append( "( fecha, id_lugar, id_localidad, costo )" );
 		sql.append( "VALUES ( " );
-		sql.append( String.format( "%s, ", toDate( costoLocalidad.getFecha( ) ) ) );
+		sql.append( String.format( "%s, ", toDateTime( costoLocalidad.getFecha( ) ) ) );
 		sql.append( String.format( "%s, ", costoLocalidad.getIdLugar( ) ) );
 		sql.append( String.format( "%s, ", costoLocalidad.getIdLocalidad( ) ) );
 		sql.append( String.format( "%s ", costoLocalidad.getCosto( ) ) );
@@ -70,8 +72,10 @@ public class DAOCostoLocalidad extends DAO
 		sql.append( "  LEFT JOIN LUGAR_LOCALIDAD LL " );
 		sql.append( "    ON L.ID = LL.ID_LOCALIDAD " );
 		sql.append( "       AND CL.ID_LUGAR = LL.ID_LUGAR ) " );
-		sql.append( String.format( "WHERE CL.fecha = %s ", toDate( fecha ) ) );
+		sql.append( String.format( "WHERE CL.fecha = %s ", toDateTime( fecha ) ) );
 		sql.append( String.format( "AND Cl.id_lugar = %s ", idLugar ) );
+		
+		System.out.println( sql.toString( ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		ResultSet rs = s.executeQuery( );
@@ -122,9 +126,11 @@ public class DAOCostoLocalidad extends DAO
 		sql.append( "  LEFT JOIN LUGAR_LOCALIDAD LL " );
 		sql.append( "    ON L.ID = LL.ID_LOCALIDAD " );
 		sql.append( "       AND CL.ID_LUGAR = LL.ID_LUGAR ) " );
-		sql.append( String.format( "WHERE CL.fecha = %s ", toDate( fecha ) ) );
+		sql.append( String.format( "WHERE CL.fecha = %s ", toDateTime( fecha ) ) );
 		sql.append( String.format( "AND CL.id_lugar = %s ", idLugar ) );
 		sql.append( String.format( "AND CL.id_localidad = %s ", idLocalidad ) );
+		
+		System.out.println( sql.toString( ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		ResultSet rs = s.executeQuery( );
@@ -135,6 +141,70 @@ public class DAOCostoLocalidad extends DAO
 		rs.close( );
 		s.close( );
 		return costoLocalidad;
+	}
+	
+	public List<Silla.SillaExtended> getEstadoSillas( Date fecha, Long idLugar, Long idLocalidad ) throws SQLException
+	{
+		List<Silla.SillaExtended> list = new LinkedList<>( );
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT " );
+		sql.append( "  ID_LUGAR, " );
+		sql.append( "  ID_LOCALIDAD, " );
+		sql.append( "  NUM_FILA, " );
+		sql.append( "  NUM_SILLA, " );
+		sql.append( "  '0' AS DISPONIBILIDAD " );
+		sql.append( "FROM ((SELECT S.* " );
+		sql.append( "       FROM " );
+		sql.append( "         SILLAS S " );
+		sql.append( "         INNER JOIN " );
+		sql.append( "         COSTO_LOCALIDAD CL " );
+		sql.append( "           ON S.ID_LUGAR = CL.ID_LUGAR " );
+		sql.append( "              AND S.ID_LOCALIDAD = CL.ID_LOCALIDAD " );
+		sql.append( String.format( "WHERE CL.fecha = %s ", toDateTime( fecha ) ) );
+		sql.append( String.format( "AND CL.id_lugar = %s ", idLugar ) );
+		sql.append( String.format( "AND CL.id_localidad = %s ) ", idLocalidad ) );
+		sql.append( "      MINUS " );
+		sql.append( "      (SELECT S.* " );
+		sql.append( "       FROM BOLETAS B " );
+		sql.append( "         INNER JOIN " );
+		sql.append( "         SILLAS S " );
+		sql.append( "           ON B.NUM_FILA = S.NUM_FILA " );
+		sql.append( "              AND B.NUM_SILLA = S.NUM_SILLA " );
+		sql.append( "              AND B.ID_LOCALIDAD = S.ID_LOCALIDAD " );
+		sql.append( "              AND B.ID_LUGAR = S.ID_LUGAR " );
+		sql.append( String.format( "WHERE B.fecha = %s ", toDateTime( fecha ) ) );
+		sql.append( String.format( "AND B.id_lugar = %s ", idLugar ) );
+		sql.append( String.format( "AND B.id_localidad = %s )) ", idLocalidad ) );
+		sql.append( "UNION (SELECT " );
+		sql.append( "         S.ID_LUGAR, " );
+		sql.append( "         S.ID_LOCALIDAD, " );
+		sql.append( "         S.NUM_FILA, " );
+		sql.append( "         S.NUM_SILLA, " );
+		sql.append( "         '1' AS DISPONIBILIDAD " );
+		sql.append( "       FROM BOLETAS B " );
+		sql.append( "         INNER JOIN " );
+		sql.append( "         SILLAS S " );
+		sql.append( "           ON B.NUM_FILA = S.NUM_FILA " );
+		sql.append( "              AND B.NUM_SILLA = S.NUM_SILLA " );
+		sql.append( "              AND B.ID_LOCALIDAD = S.ID_LOCALIDAD " );
+		sql.append( "              AND B.ID_LUGAR = S.ID_LUGAR " );
+		sql.append( String.format( "WHERE B.fecha = %s ", toDateTime( fecha ) ) );
+		sql.append( String.format( "AND B.id_lugar = %s ", idLugar ) );
+		sql.append( String.format( "AND B.id_localidad = %s )", idLocalidad ) );
+		sql.append( "ORDER BY ID_LUGAR, ID_LOCALIDAD, NUM_FILA, NUM_SILLA " );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		while( rs.next( ) )
+		{
+			Silla.SillaExtended silla = new Silla.SillaExtended( DAOSilla.resultToSilla( rs ) );
+			silla.setDisponibilidad( rs.getInt( "disponibilidad" ) );
+			list.add( silla );
+		}
+		rs.close( );
+		s.close( );
+		return list;
 	}
 	
 	public CostoLocalidad updateCostoLocalidad( Date fecha, Long idLugar, Long idLocalidad, CostoLocalidad costoLocalidad ) throws SQLException

@@ -2,8 +2,48 @@ package vos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 public class Localidad
 {
+	public static class LocalidadExtended extends Localidad
+	{
+		private List<List<Silla.SillaExtended>> sillas;
+		
+		public LocalidadExtended( )
+		{
+		}
+		
+		public LocalidadExtended( Localidad localidad )
+		{
+			this.setId( localidad.id );
+			this.setNombre( localidad.nombre );
+			this.setEsNumerado( localidad.esNumerada );
+			this.setCapacidad( localidad.capacidad );
+			this.setCosto( localidad.costo );
+		}
+		
+		/**
+		 * Retrieves the sillas of the LocalidadExtended
+		 *
+		 * @return The sillas of the LocalidadExtended
+		 */
+		public List<List<Silla.SillaExtended>> getSillas( )
+		{
+			return sillas;
+		}
+		
+		/**
+		 * Updates the sillas of the LocalidadExtended by the one given by parameter
+		 *
+		 * @param sillas The new sillas of the LocalidadExtended
+		 */
+		public void setSillas( List<List<Silla.SillaExtended>> sillas )
+		{
+			this.sillas = sillas;
+		}
+	}
+	
 	@JsonProperty( value = "id" )
 	private Long id;
 	

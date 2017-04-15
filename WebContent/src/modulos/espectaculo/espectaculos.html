@@ -1,5 +1,14 @@
 <div class="container-fluid">
+    <div ui-view="headerView"></div>
     <div class="row">
-        <div ui-view="infoView"></div>
+        <div class="col-lg-5">
+            <div ui-view="infoView"></div>
+            <div ui-view="generosView"></div>
+            <div ui-view="requerimientosView"></div>
+            <div ui-view="companiasView"></div>
+        </div>
+        <div class="col-lg-7">
+            <div ui-view="funcionesView"></div>
+        </div>
     </div>
 </div>

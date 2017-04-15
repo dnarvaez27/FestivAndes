@@ -126,7 +126,7 @@ public class DAOBoleta extends DAO
 		sql.append( String.format( "num_fila = %s, ", object.getNumeroFila( ) ) );
 		sql.append( String.format( "id_localidad = %s, ", object.getIdLocalidad( ) ) );
 		sql.append( String.format( "id_lugar = %s, ", object.getIdLugar( ) ) );
-		sql.append( String.format( "fecha = %s, ", toDate( object.getFecha( ) ) ) );
+		sql.append( String.format( "fecha = %s, ", toDateTime( object.getFecha( ) ) ) );
 		sql.append( String.format( "id_usuario = %s ", object.getIdUsuario( ) ) );
 		sql.append( String.format( "WHERE num_boleta = %s ", numBoleta ) );
 		
@@ -172,7 +172,7 @@ public class DAOBoleta extends DAO
 		sql.append( String.format( "  AND NUM_FILA = %s ", boleta.getNumeroFila( ) ) );
 		sql.append( String.format( "  AND ID_LUGAR = %s ", boleta.getIdLugar( ) ) );
 		sql.append( String.format( "  AND ID_LOCALIDAD = %s ", boleta.getIdLocalidad( ) ) );
-		sql.append( String.format( "  AND fecha = %s ", toDate( boleta.getFecha( ) ) ) );
+		sql.append( String.format( "  AND fecha = %s ", toDateTime( boleta.getFecha( ) ) ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		ResultSet rs = s.executeQuery( );

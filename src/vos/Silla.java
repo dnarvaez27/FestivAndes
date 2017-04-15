@@ -4,6 +4,44 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Silla
 {
+	public static class SillaExtended extends Silla
+	{
+		@JsonProperty( value = "disponibilidad" )
+		private Integer disponibilidad;
+		
+		public SillaExtended( )
+		{
+		}
+		
+		public SillaExtended( Silla silla )
+		{
+			this.setIdLugar( silla.getIdLugar( ) );
+			this.setIdLocalidad( silla.getIdLocalidad( ) );
+			this.setNumFila( silla.getNumFila( ) );
+			this.setNumSilla( silla.getNumSilla( ) );
+		}
+		
+		/**
+		 * Retrieves the disponibilidad of the SillaExtended
+		 *
+		 * @return The disponibilidad of the SillaExtended
+		 */
+		public Integer getDisponibilidad( )
+		{
+			return disponibilidad;
+		}
+		
+		/**
+		 * Updates the disponibilidad of the SillaExtended by the one given by parameter
+		 *
+		 * @param disponibilidad The new disponibilidad of the SillaExtended
+		 */
+		public void setDisponibilidad( Integer disponibilidad )
+		{
+			this.disponibilidad = disponibilidad;
+		}
+	}
+	
 	@JsonProperty( value = "numSilla" )
 	private Integer numSilla;
 	

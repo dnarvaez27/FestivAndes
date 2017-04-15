@@ -309,7 +309,7 @@ public class DAOEspectaculo extends DAO
 		sql.append( "        FUNCIONES ON BOLETAS.ID_LUGAR = FUNCIONES.ID_LUGAR AND BOLETAS.FECHA = FUNCIONES.FECHA " );
 		sql.append( "        INNER JOIN " );
 		sql.append( "        ESPECTACULOS ON FUNCIONES.ID_ESPECTACULO = ESPECTACULOS.ID " );
-		sql.append( String.format( "      WHERE FUNCIONES.FECHA BETWEEN %s AND %s ", toDate( fInicio ), toDate( fFin ) ) );
+		sql.append( String.format( "      WHERE FUNCIONES.FECHA BETWEEN %s AND %s ", toDateTime( fInicio ), toDateTime( fFin ) ) );
 		sql.append( "      GROUP BY ESPECTACULOS.ID) B INNER JOIN ESPECTACULOS ON B.ID = ESPECTACULOS.ID " );
 		sql.append( "WHERE NUM_ASISTENTES = (SELECT MAX(NUM_ASISTENTES) " );
 		sql.append( "                        FROM (SELECT " );

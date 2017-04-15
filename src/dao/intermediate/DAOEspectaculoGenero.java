@@ -88,6 +88,7 @@ public class DAOEspectaculoGenero extends DAO
 		Genero genero = new Genero( );
 		genero.setNombre( rs.getString( "nombre" ) );
 		genero.setId( rs.getLong( "id" ) );
+		genero.setImagen( rs.getString( "imagen" ) );
 		return genero;
 	}
 }

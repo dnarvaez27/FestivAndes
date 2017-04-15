@@ -1,15 +1,12 @@
-<div class="container-fluid">
-    <div class="col-lg-offset-2 dark-container">
-        <h1>{{currentEspectaculo.nombre}}</h1>
-    </div>
-    <div class="col-lg-5">
-        <span class="just">{{currentEspectaculo.descripcion}}</span>
-        <div class="row">
-            <span>
-                <i class="badge">{{currentEspectaculo.duracion}}</i>
-                <i class="label-primary">{{currentEspectaculo.idioma}}</i>
-                <i class="badge">{{currentEspectaculo.costoRealizacion | currency }}</i>
-            </span>
+<div class="container-fluid no-padd">
+    <div class="row padd-box">
+        <div class="container-fluid panel panel-default inner-box">
+            <span class="just">{{currentEspectaculo.descripcion}}</span>
+            <div class="panel panel-body">
+                Duracion: <span class="label label-danger">{{currentEspectaculo.duracion}} min</span><br>
+                Idioma: <span class="label label-primary">{{currentEspectaculo.idioma}}</span><br>
+                Costo de realización: <span class="label label-warning">{{currentEspectaculo.costoRealizacion | currency }}</span><br>
+            </div>
         </div>
     </div>
 </div>

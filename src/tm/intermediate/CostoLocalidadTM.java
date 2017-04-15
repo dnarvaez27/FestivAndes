@@ -4,10 +4,12 @@ import dao.intermediate.DAOCostoLocalidad;
 import tm.TransactionManager;
 import vos.Funcion;
 import vos.Localidad;
+import vos.Silla;
 import vos.intermediate.CostoLocalidad;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 public class CostoLocalidadTM extends TransactionManager
@@ -124,9 +126,29 @@ public class CostoLocalidadTM extends TransactionManager
 		return list;
 	}
 	
-	public Localidad getCostoLocalidadFrom( Date fecha, Long idLugar, Long idLocalidad ) throws SQLException
+	private List<List<Silla.SillaExtended>> ordenarSillas( List<Silla.SillaExtended> sillas )
 	{
-		Localidad localidad;
+		List<List<Silla.SillaExtended>> list = new LinkedList<>( );
+		int numFila = -1;
+		List<Silla.SillaExtended> fila = new LinkedList<>( );
+		for( Silla.SillaExtended silla : sillas )
+		{
+			numFila = numFila == -1 ? silla.getNumFila( ) : numFila;
+			if( numFila != silla.getNumFila( ) )
+			{
+				list.add( fila );
+				fila = new LinkedList<>( );
+				numFila = silla.getNumFila( );
+			}
+			fila.add( silla );
+		}
+		list.add( fila );
+		return list;
+	}
+	
+	public Localidad.LocalidadExtended getCostoLocalidadFrom( Date fecha, Long idLugar, Long idLocalidad ) throws SQLException
+	{
+		Localidad.LocalidadExtended localidad;
 		DAOCostoLocalidad dao = new DAOCostoLocalidad( );
 		try
 		{
@@ -135,7 +157,9 @@ public class CostoLocalidadTM extends TransactionManager
 			
 			dao.setConnection( this.connection );
 			
-			localidad = dao.getCostoLocalidadFromFuncion( fecha, idLugar, idLocalidad );
+			localidad = new Localidad.LocalidadExtended( dao.getCostoLocalidadFromFuncion( fecha, idLugar, idLocalidad ) );
+			List<Silla.SillaExtended> list = dao.getEstadoSillas( fecha, idLugar, idLocalidad );
+			localidad.setSillas( ordenarSillas( list ) );
 			
 			connection.commit( );
 		}

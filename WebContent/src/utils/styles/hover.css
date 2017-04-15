@@ -1,0 +1,26 @@
+button:hover > a,
+.btn-default:hover,
+.btn-default:hover > a {
+    background: #ffffff;
+    color: #212121;
+}
+
+.side-down > li:hover > a {
+    color: #212121;
+}
+
+a:hover {
+    color: #212121;
+}
+
+.btn-nav:hover,
+.btn-nav:focus {
+    background-color: #FFFFFF;
+    color: #212121;
+    border-radius: 0px;
+}
+
+.btn-white:focus,
+.btn-white:hover {
+    border: 1px #212121 solid;
+}

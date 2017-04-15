@@ -105,6 +105,7 @@ public class DAORequerimientoTecnico extends DAO
 		RequerimientoTecnico req = new RequerimientoTecnico( );
 		req.setId( rs.getLong( "id" ) );
 		req.setNombre( rs.getString( "nombre" ) );
+		req.setImagen( rs.getString( "imagen" ) );
 		return req;
 	}
 }

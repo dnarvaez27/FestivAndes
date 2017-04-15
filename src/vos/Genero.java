@@ -10,6 +10,29 @@ public class Genero
 	@JsonProperty( value = "nombre" )
 	private String nombre;
 	
+	@JsonProperty( value = "imagen")
+	private String imagen;
+	
+	/**
+	 * Retrieves the imagen of the Genero
+	 *
+	 * @return The imagen of the Genero
+	 */
+	public String getImagen( )
+	{
+		return imagen;
+	}
+	
+	/**
+	 * Updates the imagen of the Genero by the one given by parameter
+	 *
+	 * @param imagen The new imagen of the Genero
+	 */
+	public void setImagen( String imagen )
+	{
+		this.imagen = imagen;
+	}
+	
 	public Long getId( )
 	{
 		return id;

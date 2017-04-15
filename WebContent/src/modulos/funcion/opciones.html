@@ -1,0 +1,82 @@
+<div class="container-fluid">
+    <div class="row" ng-controller="operacionesBoletas">
+        <div ng-show="showingType === -1 || showingType === 0">
+            <div class="nav dark-container info-header">
+                <span class="center-block text-center">Opciones</span>
+            </div>
+            <a class="btn btn-default btn-white" ng-click="statSillas(1)">
+                Compra unitaria
+            </a>
+            <a class="btn btn-default btn-white" ng-click="statSillas(2)">
+                Compra multiple
+            </a>
+            <a class="btn btn-default btn-white" ng-click="statSillas(3)">
+                <i class="glyphicon glyphicon-alert icon-warning"></i>
+                Eliminar Boleta
+            </a>
+            <hr>
+            <a class="btn btn-danger btn-white-danger">Eliminar Localidad</a>
+        </div>
+        <div ng-show="showingType === 1">
+            <div class="nav dark-container info-header center-block text-center">
+                <button class="pull-left" ng-click="mainMenu()"><span class="glyphicon glyphicon-chevron-left"></span></button>
+                <span class="info-header-title">Compra</span>
+                <div class="pull-right empty-info"></div>
+            </div>
+            <div>
+                <div ng-show="haySeleccion">
+                    <div>
+                        <img class="img-responsive center-block" src="src/utils/imgs/Silla-Disp.png">
+                        <div class="text-center center-block">
+                            <div class="boleta">
+                                <span class="label-primary label-boleta-left">{{getSelectedSilla().numFila}}</span><br>
+                                <span class="text-center">Fila</span>
+                            </div>
+                            <div class="boleta">
+                                <span class="label-primary label-boleta-right">{{getSelectedSilla().numSilla}}</span><br>
+                                <span class="text-center">Silla</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-compra" ng-controller="lugarCtrl">
+                        <span class="titulo-boleta center-block text-center">{{currentEspectaculo.nombre}}</span><br>
+                        <strong>Fecha: </strong>
+                        <span class="pull-right">{{currentFuncion.fecha | date: "MMMM dd, yyyy"}}</span>
+                        <br>
+                        <strong>Hora: </strong>
+                        <span class="pull-right">{{currentFuncion.fecha | date: "HH:mm"}}</span>
+                        <br>
+                        <strong>Lugar: </strong>
+                        <span class="pull-right">{{nombreLugar(currentFuncion.idLugar)}}</span>
+                        <br>
+                        <strong>Localidad: </strong>
+                        <span class="pull-right">{{getLocalidad().nombre}}</span>
+                        <br>
+                        <div class="total">
+                            <strong>Total: </strong>
+                            <span class="pull-right">{{getLocalidad().costo | currency}}</span>
+                        </div>
+                        <button class="btn btn-success btn-block">Comprar</button>
+                    </div>
+                </div>
+                <div class="info-compra" ng-show="!haySeleccion">
+                    <div class="alert alert-danger text-center"><strong>Selecciona una silla</strong></div>
+                </div>
+            </div>
+        </div>
+        <div ng-show="showingType === 2">
+            <div class="nav dark-container info-header">
+                <button class="pull-left" ng-click="mainMenu()"><span class="glyphicon glyphicon-chevron-left"></span></button>
+                <span class="info-header-title">Compra Multiple</span>
+                <div class="pull-right empty-info"></div>
+            </div>
+        </div>
+        <div ng-show="showingType === 3">
+            <div class="nav dark-container info-header">
+                <button class="pull-left" ng-click="mainMenu()"><span class="glyphicon glyphicon-chevron-left"></span></button>
+                <span class="info-header-title">Eliminar</span>
+                <div class="pull-right empty-info"></div>
+            </div>
+        </div>
+    </div>
+</div>

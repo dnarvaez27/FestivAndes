@@ -1,0 +1,27 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="dark-container nav">
+            <div class="funcion-header" ng-controller="lugarCtrl">
+                <h1>{{currentEspectaculo.nombre}}</h1>
+                <span>{{currentFuncion.fecha | date: "MMMM dd, yyyy"}}</span>
+                <span class="badge time-big">{{currentFuncion.fecha | date: "HH:mm"}}</span><br>
+                <span class="label label-primary">{{nombreLugar(currentFuncion.idLugar)}}</span>
+                <br>
+                <!--Lista Localidades-->
+                <ul class="nav navbar-tabs">
+                    <li role="presentation" ng-repeat="localidad in currentFuncion.localidades">
+                        <a class="btn btn-default col-lg-1 btn-nav" ui-sref="funcionLocalidades({localidadId: localidad.id})">
+                            <span>{{localidad.nombre}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row" ng-controller="operacionesBoletas">
+            <div class="col-lg-9" ui-view="localidadesView"></div>
+            <div class="col-lg-3 panel-detail" ui-view="infoDetail">
+                <funcion-opciones></funcion-opciones>
+            </div>
+        </div>
+    </div>
+</div>

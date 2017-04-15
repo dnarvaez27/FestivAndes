@@ -32,8 +32,9 @@ public class DateUtils
 		try
 		{
 			date = date.replace( "T", " " );
+			System.out.println( "Parsing: " + date );
 			Calendar c = dateToCalendar( dateTimeFormat.parse( date ) );
-			c.add( Calendar.DATE, -1 );
+			//			c.add( Calendar.DATE, -1 );
 			return c.getTime( );
 		}
 		catch( ParseException e )
