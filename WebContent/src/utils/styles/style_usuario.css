@@ -1,0 +1,46 @@
+.nombre {
+    font-family: SansSerif, sans-serif;
+    color: #303030;
+}
+
+.rol {
+    font-family: PT_Sans, sans-serif;
+    color: #7a7a7a;
+    font-size: 12px;
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+}
+
+.edit {
+    background-color: #0096bb;
+    color: #FFFFFF;
+    border: 2px #0096bb solid;
+}
+
+.remove {
+    background-color: #B42E2F;
+    color: #FFFFFF;
+    border: 2px #B42E2F solid;
+}
+
+.more {
+    background-color: #8dd700;
+    color: #FFFFFF;
+    border: 2px #8dd700 solid;
+}
+
+.min-pad {
+    padding-top: 15px;
+}
+
+.min-user {
+    min-height: 280px;
+}

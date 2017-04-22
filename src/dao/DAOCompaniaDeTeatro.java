@@ -129,27 +129,23 @@ public class DAOCompaniaDeTeatro extends DAO
 		return list;
 	}
 	
-	public static CompaniaDeTeatro resultToBasicCompaniaDeTeatro( ResultSet rs ) throws SQLException
+	public static CompaniaDeTeatro resultToCompaniaDeTeatro( ResultSet rs ) throws SQLException
 	{
 		CompaniaDeTeatro object = new CompaniaDeTeatro( );
 		object.setIdentificacion( rs.getLong( "id" ) );
 		object.setTipoIdentificacion( rs.getString( "tipo_id" ) );
-		object.setNombre( rs.getString( "nombre" ) );
 		object.setNombreRepresentante( rs.getString( "nombre_representante" ) );
 		object.setPaginaWeb( rs.getString( "pagina_web" ) );
 		object.setPaisOrigen( rs.getString( "pais_origen" ) );
 		object.setFechaLlegada( rs.getDate( "fecha_llegada" ) );
 		object.setFechaSalida( rs.getDate( "fecha_salida" ) );
-		return object;
-	}
-	
-	private static CompaniaDeTeatro resultToCompaniaDeTeatro( ResultSet rs ) throws SQLException
-	{
-		CompaniaDeTeatro object = resultToBasicCompaniaDeTeatro( rs );
+		
 		object.setEmail( rs.getString( "email" ) );
 		object.setPassword( rs.getString( "password" ) );
 		object.setRol( rs.getString( "rol" ) );
 		object.setIdFestival( rs.getLong( "id_festival" ) );
+		object.setNombre( rs.getString( "nombre" ) );
+		object.setImagen( rs.getString( "imagen" ) );
 		return object;
 	}
 	

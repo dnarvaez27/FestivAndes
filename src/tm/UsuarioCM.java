@@ -85,6 +85,42 @@ public class UsuarioCM extends TransactionManager
 		return list;
 	}
 	
+	public List<Usuario> getUsuariosRol( String rol ) throws SQLException
+	{
+		List<Usuario> list;
+		DAOUsuario dao = new DAOUsuario( );
+		try
+		{
+			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
+			dao.setConnection( this.connection );
+			
+			list = dao.getUsuariosRol( rol );
+			
+			connection.commit( );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return list;
+	}
+	
 	public Usuario getUsuario( Long id, String tipo ) throws SQLException
 	{
 		Usuario usuario;

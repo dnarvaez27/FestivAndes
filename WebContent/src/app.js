@@ -3,6 +3,7 @@
     // External dependencies
     'ui.router',
     // Internal modules dependencies
+    'usuariosModule',
     'localidadesModule',
     'funcionesModule',
     'espectaculosModule',
@@ -98,6 +99,12 @@
       CompraService.setLocalidadActual(localidad);
     };
   });
+  app.controller('companiaInfo', function ($scope) {
+    $scope.showModal = function (comp) {
+      $scope.currentCompania = comp;
+      $('#modalCompania').modal('show');
+    };
+  });
 
   // DIRECTIVES
   app.directive('sillaStatus', function () {
@@ -113,6 +120,16 @@
     return {
       restrict: 'E',
       templateUrl: 'src/modulos/funcion/opciones.html'
+    };
+  });
+  app.directive('usuario', function () {
+    return {
+      restrict: 'E',
+      scope: {
+        user: '=',
+        showUsuario: '&?'
+      },
+      templateUrl: 'src/modulos/usuario/user.html'
     };
   });
 

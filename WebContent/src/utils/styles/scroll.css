@@ -12,34 +12,34 @@
 }
 
 /*SCROLL WHITE STYLE*/
-.style-2::-webkit-scrollbar {
+.white-scroll::-webkit-scrollbar {
     width: 3px;
     background-color: transparent;
 }
 
-.style-2::-webkit-scrollbar-thumb {
+.white-scroll::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: transparent;
 }
 
-.style-2::-webkit-scrollbar-thumb {
+.white-scroll::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: #FFFFFF;
 }
 
 /*SCROLL DARK STYLE*/
-.style-3::-webkit-scrollbar {
+.dark-scroll::-webkit-scrollbar {
     width: 3px;
     background-color: transparent;
 }
 
-.style-3::-webkit-scrollbar-thumb {
+.dark-scroll::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: transparent;
 
 }
 
-.style-3::-webkit-scrollbar-thumb {
+.dark-scroll::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: #212121;
 }

@@ -1,8 +1,9 @@
 <div class="container-fluid" ng-controller="lugarCtrl">
     <div class="row">
         <h2>Funciones</h2>
-        <div class="pre-scrollable style-3">
+        <div class="pre-scrollable dark-scroll">
             <div ng-repeat="funcion in funcionesRecords | orderBy: 'fecha'">
+                <!--TODO: Thumbnail?-->
                 <a class="thumbnail" ui-sref="funcionDetail({funcionIdLugar: funcion.idLugar, funcionFecha: funcion.fecha})">
                     <span class="">{{funcion.fecha | date : "MMMM dd, yyyy"}}</span>
                     <span class="badge">{{funcion.fecha | date : "HH:mm"}}</span>

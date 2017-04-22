@@ -8,218 +8,43 @@
     src: url(fonts/DigitalReadout.ttf);
 }
 
-html, body, .container-fluid, .row {
-    height: 100%;
-}
-
-@media (min-width: 992px) {
-    .sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        z-index: 1000;
-        display: block;
-        background-color: #212121;
-        padding: 3px 3px 0px 3px;
-    }
-}
-
-@media (max-width: 992px) {
-    .downside {
-        display: none;
-    }
-}
-
-.nav-pills > li {
-    min-width: 100%;
-}
-
-.navbar-default {
-    background-color: transparent;
-}
-
-button, .btn-default, .btn-default > a {
-    background-color: transparent;
-    border: transparent;
-    color: #ffffff;
-}
-
-.big-button {
-    padding: 20px;
-}
-
-.side-down > li > a {
-    color: #ffffff;
-}
-
-.downside {
-    background: #4f4f4f;
-}
-
-.navbar-inverse {
-    color: #FFFFFF;
-    padding: 10px;
-}
-
-.btn-see-espectaculo {
-    background-color: #823010;
-    color: #FFFFFF;
+@font-face {
+    font-family: PT_Sans;
+    src: url('fonts/Pt_Sans.ttf');
 }
 
 .dark-container {
     background-color: #151515;
     color: #FFFFFF;
-    padding: 0px;
-    margin: 0px;
-    border: 0px;
-}
-
-.just {
-    text-align: justify;
-    text-justify: inter-word;
-    font-family: Comfortaa, cursive;
-    padding-top: 10px;
-}
-
-.time-big {
-    background-color: #FFFFFF;
-    color: #212121;
-    font-family: Digital, monospace;
-    font-size: 20px;
+    padding: 0;
+    margin: 0;
+    border: 0;
 }
 
 .thumbnail {
     padding: 4px;
 }
 
+button, .btn-default {
+    background-color: transparent;
+    border: transparent;
+    color: #ffffff;
+}
+
+/*TODO: Verificar permanencia*/
+.navbar-inverse {
+    color: #FFFFFF;
+    padding: 10px;
+}
+
+/*TODO: Verificar permanencia*/
 div > ul link > li > a {
     color: #ffffff;
     background: transparent;
 }
 
+/*TODO: Verificar permanencia*/
 div > ul > li > a {
     color: #ffffff;
     background: transparent;
-}
-
-.funcion-header {
-    margin-left: 15px;
-}
-
-table, td {
-    padding: 5px;
-}
-
-.silla {
-    width: 100%;
-    padding: 10px;
-    color: #212121;
-}
-
-.btn-nav {
-    background-color: transparent;
-    color: #FFFFFF;
-}
-
-.panel-detail {
-    position: fixed;
-    right: 0px;
-    padding: 0px;
-    width: 21%;
-    margin-top: 5px;
-    background-color: transparent;
-    border-radius: 5px;
-    border: #DFDFDF solid 2px;
-}
-
-.panel-detail > button {
-    padding: 10px;
-}
-
-.info-header {
-    padding: 15px;
-}
-
-.btn-white-danger,
-.btn-white {
-    color: #212121;
-    border: 1px #FFFFFF solid;
-    display: block;
-}
-
-.icon-warning {
-    color: #dcb40a;
-}
-
-.btn-white-danger {
-    color: #FFFFFF;
-}
-
-.disabled {
-    opacity: 0.3;
-}
-
-.boleta {
-    display: inline-block;
-}
-
-.label-boleta-left,
-.label-boleta-right,
-.label-boleta {
-    padding: 5px 10px 5px 10px;
-    background-color: #870000;
-    color: #FFFFFF;
-}
-
-.label-boleta-left {
-    border-radius: 5px 0px 0px 5px;
-}
-
-.label-boleta-right {
-    border-radius: 0px 5px 5px 0px;
-}
-
-.info-compra {
-    padding: 10px;
-}
-
-.total {
-    font-size: 20px;
-}
-
-.titulo-boleta {
-    font-size: 25px;
-}
-
-.info-header-title {
-    left: -20px;
-}
-
-.empty-info {
-    width: 20px;
-    height: 20px;
-}
-
-.no-padd {
-    padding: 0px;
-}
-
-.padd-box {
-    padding: 5px;
-}
-
-.inner-box {
-    padding-top: 10px;
-}
-
-.hand {
-    cursor: pointer;
-}
-
-.div-compania {
-
-    background-color: #212121;
-    color: #FFFFFF;
 }

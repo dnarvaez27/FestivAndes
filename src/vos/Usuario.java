@@ -14,7 +14,7 @@ public class Usuario
 	
 	public static final String USUARIO_COMPANIA = "Compania De Teatro";
 	
-	public static final Usuario UNREGISTERED_USER = new Usuario( -1L, "NR", null, "1234", USUARIO_NO_REGISTRADO, USUARIO_NO_REGISTRADO, 1L );
+	public static final Usuario UNREGISTERED_USER = new Usuario( -1L, "NR", null, "1234", USUARIO_NO_REGISTRADO, USUARIO_NO_REGISTRADO, 1L, "src/utils/imgs/usuarios/no-user.jpg" );
 	
 	@JsonProperty( value = "identificacion" )
 	protected Long identificacion;
@@ -37,12 +37,15 @@ public class Usuario
 	@JsonProperty( value = "idFestival" )
 	protected Long idFestival;
 	
+	@JsonProperty( value = "imagen" )
+	protected String imagen;
+	
 	public Usuario( )
 	{
 		
 	}
 	
-	public Usuario( Long identificacion, String tipoIdentificacion, String email, String password, String nombre, String rol, Long idFestival )
+	public Usuario( Long identificacion, String tipoIdentificacion, String email, String password, String nombre, String rol, Long idFestival, String imagen )
 	{
 		this.identificacion = identificacion;
 		this.tipoIdentificacion = tipoIdentificacion;
@@ -51,6 +54,27 @@ public class Usuario
 		this.nombre = nombre;
 		this.rol = rol;
 		this.idFestival = idFestival;
+		this.imagen = imagen;
+	}
+	
+	/**
+	 * Retrieves the imagen of the Usuario
+	 *
+	 * @return The imagen of the Usuario
+	 */
+	public String getImagen( )
+	{
+		return imagen;
+	}
+	
+	/**
+	 * Updates the imagen of the Usuario by the one given by parameter
+	 *
+	 * @param imagen The new imagen of the Usuario
+	 */
+	public void setImagen( String imagen )
+	{
+		this.imagen = imagen;
 	}
 	
 	/**

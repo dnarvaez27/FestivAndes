@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="src/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="src/bower_components/bootstrap/dist/css/bootstrap.css"/>
     <link rel="stylesheet" href="src/utils/styles/style.css"/>
+    <link rel="stylesheet" href="src/utils/styles/style_compania.css"/>
+    <link rel="stylesheet" href="src/utils/styles/style_espectaculo.css"/>
+    <link rel="stylesheet" href="src/utils/styles/style_funcion.css"/>
+    <link rel="stylesheet" href="src/utils/styles/style_sidebar.css"/>
+    <link rel="stylesheet" href="src/utils/styles/style_usuario.css"/>
     <link rel="stylesheet" href="src/utils/styles/scroll.css"/>
     <link rel="stylesheet" href="src/utils/styles/hover.css"/>
 
@@ -25,8 +30,10 @@
     <script src="src/modulos/espectaculo/espectaculos.mod.js" type="text/javascript"></script>
     <script src="src/modulos/funcion/funciones.mod.js" type="text/javascript"></script>
     <script src="src/modulos/localidad/localidades.mod.js" type="text/javascript"></script>
+    <script src="src/modulos/usuario/usuarios.mod.js" type="text/javascript"></script>
 
     <script src="src/app.js" type="text/javascript"></script>
+
 </head>
 <body ng-controller="lugaresController">
     <div class="container-fluid">
@@ -40,49 +47,43 @@
                     <img src="src/utils/imgs/Logo.png" class="img-responsive img-circle"/>
                 </div>
                 <!--MENU-->
-                <div class="pre-scrollable style-2">
-                    <ul class="nav navbar-default">
-                        <li>
-                            <a class="btn btn-default col-lg-12 big-button" ui-sref="festivalesList">
+                <div class="pre-scrollable white-scroll">
+                    <div>
+                        <a ui-sref="festivalesList">
+                            <button type="button" class="btn btn-default btn-block big-button">
                                 <i class="glyphicon glyphicon-star"></i><br>
                                 <span>Festivales</span>
+                            </button>
+                        </a>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-default btn-block big-button" data-toggle="collapse" data-target="#usuarios">
+                            <i class="glyphicon glyphicon-user"></i><br>
+                            <span>Usuarios</span>
+                        </button>
+                        <div id="usuarios" class="collapse">
+                            <a ui-sref="usuariosAdministradores">
+                                <button type="button" class="btn btn-default btn-block">Administradores</button>
                             </a>
-                        </li>
-                        <li>
-                            <a class="btn btn-default col-lg-12 big-button" data-toggle="collapse" href="#usuarios_col">
-                                <i class="glyphicon glyphicon-user"></i><br>
-                                <span>Usuarios</span>
+                            <a ui-sref="usuariosCompanias">
+                                <button type="button" class="btn btn-default btn-block">Compañias de Teatro</button>
                             </a>
-                            <div id="usuarios_col" class="panel-collapse collapse">
-                                <ul class="nav navbar-default">
-                                    <li>
-                                        <button class="btn btn-default col-lg-12"><a class="text-left col-lg-12 ">Administradores</a></button>
-                                    </li>
-                                    <li>
-                                        <button class="btn btn-default col-lg-12"><a class="text-left col-lg-12 ">Compañias de Teatro</a></button>
-                                    </li>
-                                    <li>
-                                        <button class="btn btn-default col-lg-12"><a class="text-left col-lg-12 ">Organizadores</a></button>
-                                    </li>
-                                    <li>
-                                        <button class="btn btn-default col-lg-12"><a class="text-left col-lg-12 ">Espectadores</a></button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <a class="btn btn-default col-lg-12 big-button">
-                                <i class="glyphicon glyphicon-globe"></i><br>
-                                <span>Lugares</span>
-                            </a>
-                        </li>
-                    </ul>
+                            <button type="button" class="btn btn-default btn-block">Organizadores</button>
+                            <button type="button" class="btn btn-default btn-block">Espectadores</button>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-default btn-block big-button">
+                            <i class="glyphicon glyphicon-globe"></i><br>
+                            <span>Lugares</span>
+                        </button>
+                    </div>
                 </div>
                 <!--LOWER SIDE-->
                 <div class="">
                     <div class="downside navbar-fixed-bottom col-md-2">
                         <div class="col-lg-6">
-                            <a href="#">
+                            <a>
                                 <button class="btn btn-default">
                                     <i class="glyphicon glyphicon-user"></i><br>
                                     <span>Sign up</span>
@@ -90,7 +91,7 @@
                             </a>
                         </div>
                         <div class="col-md-6">
-                            <a href="#">
+                            <a>
                                 <button class="btn btn-default">
                                     <i class="glyphicon glyphicon-log-in"></i><br>
                                     <span>Sign in</span>

@@ -1,0 +1,34 @@
+/*BEGIN: Info Espectaculo*/
+.just {
+    text-align: justify;
+    text-justify: inter-word;
+    font-family: Comfortaa, cursive;
+    padding-top: 10px;
+}
+
+.no-padd {
+    padding: 0px;
+}
+
+.padd-box {
+    padding: 5px;
+}
+
+.inner-box {
+    padding-top: 10px;
+}
+
+/*BEGIN: Info Espectaculo*/
+
+/*BEGIN: Espectaculo List*/
+.hand {
+    cursor: pointer;
+}
+
+/*TODO: Mejorar*/
+.btn-see-espectaculo {
+    background-color: #823010;
+    color: #FFFFFF;
+}
+
+/*BEGIN: Espectaculo List*/

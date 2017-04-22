@@ -1,0 +1,58 @@
+<div class="container-fluid min-pad" ng-controller="companiaInfo">
+    <div class="row">
+        <div ng-repeat="usuario in usuariosRecords">
+            <usuario user="usuario" show-usuario="showModal(usuario_seleccionado)"></usuario>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalCompania" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+
+                <!--<div class="blur modal-bg">-->
+                <!--<img ng-src="{{currentCompania.imagen}}" class="detail-bg">-->
+                <!--</div>-->
+                <!--<div class="white-opp">-->
+                <!--</div>-->
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">{{currentCompania.nombre}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <img class="col-lg-4 img-circle img-responsive" ng-src="{{currentCompania.imagen}}">
+                        <div class="col-lg-8">
+                            <table>
+                                <tr>
+                                    <td><strong>Pais</strong></td>
+                                    <td>{{currentCompania.paisOrigen}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Representante</strong></td>
+                                    <td>{{currentCompania.nombreRepresentante}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Página web</strong></td>
+                                    <td><a target="_blank" href="{{currentCompania.paginaWeb}}">{{currentCompania.paginaWeb}}</a></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Fecha Llegada</strong></td>
+                                    <td>{{currentCompania.fechaLlegada | date: "MMMM dd, yyyy"}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Fecha Salida</strong></td>
+                                    <td>{{currentCompania.fechaSalida | date: "MMMM dd, yyyy"}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

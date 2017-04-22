@@ -15,9 +15,10 @@
         url: '/festivales',
         abstract: true,
         resolve: {
-          festivales: ['$http', 'festivalesContext', function ($http, festivalesContext) {
-            return $http.get(festivalesContext);
-          }]
+          festivales: ['$http', 'festivalesContext',
+            function ($http, festivalesContext) {
+              return $http.get(festivalesContext);
+            }]
         },
         views: {
           'mainView': {

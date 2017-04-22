@@ -1,6 +1,8 @@
 package rest;
 
+import tm.CompaniaDeTeatroCM;
 import tm.UsuarioCM;
+import tm.UsuarioRegistradoCM;
 import vos.Usuario;
 import vos.reportes.RFC7;
 
@@ -40,20 +42,62 @@ public class UsuarioServices extends Services
 		return Response.status( 200 ).entity( usuario ).build( );
 	}
 	
+	//	@GET
+	//	public Response getUsuarios( )
+	//	{
+	//		List<Usuario> list;
+	//		UsuarioCM tm = new UsuarioCM( getPath( ) );
+	//		try
+	//		{
+	//			list = tm.getUsuarios( );
+	//		}
+	//		catch( SQLException e )
+	//		{
+	//			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+	//		}
+	//		return Response.status( 200 ).entity( list ).build( );
+	//	}
+	//
+	
 	@GET
-	public Response getUsuarios( )
+	public Response getUsuariosRol( @QueryParam( "rol" ) String rol )
 	{
 		List<Usuario> list;
-		UsuarioCM tm = new UsuarioCM( getPath( ) );
 		try
 		{
-			list = tm.getUsuarios( );
+			if( rol != null && !rol.isEmpty( ) )
+			{
+				switch( rol )
+				{
+					case Usuario.USUARIO_COMPANIA:
+					{
+						CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM( getPath( ) );
+						return Response.status( 200 ).entity( tm.getCompaniaDeTeatros( ) ).build( );
+					}
+					case Usuario.USUARIO_REGISTRADO:
+					{
+						UsuarioRegistradoCM tm = new UsuarioRegistradoCM( getPath( ) );
+						return Response.status( 200 ).entity( tm.getUsuarioRegistrados( ) ).build( );
+					}
+					default:
+					{
+						UsuarioCM tm = new UsuarioCM( getPath( ) );
+						list = tm.getUsuariosRol( rol );
+						break;
+					}
+				}
+			}
+			else
+			{
+				UsuarioCM tm = new UsuarioCM( getPath( ) );
+				list = tm.getUsuarios( );
+			}
+			return Response.status( 200 ).entity( list ).build( );
 		}
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( list ).build( );
 	}
 	
 	@GET

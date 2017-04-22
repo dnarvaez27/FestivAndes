@@ -1,0 +1,35 @@
+/*BEGIN: Compania List*/
+.div-compania {
+    background-color: #212121;
+    color: #FFFFFF;
+}
+
+/*END: Compania List*/
+
+/*todo: REMOVE?*/
+/*BEGIN: Modal*/
+.blur {
+    -webkit-filter: blur(10px) grayscale(50%);
+}
+
+.modal-bg {
+    position: absolute;
+    width: 100%;
+    height: 300px;
+}
+
+.detail-bg {
+    height: inherit;
+    display: block;
+    width: 100%;
+}
+
+.white-opp {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.4
+}
+
+/*END: Modal*/

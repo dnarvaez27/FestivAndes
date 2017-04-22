@@ -1,0 +1,128 @@
+/*---------------------------------------------------------------------------*/
+/*BEGIN: Opciones*/
+
+.opciones-box {
+    position: fixed;
+    right: 0;
+    padding: 0;
+    width: 21%;
+    margin-top: 5px;
+    background-color: transparent;
+    border-radius: 5px;
+    border: #DFDFDF solid 2px;
+}
+
+.opciones-box > button {
+    padding: 10px;
+}
+
+/*BEGIN: Header Opciones*/
+
+.info-header {
+    padding: 15px;
+}
+
+.info-header-title {
+    left: -20px;
+}
+
+.empty-info {
+    width: 20px;
+    height: 20px;
+}
+
+/*END: Header Opciones*/
+
+/*BEGIN: Compra Boleta*/
+.titulo-boleta {
+    font-size: 25px;
+}
+
+.boleta {
+    display: inline-block;
+}
+
+.label-boleta-left,
+.label-boleta-right,
+.label-boleta {
+    padding: 5px 10px 5px 10px;
+    background-color: #870000;
+    color: #FFFFFF;
+}
+
+.label-boleta-left {
+    border-radius: 5px 0px 0px 5px;
+}
+
+.label-boleta-right {
+    border-radius: 0px 5px 5px 0px;
+}
+
+.info-compra {
+    padding: 10px;
+}
+
+.total {
+    font-size: 20px;
+}
+
+/*END: Compra Boleta*/
+
+/*BEGIN: Botones Opciones*/
+.btn-white-danger,
+.btn-white {
+    color: #212121;
+    border: 1px #FFFFFF solid;
+    display: block;
+}
+
+.icon-warning {
+    color: #dcb40a;
+}
+
+.btn-white-danger {
+    color: #FFFFFF;
+}
+
+/*END: Botones Opciones*/
+
+/*END: Opciones*/
+/*---------------------------------------------------------------------------*/
+
+/*BEGIN: Funcion*/
+/*Btn Localidades*/
+.btn-nav {
+    background-color: transparent;
+    color: #FFFFFF;
+}
+
+.funcion-header {
+    margin-left: 15px;
+}
+
+.time-big {
+    background-color: #FFFFFF;
+    color: #212121;
+    font-family: Digital, monospace;
+    font-size: 20px;
+}
+
+/*END: Funcion*/
+/*---------------------------------------------------------------------------*/
+/*BEGIN: Sillas*/
+table, td {
+    padding: 5px;
+}
+
+.silla {
+    width: 100%;
+    padding: 10px;
+    color: #212121;
+}
+
+.disabled {
+    opacity: 0.3;
+}
+
+/*END: Sillas*/
+/*---------------------------------------------------------------------------*/

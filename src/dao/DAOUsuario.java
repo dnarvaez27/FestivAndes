@@ -83,10 +83,28 @@ public class DAOUsuario extends DAO
 		ResultSet rs = s.executeQuery( );
 		while( rs.next( ) )
 		{
-			list.add( restultToAccesibildiad( rs ) );
+			list.add( resultToUsuario( rs ) );
 		}
 		rs.close( );
 		s.close( );
+		return list;
+	}
+	
+	public List<Usuario> getUsuariosRol( String rol ) throws SQLException
+	{
+		List<Usuario> list = new LinkedList<>( );
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT * " );
+		sql.append( "FROM USUARIOS " );
+		sql.append( String.format( "WHERE ROL = '%s'", rol ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		while( rs.next( ) )
+		{
+			list.add( resultToUsuario( rs ) );
+		}
 		return list;
 	}
 	
@@ -105,7 +123,7 @@ public class DAOUsuario extends DAO
 		ResultSet rs = s.executeQuery( );
 		if( rs.next( ) )
 		{
-			usuario = restultToAccesibildiad( rs );
+			usuario = resultToUsuario( rs );
 		}
 		rs.close( );
 		s.close( );
@@ -126,7 +144,7 @@ public class DAOUsuario extends DAO
 		ResultSet rs = s.executeQuery( );
 		if( rs.next( ) )
 		{
-			usuario = restultToAccesibildiad( rs );
+			usuario = resultToUsuario( rs );
 		}
 		rs.close( );
 		s.close( );
@@ -165,7 +183,7 @@ public class DAOUsuario extends DAO
 		s.close( );
 	}
 	
-	private static Usuario restultToAccesibildiad( ResultSet rs ) throws SQLException
+	private static Usuario resultToUsuario( ResultSet rs ) throws SQLException
 	{
 		Usuario u = new Usuario( );
 		u.setIdentificacion( rs.getLong( "identificacion" ) );
@@ -175,6 +193,7 @@ public class DAOUsuario extends DAO
 		u.setNombre( rs.getString( "nombre" ) );
 		u.setRol( rs.getString( "rol" ) );
 		u.setIdFestival( rs.getLong( "id_festival" ) );
+		u.setImagen( rs.getString( "imagen" ) );
 		return u;
 	}
 	

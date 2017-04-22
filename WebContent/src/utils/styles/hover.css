@@ -24,3 +24,18 @@ a:hover {
 .btn-white:hover {
     border: 1px #212121 solid;
 }
+
+.edit:hover {
+    border: #0096bb solid 2px;
+    color: #0096bb !important;
+}
+
+.remove:hover {
+    border: 2px #B42E2F solid;
+    color: #B42e2f !important;
+}
+
+.more:hover {
+    border: 2px #8dd700 solid;
+    color: #8dd700 !important;
+}

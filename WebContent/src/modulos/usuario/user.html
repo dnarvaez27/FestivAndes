@@ -1,0 +1,18 @@
+<div class="col-lg-2 min-user">
+    <img ng-src="{{user.imagen}}" class="img-responsive img-circle">
+    <div class="center-block">
+        <span class="center-block text-center nombre">{{user.nombre}}</span>
+        <span class="center-block text-center rol">{{user.email}}</span>
+        <div class="text-center">
+            <button class="btn btn-default btn-circle more" ng-click="showUsuario({ usuario_seleccionado: user })" ng-if="showUsuario !== undefined">
+                <i class="glyphicon glyphicon-info-sign"></i>
+            </button>
+            <button class="btn btn-default btn-circle edit">
+                <i class="glyphicon glyphicon-edit"></i>
+            </button>
+            <button class="btn btn-default btn-circle remove">
+                <i class="glyphicon glyphicon-trash"></i>
+            </button>
+        </div>
+    </div>
+</div>

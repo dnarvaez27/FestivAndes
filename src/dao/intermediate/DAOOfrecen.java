@@ -83,16 +83,23 @@ public class DAOOfrecen extends DAO
 		List<CompaniaDeTeatro> list = new LinkedList<>( );
 		
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELECT * " );
-		sql.append( "FROM OFRECE O INNER JOIN COMPANIAS_DE_TEATRO C " );
-		sql.append( "                ON O.id_compania_de_teatro = C.id " );
+		sql.append( "SELECT C.*, U.* " );
+		sql.append( "FROM " );
+		sql.append( "  OFRECE O " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  COMPANIAS_DE_TEATRO C " );
+		sql.append( "    ON O.id_compania_de_teatro = C.id " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  USUARIOS U " );
+		sql.append( "    ON C.ID = U.IDENTIFICACION " );
+		sql.append( "       AND C.TIPO_ID = U.TIPO_IDENTIFICACION " );
 		sql.append( String.format( "WHERE O.id_espectaculo = %s ", idEspectaculo ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		ResultSet rs = s.executeQuery( );
 		while( rs.next( ) )
 		{
-			list.add( DAOCompaniaDeTeatro.resultToBasicCompaniaDeTeatro( rs ) );
+			list.add( DAOCompaniaDeTeatro.resultToCompaniaDeTeatro( rs ) );
 		}
 		rs.close( );
 		s.close( );
