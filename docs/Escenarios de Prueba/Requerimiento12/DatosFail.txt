@@ -1,0 +1,1 @@
+http://localhost:9090/Iteracion_war/rest/usuarios/registrados/2/CC/boletas/2

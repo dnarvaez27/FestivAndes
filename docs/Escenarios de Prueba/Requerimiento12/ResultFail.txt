@@ -1,0 +1,3 @@
+{
+   "ERROR":"La boleta no puede ser devuelta, en menos de 5 días se realiza la funcion"
+}

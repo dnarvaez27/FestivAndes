@@ -90,7 +90,7 @@ public class FuncionServices extends Services
 		FuncionCM tm = new FuncionCM( getPath( ) );
 		try
 		{
-			funcion = tm.getFuncion( DateUtils.format( fecha ), idFecha );
+			funcion = tm.getFuncion( fecha.contains( "T" ) ? DateUtils.format( fecha ) : DateUtils.milisToDate( Long.parseLong( fecha ) ), idFecha );
 		}
 		catch( SQLException e )
 		{
@@ -270,7 +270,7 @@ public class FuncionServices extends Services
 		Double d = -1D;
 		try
 		{
-			Date laFecha = DateUtils.format( fecha );
+			Date laFecha = fecha.contains( "T" ) ? DateUtils.format( fecha ) : DateUtils.milisToDate( Long.parseLong( fecha ) );
 			d = tm.cancelarFuncion( id, tipo, password, laFecha, idLugar );
 			if( d == -1 )
 			{

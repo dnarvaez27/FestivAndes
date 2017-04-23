@@ -1,0 +1,28 @@
+{
+   "idFestival":0,
+   "idUsuario":2,
+   "tipoId":"CC",
+   "descuento":0.2,
+   "funciones":[
+      {
+         "fecha":1491152501010,
+         "idLugar":14,
+         "idLocalidad":1
+      },
+      {
+         "fecha":1490041401010,
+         "idLugar":49,
+         "idLocalidad":2
+      },
+      {
+         "fecha":1491161501010,
+         "idLugar":14,
+         "idLocalidad":1
+      },
+      {
+         "fecha":1491247701010,
+         "idLugar":14,
+         "idLocalidad":2
+      }
+   ]
+}

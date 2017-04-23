@@ -1,0 +1,10 @@
+{
+   "idUsuario":2,
+   "fecha":1513366200000,
+   "numeroSilla":1,
+   "idLugar":13,
+   "idLocalidad":1,
+   "numBoleta":9,
+   "tipoIdUsuario":"CC",
+   "numeroFila":1
+}

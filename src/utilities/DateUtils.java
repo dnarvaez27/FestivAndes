@@ -23,7 +23,6 @@ public class DateUtils
 	public static Date milisToDate( Long milis )
 	{
 		Calendar c = dateToCalendar( new Date( milis ) );
-		c.add( Calendar.DATE, -1 );
 		return c.getTime( );
 	}
 	
@@ -34,7 +33,6 @@ public class DateUtils
 			date = date.replace( "T", " " );
 			System.out.println( "Parsing: " + date );
 			Calendar c = dateToCalendar( dateTimeFormat.parse( date ) );
-			//			c.add( Calendar.DATE, -1 );
 			return c.getTime( );
 		}
 		catch( ParseException e )

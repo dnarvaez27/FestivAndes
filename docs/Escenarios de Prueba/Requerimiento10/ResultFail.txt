@@ -1,0 +1,3 @@
+{
+   "ERROR":"No hay cupo suficiente para la compra de boletas en sillas contiguas"
+}

@@ -152,7 +152,7 @@ public class BoletaCM extends TransactionManager
 				
 				int cant = 0;
 				Long numBoleta = dao.getNextBoleta( );
-				for( long s = info[ 1 ] - cantBoletas + 1; cant < cantBoletas; s++, cant++ )
+				for( long s = info[ 1 ] - cantBoletas; cant < cantBoletas; s++, cant++ )
 				{
 					boleta.setNumBoleta( numBoleta++ );
 					boleta.setNumeroSilla( s );

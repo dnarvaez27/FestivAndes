@@ -238,7 +238,7 @@ public class DAOCostoLocalidad extends DAO
 	public static CostoLocalidad resultToCostoLocalidad( ResultSet rs ) throws SQLException
 	{
 		CostoLocalidad costoLocalidad = new CostoLocalidad( );
-		costoLocalidad.setFecha( rs.getDate( "fecha" ) );
+		costoLocalidad.setFecha( rs.getTimestamp( "fecha" ) );
 		costoLocalidad.setIdLugar( rs.getLong( "id_lugar" ) );
 		costoLocalidad.setIdLocalidad( rs.getLong( "id_localidad" ) );
 		costoLocalidad.setCosto( rs.getFloat( "costo" ) );
