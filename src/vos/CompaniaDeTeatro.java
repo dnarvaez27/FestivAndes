@@ -11,9 +11,6 @@ public class CompaniaDeTeatro extends Usuario
 {
 	public static final String TIPO_ID = "COMPANY";
 	
-	@JsonProperty( value = "nombre" )
-	private String nombre;
-	
 	@JsonProperty( value = "nombreRepresentante" )
 	private String nombreRepresentante;
 	
@@ -31,26 +28,19 @@ public class CompaniaDeTeatro extends Usuario
 	
 	public CompaniaDeTeatro( )
 	{
+	
 	}
 	
-	/**
-	 * Retrieves the nombre of the CompaniaDeTeatro
-	 *
-	 * @return The nombre of the CompaniaDeTeatro
-	 */
-	public String getNombre( )
+	public CompaniaDeTeatro( Usuario usuario )
 	{
-		return nombre;
-	}
-	
-	/**
-	 * Updates the nombre of the CompaniaDeTeatro by the one given by parameter
-	 *
-	 * @param nombre The new nombre of the CompaniaDeTeatro
-	 */
-	public void setNombre( String nombre )
-	{
-		this.nombre = nombre;
+		this.identificacion = usuario.getIdentificacion( );
+		this.tipoIdentificacion = TIPO_ID;
+		this.email = usuario.getEmail( );
+		this.password = usuario.getPassword( );
+		this.nombre = usuario.getNombre( );
+		this.rol = Usuario.USUARIO_COMPANIA;
+		this.idFestival = usuario.getIdFestival( );
+		this.imagen = usuario.getImagen( );
 	}
 	
 	/**
@@ -151,5 +141,17 @@ public class CompaniaDeTeatro extends Usuario
 	public void setFechaSalida( Date fechaSalida )
 	{
 		this.fechaSalida = fechaSalida;
+	}
+	
+	@Override
+	public String toString( )
+	{
+		StringBuilder sBuilder = new StringBuilder( );
+		sBuilder.append( String.format( "%s: %s (%s)\n", identificacion, nombre, paisOrigen ) );
+		sBuilder.append( String.format( "\t%s\n%s (%s)\n", paginaWeb, email, password ) );
+		sBuilder.append( String.format( "%s - %s\n", fechaLlegada, fechaSalida ) );
+		sBuilder.append( String.format( "%s (%s)\n", nombreRepresentante, idFestival ) );
+		sBuilder.append( String.format( "%s\n", imagen ) );
+		return sBuilder.toString( );
 	}
 }

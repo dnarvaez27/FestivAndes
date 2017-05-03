@@ -104,4 +104,10 @@ public class Festival
 	{
 		this.ciudad = ciudad;
 	}
+	
+	@Override
+	public String toString( )
+	{
+		return String.format( "%d: %s:\n\t%s\n\t%s\n", id, ciudad, fechaInicio, fechaFin );
+	}
 }

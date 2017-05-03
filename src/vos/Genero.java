@@ -10,8 +10,21 @@ public class Genero
 	@JsonProperty( value = "nombre" )
 	private String nombre;
 	
-	@JsonProperty( value = "imagen")
+	@JsonProperty( value = "imagen" )
 	private String imagen;
+	
+	public Genero( )
+	{
+	
+	}
+	
+	public Genero( Long id, String nombre, String imagen )
+	{
+		super( );
+		this.id = id;
+		this.nombre = nombre;
+		this.imagen = imagen;
+	}
 	
 	/**
 	 * Retrieves the imagen of the Genero
@@ -53,14 +66,9 @@ public class Genero
 		this.nombre = nombre;
 	}
 	
-	public Genero( )
+	@Override
+	public String toString( )
 	{
-		
+		return String.format( "%s: %s (%s)", id, nombre, imagen );
 	}
-	
-	//	public Genero(@JsonProperty(value = "id") Long id, @JsonProperty(value = "nombre") String nombre) {
-	//		super();
-	//		this.id = id;
-	//		this.nombre = nombre;
-	//	}
 }

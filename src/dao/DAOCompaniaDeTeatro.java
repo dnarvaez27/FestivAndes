@@ -168,7 +168,7 @@ public class DAOCompaniaDeTeatro extends DAO
 		sql.append( "        E.ID          AS ID_ESPECTACULO, " );
 		sql.append( "        E.NOMBRE      AS NOMBRE_ESPECTACULO, " );
 		sql.append( "        CT.ID         AS ID_COMPANIA, " );
-		sql.append( "        CT.NOMBRE     AS NOMBRE_COMPANIA, " );
+		sql.append( "        U.NOMBRE     AS NOMBRE_COMPANIA, " );
 		sql.append( "        F.FECHA       AS FECHA_FUNCION, " );
 		sql.append( "        F.ID_LUGAR    AS LUGAR_FUNCION, " );
 		sql.append( "        COUNT(*)      AS ASISTENCIA, " );
@@ -189,8 +189,10 @@ public class DAOCompaniaDeTeatro extends DAO
 		sql.append( "        OFRECE O ON O.ID_ESPECTACULO = E.ID " );
 		sql.append( "        RIGHT JOIN " );
 		sql.append( "        COMPANIAS_DE_TEATRO CT ON O.ID_COMPANIA_DE_TEATRO = CT.ID " );
+		sql.append( "        INNER JOIN " );
+		sql.append( "        USUARIOS U ON U.IDENTIFICACION = CT.ID AND U.TIPO_IDENTIFICACION = CT.TIPO_ID " );
 		sql.append( String.format( "WHERE CT.ID = %s ", idCompania ) );
-		sql.append( "      GROUP BY E.ID, E.NOMBRE, CT.ID, CT.NOMBRE, F.FECHA, F.ID_LUGAR " );
+		sql.append( "      GROUP BY E.ID, E.NOMBRE, CT.ID, U.NOMBRE, F.FECHA, F.ID_LUGAR " );
 		sql.append( "      ORDER BY E.ID) Z " );
 		sql.append( "  LEFT JOIN (SELECT " );
 		sql.append( "               CL.FECHA, " );

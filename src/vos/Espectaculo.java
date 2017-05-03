@@ -2,6 +2,7 @@ package vos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Espectaculo
@@ -79,7 +80,9 @@ public class Espectaculo
 	
 	public Espectaculo( )
 	{
-		
+		companias = new LinkedList<>( );
+		reqs = new LinkedList<>( );
+		generos = new LinkedList<>( );
 	}
 	
 	/**
@@ -202,24 +205,20 @@ public class Espectaculo
 		this.reqs = reqs;
 	}
 	
-	//	public Espectaculo(@JsonProperty(value = "id") Long id, @JsonProperty(value = "nombre") String nombre,
-	//			@JsonProperty(value = "duracion") Integer duracion, @JsonProperty(value = "idioma") String idioma,
-	//			@JsonProperty(value = "costoRealizacion") Float costoRealizacion, String descripcion,
-	//			@JsonProperty(value = "idFestival") Long idFestival,
-	//			@JsonProperty(value = "idClasificacion") Long idClasificacion,
-	//			@JsonProperty(value = "generos") List<Genero> generos,
-	//			@JsonProperty(value = "reqs") List<RequerimientoTecnico> reqs) {
-	//		super();
-	//		this.id = id;
-	//		this.nombre = nombre;
-	//		this.duracion = duracion;
-	//		this.idioma = idioma;
-	//		this.costoRealizacion = costoRealizacion;
-	//		this.descripcion = descripcion;
-	//		this.idFestival = idFestival;
-	//		this.idClasificacion = idClasificacion;
-	//		this.generos = generos;
-	//		this.reqs = reqs;
-	//	}
-	
+	@Override
+	public String toString( )
+	{
+		StringBuilder sBuilder = new StringBuilder( );
+		sBuilder.append( String.format( "%s: %s\n", id, nombre ) );
+		sBuilder.append( String.format( "Duracion: %s\n", duracion ) );
+		sBuilder.append( String.format( "Idioma: %s\n", idioma ) );
+		sBuilder.append( String.format( "Costo: %s\n", costoRealizacion ) );
+		sBuilder.append( String.format( "Clasificacion: %s\n", idClasificacion ) );
+		sBuilder.append( String.format( "Descripcion: %s\n", descripcion ) );
+		sBuilder.append( String.format( "Festival: %s\n", idFestival ) );
+		sBuilder.append( String.format( "Generos: %s\n", generos ) );
+		sBuilder.append( String.format( "Requerimientos: %s\n", reqs ) );
+		sBuilder.append( String.format( "Companias: %s\n", companias ) );
+		return sBuilder.toString( );
+	}
 }

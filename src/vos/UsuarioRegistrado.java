@@ -14,6 +14,18 @@ public class UsuarioRegistrado extends Usuario
 	{
 	}
 	
+	public UsuarioRegistrado( Usuario usuario )
+	{
+		this.nombre = usuario.nombre;
+		this.identificacion = usuario.identificacion;
+		this.tipoIdentificacion = usuario.getTipoIdentificacion( );
+		this.email = usuario.email;
+		this.password = usuario.password;
+		this.rol = usuario.rol;
+		this.idFestival = usuario.idFestival;
+		this.imagen = usuario.imagen;
+	}
+	
 	/**
 	 * Retrieves the edad of the UsuarioRegistrado
 	 *

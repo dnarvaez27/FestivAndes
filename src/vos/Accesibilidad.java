@@ -10,8 +10,37 @@ public class Accesibilidad
 	@JsonProperty( value = "nombre" )
 	private String nombre;
 	
+	private String imagen;
+	
 	public Accesibilidad( )
 	{
+	}
+	
+	public Accesibilidad( Long id, String nombre, String imagen )
+	{
+		this.id = id;
+		this.nombre = nombre;
+		this.imagen = imagen;
+	}
+	
+	/**
+	 * Retrieves the imagen of the Accesibilidad
+	 *
+	 * @return The imagen of the Accesibilidad
+	 */
+	public String getImagen( )
+	{
+		return imagen;
+	}
+	
+	/**
+	 * Updates the imagen of the Accesibilidad by the one given by parameter
+	 *
+	 * @param imagen The new imagen of the Accesibilidad
+	 */
+	public void setImagen( String imagen )
+	{
+		this.imagen = imagen;
 	}
 	
 	/**

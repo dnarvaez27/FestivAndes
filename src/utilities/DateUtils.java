@@ -1,5 +1,7 @@
 package utilities;
 
+import utilities.data.DataRandom;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -64,9 +66,24 @@ public class DateUtils
 		return c;
 	}
 	
+	public static Date toTime( String time )
+	{
+		String[] tData = time.split( ":" );
+		Calendar c = Calendar.getInstance( );
+		c.set( Calendar.HOUR_OF_DAY, Integer.parseInt( tData[ 0 ] ) );
+		c.set( Calendar.MINUTE, Integer.parseInt( tData[ 1 ] ) );
+		
+		return c.getTime( );
+	}
+	
 	public static boolean isDateBetween( Date date, Date begining, Date end )
 	{
 		Calendar c = dateToCalendar( date );
 		return ( dateToCalendar( begining ).before( c ) && dateToCalendar( end ).after( c ) ) || dateToCalendar( date ).equals( c );
+	}
+	
+	public static String timeToString( Date date )
+	{
+		return dateTimeFormat.format( date );
 	}
 }

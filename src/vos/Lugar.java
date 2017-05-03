@@ -3,6 +3,8 @@ package vos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Lugar
 {
@@ -24,22 +26,67 @@ public class Lugar
 	@JsonProperty( value = "tipo" )
 	private String tipo;
 	
+	@JsonProperty( value = "requerimientos" )
+	private List<RequerimientoTecnico> requerimientosTecnicos;
+	
+	@JsonProperty( value = "accesibilidades" )
+	private List<Accesibilidad> accesibilidades;
+	
 	public Lugar( )
 	{
-		
+		requerimientosTecnicos = new LinkedList<>( );
+		accesibilidades = new LinkedList<>( );
 	}
 	
-	//	public Lugar(@JsonProperty(value = "id") Long id, @JsonProperty(value = "nombre") String nombre,
-	//			@JsonProperty(value = "disponibilidadInicio") Date disponibilidadInicio,
-	//			@JsonProperty(value = "disponibilidadFin") Date disponibilidadFin,
-	//			@JsonProperty(value = "esAbierto") Integer esAbierto) {
-	//		super();
-	//		this.id = id;
-	//		this.nombre = nombre;
-	//		this.disponibilidadInicio = disponibilidadInicio;
-	//		this.disponibilidadFin = disponibilidadFin;
-	//		this.esAbierto = esAbierto;
-	//	}
+	public Lugar( Long id, String nombre, Date disponibilidadInicio, Date disponibilidadFin, Integer esAbierto, String tipo )
+	{
+		this.id = id;
+		this.nombre = nombre;
+		this.disponibilidadInicio = disponibilidadInicio;
+		this.disponibilidadFin = disponibilidadFin;
+		this.esAbierto = esAbierto;
+		this.tipo = tipo;
+	}
+	
+	/**
+	 * Retrieves the accesibilidades of the Lugar
+	 *
+	 * @return The accesibilidades of the Lugar
+	 */
+	public List<Accesibilidad> getAccesibilidades( )
+	{
+		return accesibilidades;
+	}
+	
+	/**
+	 * Updates the accesibilidades of the Lugar by the one given by parameter
+	 *
+	 * @param accesibilidades The new accesibilidades of the Lugar
+	 */
+	public void setAccesibilidades( List<Accesibilidad> accesibilidades )
+	{
+		this.accesibilidades = accesibilidades;
+	}
+	
+	/**
+	 * Retrieves the requerimientosTecnicos of the Lugar
+	 *
+	 * @return The requerimientosTecnicos of the Lugar
+	 */
+	public List<RequerimientoTecnico> getRequerimientosTecnicos( )
+	{
+		return requerimientosTecnicos;
+	}
+	
+	/**
+	 * Updates the requerimientosTecnicos of the Lugar by the one given by parameter
+	 *
+	 * @param requerimientosTecnicos The new requerimientosTecnicos of the Lugar
+	 */
+	public void setRequerimientosTecnicos( List<RequerimientoTecnico> requerimientosTecnicos )
+	{
+		this.requerimientosTecnicos = requerimientosTecnicos;
+	}
 	
 	/**
 	 * Retrieves the tipo of the Lugar

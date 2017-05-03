@@ -64,6 +64,12 @@ public class Localidad
 	
 	}
 	
+	public Localidad( Long id, String nombre )
+	{
+		this.id = id;
+		this.nombre = nombre;
+	}
+	
 	/**
 	 * Retrieves the esNumerada of the Localidad
 	 *
@@ -142,5 +148,11 @@ public class Localidad
 	public void setNombre( String nombre )
 	{
 		this.nombre = nombre;
+	}
+	
+	@Override
+	public String toString( )
+	{
+		return String.format( "%s: %s: (Num: %s) (Cap: %s) (Costo: %s)", id, nombre, esNumerada, capacidad, costo );
 	}
 }

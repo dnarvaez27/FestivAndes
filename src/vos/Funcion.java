@@ -104,4 +104,10 @@ public class Funcion
 	{
 		this.idLugar = idLugar;
 	}
+	
+	@Override
+	public String toString( )
+	{
+		return String.format( "Fecha: %s\nLugar:%s\nEspectaculo:%s\nRealizado:%s", fecha, idLugar, idEspectaculo, seRealiza );
+	}
 }

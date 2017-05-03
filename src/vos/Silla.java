@@ -98,4 +98,10 @@ public class Silla
 	{
 		this.idLocalidad = idLocalidad;
 	}
+	
+	@Override
+	public String toString( )
+	{
+		return String.format( "%s-%s: %s-%s", idLugar, idLocalidad, numFila, numSilla );
+	}
 }

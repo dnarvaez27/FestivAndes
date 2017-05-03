@@ -13,8 +13,38 @@ public class Clasificacion
 	@JsonProperty( value = "nombre" )
 	private String nombre;
 	
+	@JsonProperty( value = "imagen" )
+	private String imagen;
+	
 	public Clasificacion( )
 	{
+	}
+	
+	public Clasificacion( Long id, String nombre, String imagen )
+	{
+		this.id = id;
+		this.nombre = nombre;
+		this.imagen = imagen;
+	}
+	
+	/**
+	 * Retrieves the imagen of the Clasificacion
+	 *
+	 * @return The imagen of the Clasificacion
+	 */
+	public String getImagen( )
+	{
+		return imagen;
+	}
+	
+	/**
+	 * Updates the imagen of the Clasificacion by the one given by parameter
+	 *
+	 * @param imagen The new imagen of the Clasificacion
+	 */
+	public void setImagen( String imagen )
+	{
+		this.imagen = imagen;
 	}
 	
 	/**
