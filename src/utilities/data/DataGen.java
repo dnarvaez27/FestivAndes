@@ -243,7 +243,7 @@ public class DataGen implements DataConstant, DataControl
 					UsuarioRegistrado user = usuariosRegistrados.get( nextInt( usuariosRegistrados.size( ) ) );
 					boleta.setIdUsuario( user.getIdentificacion( ) );
 					boleta.setTipoIdUsuario( user.getTipoIdentificacion( ) );
-					System.out.println( boletas.size( ) );
+
 					boletas.add( boleta );
 				}
 			}
