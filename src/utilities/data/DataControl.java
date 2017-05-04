@@ -79,4 +79,12 @@ public interface DataControl
 	Integer MAX_ACCESIBILIDADES_LUGAR = 5;
 	
 	Integer NUM_ABONOS = 100;
+	
+	Float MIN_DESCUENTO_ABONO = 0.4F;
+	
+	Float MAX_DESCUENTO_ABONO = 0.8F;
+	
+	Integer MIN_FUNCIONES_ABONO = 5;
+	
+	Integer MAX_FUNCION_ABONO = 15;
 }

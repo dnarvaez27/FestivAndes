@@ -2,10 +2,12 @@ package utilities.data;
 
 import utilities.DateUtils;
 import vos.*;
+import vos.intermediate.CostoLocalidad;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static utilities.data.DataRandom.*;
 
@@ -21,7 +23,7 @@ public class DataGen implements DataConstant, DataControl
 	
 	private HashMap<Long, List<Localidad>> lugarLocalidades;
 	
-	private HashMap<String, List<Localidad>> costoLocalidades;
+	private HashMap<String, List<CostoLocalidad>> costoLocalidades;
 	
 	private HashMap<String, List<Silla>> sillas;
 	
@@ -30,6 +32,8 @@ public class DataGen implements DataConstant, DataControl
 	private List<Usuario> usuarios;
 	
 	private List<UsuarioRegistrado> usuariosRegistrados;
+	
+	private List<Abono> abonos;
 	
 	public DataGen( )
 	{
@@ -43,6 +47,7 @@ public class DataGen implements DataConstant, DataControl
 		usuarios = new LinkedList<>( );
 		usuariosRegistrados = new LinkedList<>( );
 		boletas = new LinkedList<>( );
+		abonos = new LinkedList<>( );
 		
 		// Lugar( Localidades( Sillas ), Requerimientos, Accesibilidad )
 		generarInfoLugares( );
@@ -63,6 +68,9 @@ public class DataGen implements DataConstant, DataControl
 		// Boletas
 		generarBoletas( );
 		System.out.println( "Boletas Done" );
+		
+		generarAbonos( );
+		System.out.println( "Abonos Done" );
 	}
 	
 	private void generarCompanias( Festival festival )
@@ -210,12 +218,13 @@ public class DataGen implements DataConstant, DataControl
 	
 	private void generarCostoLocalidades( Funcion funcion )
 	{
-		List<Localidad> localidades = new LinkedList<>( );
+		List<CostoLocalidad> localidades = new LinkedList<>( );
 		for( Localidad localidad : lugarLocalidades.get( funcion.getIdLugar( ) ) )
 		{
-			Localidad l = new Localidad( );
-			l.setId( localidad.getId( ) );
-			l.setNombre( localidad.getNombre( ) );
+			CostoLocalidad l = new CostoLocalidad( );
+			l.setFecha( funcion.getFecha( ) );
+			l.setIdLugar( funcion.getIdLugar( ) );
+			l.setIdLocalidad( localidad.getId( ) );
 			l.setCosto( nextFloatBetween( MIN_COSTO_LOCALIDAD, MAX_COSTO_LOCALIDAD ) );
 			
 			localidades.add( l );
@@ -225,17 +234,17 @@ public class DataGen implements DataConstant, DataControl
 	
 	private void generarBoletas( )
 	{
-		for( Map.Entry<String, List<Localidad>> clEntry : costoLocalidades.entrySet( ) )
+		for( Map.Entry<String, List<CostoLocalidad>> clEntry : costoLocalidades.entrySet( ) )
 		{
 			Funcion funcion = funciones.get( clEntry.getKey( ) );
-			for( Localidad localidad : clEntry.getValue( ) )
+			for( CostoLocalidad localidad : clEntry.getValue( ) )
 			{
-				for( Silla silla : sillas.get( keyOf( funcion.getIdLugar( ), localidad.getId( ) ) ) )
+				for( Silla silla : sillas.get( keyOf( funcion.getIdLugar( ), localidad.getIdLocalidad( ) ) ) )
 				{
 					Boleta boleta = new Boleta( );
 					boleta.setFecha( funcion.getFecha( ) );
 					boleta.setIdLugar( funcion.getIdLugar( ) );
-					boleta.setIdLocalidad( localidad.getId( ) );
+					boleta.setIdLocalidad( localidad.getIdLocalidad( ) );
 					boleta.setNumBoleta( Integer.toUnsignedLong( boletas.size( ) ) );
 					boleta.setNumeroFila( Integer.toUnsignedLong( silla.getNumFila( ) ) );
 					boleta.setNumeroSilla( Integer.toUnsignedLong( silla.getNumSilla( ) ) );
@@ -243,7 +252,7 @@ public class DataGen implements DataConstant, DataControl
 					UsuarioRegistrado user = usuariosRegistrados.get( nextInt( usuariosRegistrados.size( ) ) );
 					boleta.setIdUsuario( user.getIdentificacion( ) );
 					boleta.setTipoIdUsuario( user.getTipoIdentificacion( ) );
-
+					
 					boletas.add( boleta );
 				}
 			}
@@ -295,12 +304,33 @@ public class DataGen implements DataConstant, DataControl
 		}
 	}
 	
-	// -------------------------------------------------------------------
-	
-	private Long[] valuesOf( String key )
+	private void generarAbonos( )
 	{
-		return Arrays.stream( key.split( ":" ) ).map( Long::parseLong ).toArray( Long[]::new );
+		for( Festival festival : festivales )
+		{
+			for( int i = 0; i < NUM_ABONOS; i++ )
+			{
+				Abono abono = new Abono( );
+				abono.setDescuento( nextFloatBetween( MIN_DESCUENTO_ABONO, MAX_DESCUENTO_ABONO ) );
+				abono.setIdFestival( festival.getId( ) );
+				
+				abono.setFunciones( getRandomFrom( costoLocalidades.values( )
+				                                                   .stream( )
+				                                                   .flatMap( Collection::stream )
+				                                                   .collect( Collectors.toList( ) )
+				                                                   .toArray( new CostoLocalidad[ 0 ] ), MIN_FUNCIONES_ABONO, MAX_FUNCION_ABONO ) );
+				
+				UsuarioRegistrado user = usuariosRegistrados.get( nextInt( usuariosRegistrados.size( ) ) );
+				
+				abono.setIdUsuario( user.getIdentificacion( ) );
+				abono.setTipoId( user.getTipoIdentificacion( ) );
+				
+				abonos.add( abono );
+			}
+		}
 	}
+	
+	// -------------------------------------------------------------------
 	
 	private String keyOf( Long idLugar, Long idLocalidad )
 	{
@@ -368,10 +398,11 @@ public class DataGen implements DataConstant, DataControl
 		                                                                            .mapToInt( l -> l.getValue( ).size( ) )
 		                                                                            .sum( ) ) );
 		System.out.println( String.format( "Boletas: %s", d.boletas.size( ) ) );
+		System.out.println( String.format( "Abonos: %s", d.abonos.size( ) ) );
 		
 		System.out.println( System.currentTimeMillis( ) - init + " ms" );
 		
-		System.out.println( "Ingrese una opcion: \n -FESTIVALES\n -COMPANIAS\n -ESPECTACULOS\n -FUNCIONES\n -SILLAS\n -LOCALIDADES\n -COSTO_LOCALIDAD\n -BOLETAS \n--END" );
+		System.out.println( "Ingrese una opcion: \n -FESTIVALES\n -COMPANIAS\n -ESPECTACULOS\n -FUNCIONES\n -SILLAS\n -LOCALIDADES\n -COSTO_LOCALIDAD\n -BOLETAS\n -ABONOS \n--END" );
 		Scanner sc = new Scanner( System.in );
 		String line;
 		while( !( line = sc.nextLine( ) ).equals( "END" ) )
@@ -409,6 +440,10 @@ public class DataGen implements DataConstant, DataControl
 				case "BOLETAS":
 					System.out.println( "Ingrese el indice de la boleta deseada" );
 					System.out.println( d.boletas.get( Integer.parseInt( sc.nextLine( ) ) ) );
+					break;
+				case "ABONOS":
+					System.out.println( "Ingrese el indice del abono deseado" );
+					System.out.println( d.abonos.get( Integer.parseInt( sc.nextLine( ) ) ) );
 					break;
 			}
 		}
