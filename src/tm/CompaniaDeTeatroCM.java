@@ -4,9 +4,12 @@ import dao.DAOCompaniaDeTeatro;
 import dao.DAOUsuario;
 import vos.CompaniaDeTeatro;
 import vos.Usuario;
+import vos.UsuarioRegistrado;
+import vos.reportes.RFC11;
 import vos.reportes.RFC8;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -309,5 +312,118 @@ public class CompaniaDeTeatroCM extends TransactionManager
 			closeDAO( dao );
 		}
 		return resp;
+	}
+	
+	public List<UsuarioRegistrado> rfc9( Long idCompania, Date fInicio, Date fEnd ) throws SQLException
+	{
+		List<UsuarioRegistrado> list;
+		
+		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
+		
+		try
+		{
+			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
+			dao.setConnection( this.connection );
+			list = dao.rfc9( idCompania, fInicio, fEnd );
+			
+			this.connection.commit( );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return list;
+	}
+	
+	public List<UsuarioRegistrado> rfc10( Long idCompania, Date fInicio, Date fEnd ) throws SQLException
+	{
+		List<UsuarioRegistrado> list;
+		
+		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
+		
+		try
+		{
+			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
+			dao.setConnection( this.connection );
+			list = dao.rfc10( idCompania, fInicio, fEnd );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return list;
+	}
+	
+	public List<RFC11> rfc11( Long id, String tipo, String password, String localidad, List<String> requerimientosTecnicos, Date hInicio, Date hFin, Date fInicio, Date fEnd ) throws SQLException
+	{
+		List<RFC11> list = null;
+		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
+		DAOUsuario daoUsuario = new DAOUsuario( );
+		
+		try
+		{
+			this.connection = getConnection( );
+			
+			daoUsuario.setConnection( this.connection );
+			dao.setConnection( this.connection );
+			
+			if( daoUsuario.isUserRole( id, tipo, password, Usuario.USUARIO_ADMINISTRADOR ) )
+			{
+				list = dao.rfc11( localidad, requerimientosTecnicos, hInicio, hFin, fInicio, fEnd );
+				
+				this.connection.commit( );
+			}
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return list;
 	}
 }

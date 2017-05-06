@@ -2,15 +2,15 @@ package dao;
 
 import vos.CompaniaDeTeatro;
 import vos.Usuario;
+import vos.UsuarioRegistrado;
+import vos.reportes.RFC11;
 import vos.reportes.RFC5;
 import vos.reportes.RFC8;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class DAOCompaniaDeTeatro extends DAO
 {
@@ -276,5 +276,199 @@ public class DAOCompaniaDeTeatro extends DAO
 		}
 		rfc8.setEspectaculos( list );
 		return rfc8;
+	}
+	
+	public List<UsuarioRegistrado> rfc9( Long idCompania, Date fInicio, Date fEnd ) throws SQLException
+	{
+		List<UsuarioRegistrado> list = new LinkedList<>( );
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT U.*, UR.* " );
+		sql.append( "FROM " );
+		sql.append( "  FUNCIONES F " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  ESPECTACULOS E " );
+		sql.append( "    ON F.ID_ESPECTACULO = E.ID " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  OFRECE O " );
+		sql.append( "    ON O.ID_ESPECTACULO = E.ID " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  COMPANIAS_DE_TEATRO CT " );
+		sql.append( "    ON O.ID_COMPANIA_DE_TEATRO = CT.ID AND O.TIPO_ID = CT.TIPO_ID " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  BOLETAS B " );
+		sql.append( "    ON B.ID_LUGAR = F.ID_LUGAR AND B.FECHA = F.FECHA " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  USUARIOS U " );
+		sql.append( "    ON B.ID_USUARIO = U.IDENTIFICACION AND B.ID_TIPO = U.TIPO_IDENTIFICACION " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  USUARIOS_REGISTRADOS UR " );
+		sql.append( "    ON U.IDENTIFICACION = UR.ID_USUARIO AND U.TIPO_IDENTIFICACION = UR.TIPO_ID " );
+		sql.append( String.format( "WHERE CT.ID = %s ", idCompania ) );
+		sql.append( String.format( "  AND BETWEEN F.FECHA BETWEEN %s AND %s ", toDateTime( fInicio ), toDateTime( fEnd ) ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		
+		while( rs.next( ) )
+		{
+			list.add( DAOUsuarioRegistrado.restultToAccesibildiad( rs ) );
+		}
+		
+		rs.close( );
+		s.close( );
+		return list;
+	}
+	
+	public List<UsuarioRegistrado> rfc10( Long idCompania, Date fInicio, Date fEnd ) throws SQLException
+	{
+		List<UsuarioRegistrado> list = new LinkedList<>( );
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT * " );
+		sql.append( "FROM USUARIOS " );
+		sql.append( "  INNER JOIN USUARIOS_REGISTRADOS UR " );
+		sql.append( "    ON USUARIOS.IDENTIFICACION = UR.ID_USUARIO AND USUARIOS.TIPO_IDENTIFICACION = UR.TIPO_ID " );
+		sql.append( "MINUS ( SELECT " );
+		sql.append( "          U.*, " );
+		sql.append( "          UR.* " );
+		sql.append( "        FROM " );
+		sql.append( "          FUNCIONES F " );
+		sql.append( "          INNER JOIN " );
+		sql.append( "          ESPECTACULOS E " );
+		sql.append( "            ON F.ID_ESPECTACULO = E.ID " );
+		sql.append( "          INNER JOIN " );
+		sql.append( "          OFRECE O " );
+		sql.append( "            ON O.ID_ESPECTACULO = E.ID " );
+		sql.append( "          INNER JOIN " );
+		sql.append( "          COMPANIAS_DE_TEATRO CT " );
+		sql.append( "            ON O.ID_COMPANIA_DE_TEATRO = CT.ID AND O.TIPO_ID = CT.TIPO_ID " );
+		sql.append( "          INNER JOIN " );
+		sql.append( "          BOLETAS B " );
+		sql.append( "            ON B.ID_LUGAR = F.ID_LUGAR AND B.FECHA = F.FECHA " );
+		sql.append( "          INNER JOIN " );
+		sql.append( "          USUARIOS U " );
+		sql.append( "            ON B.ID_USUARIO = U.IDENTIFICACION AND B.ID_TIPO = U.TIPO_IDENTIFICACION " );
+		sql.append( "          INNER JOIN " );
+		sql.append( "          USUARIOS_REGISTRADOS UR " );
+		sql.append( "            ON U.IDENTIFICACION = UR.ID_USUARIO AND U.TIPO_IDENTIFICACION = UR.TIPO_ID " );
+		sql.append( String.format( "WHERE CT.ID = %s ", idCompania ) );
+		sql.append( String.format( "  AND BETWEEN F.FECHA BETWEEN %s AND %s )", toDateTime( fInicio ), toDateTime( fEnd ) ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		
+		while( rs.next( ) )
+		{
+			list.add( DAOUsuarioRegistrado.restultToAccesibildiad( rs ) );
+		}
+		
+		rs.close( );
+		s.close( );
+		return list;
+	}
+	
+	public List<RFC11> rfc11( String localidad, List<String> requerimientosTecnicos, Date hInicio, Date hFin, Date fInicio, Date fEnd ) throws SQLException
+	{
+		HashMap<String, RFC11> temp = new HashMap<>( );
+		List<RFC11> list = new LinkedList<>( );
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT " );
+		sql.append( "  DISTINCT " );
+		sql.append( "  E.NOMBRE  AS ESPECTACULO, " );
+		sql.append( "  Z.FECHA, " );
+		sql.append( "  L.NOMBRE  AS LUGAR, " );
+		sql.append( "  Z.ROL, " );
+		sql.append( "  NUM_BOLETAS " );
+		sql.append( "FROM ( SELECT " );
+		sql.append( "         F.*, " );
+		sql.append( "         U.ROL, " );
+		sql.append( "         COUNT( * ) AS NUM_BOLETAS " );
+		sql.append( "       FROM " );
+		sql.append( "         FUNCIONES F " );
+		sql.append( "         INNER JOIN BOLETAS B " );
+		sql.append( "           ON B.FECHA = F.FECHA AND B.ID_LUGAR = F.ID_LUGAR " );
+		sql.append( "         INNER JOIN USUARIOS U " );
+		sql.append( "           ON U.IDENTIFICACION = B.ID_USUARIO AND U.TIPO_IDENTIFICACION = B.ID_TIPO " );
+		sql.append( "         INNER JOIN " );
+		sql.append( "         LOCALIDADES L " );
+		sql.append( "           ON B.ID_LOCALIDAD = L.ID " );
+		sql.append( localidad != null && !localidad.isEmpty( ) ? String.format( " WHERE L.NOMBRE = %s ", localidad ) : "" );
+		sql.append( "       GROUP BY F.FECHA, F.ID_LUGAR, ID_ESPECTACULO, SE_REALIZA, ROL ) Z " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  ESPECTACULOS E " );
+		sql.append( "    ON E.ID = Z.ID_ESPECTACULO " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  ESPECTACULO_REQUERIMIENTO ER " );
+		sql.append( "    ON E.ID = ER.ID_ESPECTACULO " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  REQUERIMIENTOS_TECNICOS RT " );
+		sql.append( "    ON ER.ID_REQUERIMIENTO = RT.ID " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  LUGARES L " );
+		sql.append( "    ON L.ID = Z.ID_LUGAR " );
+		sql.append( "WHERE 1 = 1 " );
+		if( !requerimientosTecnicos.isEmpty( ) )
+		{
+			sql.append( "AND ( " );
+			for( String requerimiento : requerimientosTecnicos )
+			{
+				sql.append( String.format( " RT.NOMBRE = %s OR", requerimiento ) );
+			}
+			sql.deleteCharAt( sql.length( ) );
+			sql.deleteCharAt( sql.length( ) );
+			sql.append( " )" );
+		}
+		if( hInicio != null && hFin != null )
+		{
+			sql.append( String.format( "AND TO_CAR( Z.FECHA, 'HH24:MI' ) BETWEEN %s AND %s ", toTime( hInicio ), toTime( hFin ) ) );
+		}
+		if( fInicio != null && fEnd != null )
+		{
+			sql.append( String.format( "AND Z.FECHA BETWEEN %s AND %s ", toDate( fInicio ), toDate( fEnd ) ) );
+		}
+		
+		System.out.println( sql.toString( ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		while( rs.next( ) )
+		{
+			String nombreEspectaculo = rs.getString( "ESPECTACULO" );
+			Date fecha = rs.getTimestamp( "FECHA" );
+			String lugar = rs.getString( "LUGAR" );
+			String rol = rs.getString( "ROL" );
+			Integer num_boletas = rs.getInt( "NUM_BOLETAS" );
+			
+			RFC11 t = temp.get( rfc11AsKey( nombreEspectaculo, fecha, lugar ) );
+			if( t == null )
+			{
+				t = new RFC11( );
+				t.setNombreEspectaculo( nombreEspectaculo );
+				t.setFecha( fecha );
+				t.setNombreLugar( lugar );
+			}
+			if( rol.equals( Usuario.USUARIO_REGISTRADO ) )
+			{
+				t.setBoletasUsuariosRegistrados( num_boletas );
+			}
+			int total = t.getTotalBoletas( );
+			total += num_boletas;
+			t.setTotalBoletas( total );
+			
+			temp.put( rfc11AsKey( nombreEspectaculo, fecha, lugar ), t );
+		}
+		
+		list.addAll( temp.values( ) );
+		
+		rs.close( );
+		s.close( );
+		return list;
+	}
+	
+	private String rfc11AsKey( String nombreEspectaculo, Date fecha, String lugar )
+	{
+		return String.format( "%s;%s;%s", nombreEspectaculo, toDateTime( fecha ), lugar );
 	}
 }

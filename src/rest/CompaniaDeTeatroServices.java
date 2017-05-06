@@ -4,6 +4,7 @@ import tm.CompaniaDeTeatroCM;
 import tm.intermediate.OfrecenTM;
 import vos.CompaniaDeTeatro;
 import vos.Espectaculo;
+import vos.UsuarioRegistrado;
 import vos.reportes.RFC8;
 
 import javax.servlet.ServletContext;
@@ -11,6 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 @Path( "companias" )
@@ -197,8 +199,7 @@ public class CompaniaDeTeatroServices extends Services
 	
 	@GET
 	@Path( "informacion" )
-	public Response infoTodasCompanias(
-			@HeaderParam( "id" ) Long id, @HeaderParam( "tipo" ) String tipo, @HeaderParam( "password" ) String password )
+	public Response infoTodasCompanias( @HeaderParam( "id" ) Long id, @HeaderParam( "tipo" ) String tipo, @HeaderParam( "password" ) String password )
 	{
 		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM( getPath( ) );
 		List<RFC8> rfc8;
@@ -211,5 +212,29 @@ public class CompaniaDeTeatroServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).entity( rfc8 ).build( );
+	}
+	
+	@GET
+	@Path( "{id_compania}/rfc9" )
+	public Response rfc9( @PathParam( "id_compania" ) Long idCompania, @QueryParam( "inicio" ) Date fInicio, @QueryParam( "fin" ) Date fEnd )
+	{
+		List<UsuarioRegistrado> list;
+		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM( getPath( ) );
+		try
+		{
+			list = tm.rfc9( idCompania, fInicio, fEnd );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	@GET
+	@Path( "{id_compania}/rfc10" )
+	public Response rfc10( @PathParam( "id_compania" ) Long idCompania, @QueryParam( "inicio" ) Date fInicio, @QueryParam( "fin" ) Date fEnd )
+	{
+	
 	}
 }

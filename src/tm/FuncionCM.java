@@ -5,10 +5,8 @@ import dao.DAOFestival;
 import dao.DAOFuncion;
 import dao.DAOUsuario;
 import utilities.SQLUtils;
-import vos.Espectaculo;
-import vos.Festival;
-import vos.Funcion;
-import vos.Usuario;
+import vos.*;
+import vos.reportes.RFC11;
 import vos.reportes.RFC3;
 
 import java.sql.SQLException;

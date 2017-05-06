@@ -23,6 +23,7 @@ public class FuncionServices extends Services
 {
 	public FuncionServices( )
 	{
+	
 	}
 	
 	public FuncionServices( ServletContext context )
