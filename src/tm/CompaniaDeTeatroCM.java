@@ -5,7 +5,6 @@ import dao.DAOUsuario;
 import vos.CompaniaDeTeatro;
 import vos.Usuario;
 import vos.UsuarioRegistrado;
-import vos.reportes.RFC11;
 import vos.reportes.RFC8;
 
 import java.sql.SQLException;
@@ -385,6 +384,4 @@ public class CompaniaDeTeatroCM extends TransactionManager
 		}
 		return list;
 	}
-	
-	
 }

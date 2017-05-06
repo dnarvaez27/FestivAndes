@@ -13,9 +13,9 @@ public class RFC11
 	
 	private String nombreLugar;
 	
-	private Integer boletasUsuariosRegistrados;
+	private int boletasUsuariosRegistrados;
 	
-	private Integer totalBoletas;
+	private int totalBoletas;
 	
 	public RFC11( )
 	{
@@ -87,7 +87,7 @@ public class RFC11
 	 *
 	 * @return The boletasUsuariosRegistrados of the RFC11
 	 */
-	public Integer getBoletasUsuariosRegistrados( )
+	public int getBoletasUsuariosRegistrados( )
 	{
 		return boletasUsuariosRegistrados;
 	}
@@ -97,7 +97,7 @@ public class RFC11
 	 *
 	 * @param boletasUsuariosRegistrados The new boletasUsuariosRegistrados of the RFC11
 	 */
-	public void setBoletasUsuariosRegistrados( Integer boletasUsuariosRegistrados )
+	public void setBoletasUsuariosRegistrados( int boletasUsuariosRegistrados )
 	{
 		this.boletasUsuariosRegistrados = boletasUsuariosRegistrados;
 	}
@@ -107,7 +107,7 @@ public class RFC11
 	 *
 	 * @return The totalBoletas of the RFC11
 	 */
-	public Integer getTotalBoletas( )
+	public int getTotalBoletas( )
 	{
 		return totalBoletas;
 	}
@@ -117,7 +117,7 @@ public class RFC11
 	 *
 	 * @param totalBoletas The new totalBoletas of the RFC11
 	 */
-	public void setTotalBoletas( Integer totalBoletas )
+	public void setTotalBoletas( int totalBoletas )
 	{
 		this.totalBoletas = totalBoletas;
 	}

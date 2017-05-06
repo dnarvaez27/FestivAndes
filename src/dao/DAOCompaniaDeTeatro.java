@@ -3,14 +3,16 @@ package dao;
 import vos.CompaniaDeTeatro;
 import vos.Usuario;
 import vos.UsuarioRegistrado;
-import vos.reportes.RFC11;
 import vos.reportes.RFC5;
 import vos.reportes.RFC8;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class DAOCompaniaDeTeatro extends DAO
 {
@@ -283,7 +285,7 @@ public class DAOCompaniaDeTeatro extends DAO
 		List<UsuarioRegistrado> list = new LinkedList<>( );
 		
 		StringBuilder sql = new StringBuilder( );
-		sql.append( "SELECT U.*, UR.* " );
+		sql.append( "SELECT DISTINCT U.*, UR.* " );
 		sql.append( "FROM " );
 		sql.append( "  FUNCIONES F " );
 		sql.append( "  INNER JOIN " );
@@ -305,7 +307,9 @@ public class DAOCompaniaDeTeatro extends DAO
 		sql.append( "  USUARIOS_REGISTRADOS UR " );
 		sql.append( "    ON U.IDENTIFICACION = UR.ID_USUARIO AND U.TIPO_IDENTIFICACION = UR.TIPO_ID " );
 		sql.append( String.format( "WHERE CT.ID = %s ", idCompania ) );
-		sql.append( String.format( "  AND BETWEEN F.FECHA BETWEEN %s AND %s ", toDateTime( fInicio ), toDateTime( fEnd ) ) );
+		sql.append( String.format( "  AND F.FECHA BETWEEN %s AND %s ", toDateTime( fInicio ), toDateTime( fEnd ) ) );
+		
+		System.out.println( sql.toString( ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		ResultSet rs = s.executeQuery( );
@@ -353,7 +357,9 @@ public class DAOCompaniaDeTeatro extends DAO
 		sql.append( "          USUARIOS_REGISTRADOS UR " );
 		sql.append( "            ON U.IDENTIFICACION = UR.ID_USUARIO AND U.TIPO_IDENTIFICACION = UR.TIPO_ID " );
 		sql.append( String.format( "WHERE CT.ID = %s ", idCompania ) );
-		sql.append( String.format( "  AND BETWEEN F.FECHA BETWEEN %s AND %s )", toDateTime( fInicio ), toDateTime( fEnd ) ) );
+		sql.append( String.format( "  AND F.FECHA BETWEEN %s AND %s )", toDateTime( fInicio ), toDateTime( fEnd ) ) );
+		
+		System.out.println( sql.toString( ) );
 		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		ResultSet rs = s.executeQuery( );
@@ -367,6 +373,4 @@ public class DAOCompaniaDeTeatro extends DAO
 		s.close( );
 		return list;
 	}
-	
-
 }

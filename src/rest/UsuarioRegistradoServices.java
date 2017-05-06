@@ -278,18 +278,15 @@ public class UsuarioRegistradoServices extends Services
 			@HeaderParam( "tipo" ) String tipo, @HeaderParam( "password" ) String password, @QueryParam( "cantidad" ) Integer cantidad )
 	{
 		UsuarioRegistradoCM tm = new UsuarioRegistradoCM( getPath( ) );
-		List<RFC12> rfc12;
+		List<RFC12> list;
 		try
 		{
-			rfc12 = tm.clientesCheveres( id, tipo, password, cantidad );
+			list = tm.clientesCheveres( id, tipo, password, cantidad );
 		}
-		catch(
-				
-				Exception e )
+		catch( Exception e )
 		{
-			e.printStackTrace( );
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( rfc12 ).build( );
+		return Response.status( 200 ).entity( list ).build( );
 	}
 }

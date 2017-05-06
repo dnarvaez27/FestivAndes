@@ -6,6 +6,7 @@ import utilities.SQLUtils;
 import vos.Funcion;
 import vos.Localidad;
 import vos.intermediate.CostoLocalidad;
+import vos.reportes.RFC11;
 import vos.reportes.RFC3;
 
 import javax.servlet.ServletContext;
@@ -285,4 +286,32 @@ public class FuncionServices extends Services
 		return Response.status( 200 ).entity( d ).build( );
 	}
 	
+	@GET
+	@Path( "/rfc11" )
+	public Response rfc11(
+			@HeaderParam( "id" ) Long id,
+			@HeaderParam( "tipo" ) String tipo,
+			@HeaderParam( "password" ) String password,
+			@QueryParam( "localidad" ) String localidad,
+			@QueryParam( "requerimientos" ) List<String> requerimientosTecnicos,
+			@QueryParam( "hora_inicio" ) String hInicio,
+			@QueryParam( "hora_fin" ) String hFin, @QueryParam( "fecha_inicio" ) Long fInicio, @QueryParam( "fecha_fin" ) Long fEnd )
+	{
+		List<RFC11> list;
+		FuncionCM tm = new FuncionCM( getPath( ) );
+		try
+		{
+			Date horaInicio = hInicio == null ? null : SQLUtils.DateUtils.toTime( hInicio );
+			Date horaFin = hFin == null ? null : SQLUtils.DateUtils.toTime( hFin );
+			Date fechaInicio = fInicio == null ? null : SQLUtils.DateUtils.milisToDate( fInicio );
+			Date fechaFin = fEnd == null ? null : SQLUtils.DateUtils.milisToDate( fEnd );
+			list = tm.rfc11( id, tipo, password, localidad, requerimientosTecnicos, horaInicio, horaFin, fechaInicio, fechaFin );
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace( );
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
+	}
 }

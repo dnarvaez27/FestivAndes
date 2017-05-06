@@ -1,1 +1,1 @@
-http://localhost:9090/Iteracion_war/rest/usuarios/registrados/2/CC/boletas/multi?fecha=1491152400000&idLugar=14&idLocalidad=1&cant=100
+http://localhost:9090/Iteracion_war/rest/usuarios/registrados/2/CC/boletas/multi?fecha=1491152400000&idLugar=14&idLocalidad=1&numBoletas=100

@@ -3,8 +3,10 @@ package utilities;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created by Dave on 25/03/2017.
@@ -65,16 +67,16 @@ public class SQLUtils
 		{
 			Calendar c = Calendar.getInstance( );
 			c.setTime( date );
+			c.setTimeZone( TimeZone.getDefault( ) );
 			return c;
 		}
 		
 		public static Date toTime( String time )
 		{
-			String[] tData = time.split( ":" );
+			Integer[] tData = Arrays.stream( time.split( ":" ) ).map( Integer::parseInt ).toArray( Integer[]::new );
 			Calendar c = Calendar.getInstance( );
-			c.set( Calendar.HOUR_OF_DAY, Integer.parseInt( tData[ 0 ] ) );
-			c.set( Calendar.MINUTE, Integer.parseInt( tData[ 1 ] ) );
-			
+			c.set( Calendar.HOUR_OF_DAY, tData[ 0 ] );
+			c.set( Calendar.MINUTE, tData[ 1 ] );
 			return c.getTime( );
 		}
 		

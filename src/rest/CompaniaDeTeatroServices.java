@@ -2,6 +2,7 @@ package rest;
 
 import tm.CompaniaDeTeatroCM;
 import tm.intermediate.OfrecenTM;
+import utilities.SQLUtils;
 import vos.CompaniaDeTeatro;
 import vos.Espectaculo;
 import vos.UsuarioRegistrado;
@@ -12,7 +13,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 @Path( "companias" )
@@ -22,6 +22,7 @@ public class CompaniaDeTeatroServices extends Services
 {
 	public CompaniaDeTeatroServices( )
 	{
+	
 	}
 	
 	public CompaniaDeTeatroServices( ServletContext context )
@@ -216,13 +217,13 @@ public class CompaniaDeTeatroServices extends Services
 	
 	@GET
 	@Path( "{id_compania}/rfc9" )
-	public Response rfc9( @PathParam( "id_compania" ) Long idCompania, @QueryParam( "inicio" ) Date fInicio, @QueryParam( "fin" ) Date fEnd )
+	public Response rfc9( @PathParam( "id_compania" ) Long idCompania, @QueryParam( "inicio" ) Long fInicio, @QueryParam( "fin" ) Long fEnd )
 	{
 		List<UsuarioRegistrado> list;
 		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM( getPath( ) );
 		try
 		{
-			list = tm.rfc9( idCompania, fInicio, fEnd );
+			list = tm.rfc9( idCompania, SQLUtils.DateUtils.milisToDate( fInicio ), SQLUtils.DateUtils.milisToDate( fEnd ) );
 		}
 		catch( SQLException e )
 		{
@@ -233,14 +234,14 @@ public class CompaniaDeTeatroServices extends Services
 	
 	@GET
 	@Path( "{id_compania}/rfc10" )
-	public Response rfc10( @PathParam( "id_compania" ) Long idCompania, @QueryParam( "inicio" ) Date fInicio, @QueryParam( "fin" ) Date fEnd )
+	public Response rfc10( @PathParam( "id_compania" ) Long idCompania, @QueryParam( "inicio" ) Long fInicio, @QueryParam( "fin" ) Long fEnd )
 	{
 		List<UsuarioRegistrado> list;
 		
 		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM( getPath( ) );
 		try
 		{
-			list = tm.rfc10( idCompania, fInicio, fEnd );
+			list = tm.rfc10( idCompania, SQLUtils.DateUtils.milisToDate( fInicio ), SQLUtils.DateUtils.milisToDate( fEnd ) );
 		}
 		catch( SQLException e )
 		{

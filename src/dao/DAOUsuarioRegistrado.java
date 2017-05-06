@@ -231,7 +231,8 @@ public class DAOUsuarioRegistrado extends DAO
 	
 	public List<RFC12> clientesCheveres( Integer n ) throws SQLException
 	{
-		List<RFC12> resp = new LinkedList<>( );
+		List<RFC12> list = new LinkedList<>( );
+		
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "SELECT " );
 		sql.append( "  U.*, " );
@@ -273,16 +274,20 @@ public class DAOUsuarioRegistrado extends DAO
 		sql.append( "    ON U.IDENTIFICACION = UR.ID_USUARIO AND U.TIPO_IDENTIFICACION = UR.TIPO_ID " );
 		sql.append( String.format( " WHERE NUM_BOLETAS_VIP = NUM_BOLETAS AND NUM_BOLETAS >= %s", n ) );
 		
+		System.out.println( sql.toString( ) );
+		
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		recursos.add( s );
-		ResultSet rs = s.executeQuery( );
 		
+		ResultSet rs = s.executeQuery( );
 		while( rs.next( ) )
 		{
-			RFC12 temp = new RFC12( resultToUsuarioRegistrado( rs ) );
-			temp.setCant( rs.getInt( "NUM_BOLETAS" ) );
-			resp.add( temp );
+			RFC12 rfc12 = new RFC12( resultToUsuarioRegistrado( rs ), rs.getInt( "NUM_BOLETAS" ) );
+			list.add( rfc12 );
 		}
-		return resp;
+		
+		rs.close( );
+		s.close( );
+		return list;
 	}
 }

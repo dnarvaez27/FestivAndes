@@ -242,11 +242,12 @@ public class UsuarioRegistradoCM extends TransactionManager
 		}
 		return resp;
 	}
-	public List<RFC12> clientesCheveres(Long id, String tipo, String password,Integer n) throws Exception
+	
+	public List<RFC12> clientesCheveres( Long id, String tipo, String password, Integer n ) throws Exception
 	{
 		DAOUsuarioRegistrado dao = new DAOUsuarioRegistrado( );
 		DAOUsuario daoUsuario = new DAOUsuario( );
-		List<RFC12> resp;
+		List<RFC12> list;
 		try
 		{
 			this.connection = getConnection( );
@@ -257,7 +258,7 @@ public class UsuarioRegistradoCM extends TransactionManager
 			
 			if( daoUsuario.isUserRole( id, tipo, password, Usuario.USUARIO_ADMINISTRADOR ) )
 			{
-				resp = dao.clientesCheveres(n);
+				list = dao.clientesCheveres( n );
 				connection.commit( );
 			}
 			else
@@ -283,6 +284,6 @@ public class UsuarioRegistradoCM extends TransactionManager
 		{
 			closeDAO( dao );
 		}
-		return resp;
+		return list;
 	}
 }

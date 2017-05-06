@@ -1,12 +1,14 @@
 package tm;
 
-import dao.DAOCompaniaDeTeatro;
 import dao.DAOEspectaculo;
 import dao.DAOFestival;
 import dao.DAOFuncion;
 import dao.DAOUsuario;
 import utilities.SQLUtils;
-import vos.*;
+import vos.Espectaculo;
+import vos.Festival;
+import vos.Funcion;
+import vos.Usuario;
 import vos.reportes.RFC11;
 import vos.reportes.RFC3;
 
@@ -389,6 +391,7 @@ public class FuncionCM extends TransactionManager
 		}
 		return plata;
 	}
+	
 	public List<RFC11> rfc11( Long id, String tipo, String password, String localidad, List<String> requerimientosTecnicos, Date hInicio, Date hFin, Date fInicio, Date fEnd ) throws SQLException
 	{
 		List<RFC11> list = null;
@@ -405,7 +408,6 @@ public class FuncionCM extends TransactionManager
 			if( daoUsuario.isUserRole( id, tipo, password, Usuario.USUARIO_ADMINISTRADOR ) )
 			{
 				list = dao.rfc11( localidad, requerimientosTecnicos, hInicio, hFin, fInicio, fEnd );
-				
 				this.connection.commit( );
 			}
 		}
