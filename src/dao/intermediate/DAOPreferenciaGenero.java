@@ -67,7 +67,7 @@ public class DAOPreferenciaGenero extends DAO
 		ResultSet rs = s.executeQuery( );
 		while( rs.next( ) )
 		{
-			list.add( DAOUsuarioRegistrado.restultToAccesibildiad( rs ) );
+			list.add( DAOUsuarioRegistrado.resultToUsuarioRegistrado( rs ) );
 		}
 		rs.close( );
 		s.close( );

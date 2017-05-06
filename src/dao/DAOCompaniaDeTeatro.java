@@ -312,7 +312,7 @@ public class DAOCompaniaDeTeatro extends DAO
 		
 		while( rs.next( ) )
 		{
-			list.add( DAOUsuarioRegistrado.restultToAccesibildiad( rs ) );
+			list.add( DAOUsuarioRegistrado.resultToUsuarioRegistrado( rs ) );
 		}
 		
 		rs.close( );
@@ -360,7 +360,7 @@ public class DAOCompaniaDeTeatro extends DAO
 		
 		while( rs.next( ) )
 		{
-			list.add( DAOUsuarioRegistrado.restultToAccesibildiad( rs ) );
+			list.add( DAOUsuarioRegistrado.resultToUsuarioRegistrado( rs ) );
 		}
 		
 		rs.close( );

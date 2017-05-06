@@ -235,6 +235,17 @@ public class CompaniaDeTeatroServices extends Services
 	@Path( "{id_compania}/rfc10" )
 	public Response rfc10( @PathParam( "id_compania" ) Long idCompania, @QueryParam( "inicio" ) Date fInicio, @QueryParam( "fin" ) Date fEnd )
 	{
-	
+		List<UsuarioRegistrado> list;
+		
+		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM( getPath( ) );
+		try
+		{
+			list = tm.rfc10( idCompania, fInicio, fEnd );
+		}
+		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
 	}
 }
