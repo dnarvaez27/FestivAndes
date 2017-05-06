@@ -284,4 +284,5 @@ public class FuncionServices extends Services
 		}
 		return Response.status( 200 ).entity( d ).build( );
 	}
+	
 }

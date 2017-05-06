@@ -1,5 +1,6 @@
 package tm;
 
+import dao.DAOCompaniaDeTeatro;
 import dao.DAOEspectaculo;
 import dao.DAOFestival;
 import dao.DAOFuncion;
@@ -387,5 +388,45 @@ public class FuncionCM extends TransactionManager
 			closeDAO( dao );
 		}
 		return plata;
+	}
+	public List<RFC11> rfc11( Long id, String tipo, String password, String localidad, List<String> requerimientosTecnicos, Date hInicio, Date hFin, Date fInicio, Date fEnd ) throws SQLException
+	{
+		List<RFC11> list = null;
+		DAOFuncion dao = new DAOFuncion( );
+		DAOUsuario daoUsuario = new DAOUsuario( );
+		
+		try
+		{
+			this.connection = getConnection( );
+			
+			daoUsuario.setConnection( this.connection );
+			dao.setConnection( this.connection );
+			
+			if( daoUsuario.isUserRole( id, tipo, password, Usuario.USUARIO_ADMINISTRADOR ) )
+			{
+				list = dao.rfc11( localidad, requerimientosTecnicos, hInicio, hFin, fInicio, fEnd );
+				
+				this.connection.commit( );
+			}
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return list;
 	}
 }
