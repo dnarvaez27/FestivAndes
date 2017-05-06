@@ -469,10 +469,10 @@ public class DAOFuncion extends DAO
 			sql.append( "AND ( " );
 			for( String requerimiento : requerimientosTecnicos )
 			{
-				sql.append( String.format( " RT.NOMBRE = %s OR", requerimiento ) );
+				sql.append( String.format( " RT.NOMBRE = '%s' OR", requerimiento ) );
 			}
-			sql.deleteCharAt( sql.length( ) );
-			sql.deleteCharAt( sql.length( ) );
+			sql.deleteCharAt( sql.length( ) - 1 );
+			sql.deleteCharAt( sql.length( ) - 1 );
 			sql.append( " )" );
 		}
 		if( hInicio != null && hFin != null )

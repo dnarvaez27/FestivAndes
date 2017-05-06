@@ -27,7 +27,7 @@ public class LugarLocalidad
 	
 	public LugarLocalidad( )
 	{
-	
+
 	}
 	
 	public Long getIdLugar( )

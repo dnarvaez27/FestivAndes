@@ -12,6 +12,7 @@ import vos.Usuario;
 import vos.reportes.RFC11;
 import vos.reportes.RFC3;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -401,6 +402,8 @@ public class FuncionCM extends TransactionManager
 		try
 		{
 			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			this.connection.setTransactionIsolation( Connection.TRANSACTION_READ_COMMITTED );
 			
 			daoUsuario.setConnection( this.connection );
 			dao.setConnection( this.connection );

@@ -7,6 +7,7 @@ import vos.Usuario;
 import vos.UsuarioRegistrado;
 import vos.reportes.RFC8;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.LinkedList;
@@ -323,6 +324,7 @@ public class CompaniaDeTeatroCM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			this.connection.setAutoCommit( false );
+			this.connection.setTransactionIsolation( Connection.TRANSACTION_READ_UNCOMMITTED );
 			
 			dao.setConnection( this.connection );
 			list = dao.rfc9( idCompania, fInicio, fEnd );
@@ -360,6 +362,7 @@ public class CompaniaDeTeatroCM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			this.connection.setAutoCommit( false );
+			this.connection.setTransactionIsolation( Connection.TRANSACTION_READ_UNCOMMITTED );
 			
 			dao.setConnection( this.connection );
 			list = dao.rfc10( idCompania, fInicio, fEnd );

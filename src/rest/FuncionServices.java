@@ -309,7 +309,6 @@ public class FuncionServices extends Services
 		}
 		catch( Exception e )
 		{
-			e.printStackTrace( );
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).entity( list ).build( );

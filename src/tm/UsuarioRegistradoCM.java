@@ -7,6 +7,7 @@ import vos.UsuarioRegistrado;
 import vos.reportes.RFC12;
 import vos.reportes.RFC7;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -252,6 +253,7 @@ public class UsuarioRegistradoCM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			this.connection.setAutoCommit( false );
+			this.connection.setTransactionIsolation( Connection.TRANSACTION_READ_COMMITTED );
 			
 			daoUsuario.setConnection( this.connection );
 			dao.setConnection( this.connection );
