@@ -4,6 +4,7 @@ import dao.DAOUsuario;
 import dao.DAOUsuarioRegistrado;
 import vos.Usuario;
 import vos.UsuarioRegistrado;
+import vos.reportes.RFC12;
 import vos.reportes.RFC7;
 
 import java.sql.SQLException;
@@ -214,6 +215,49 @@ public class UsuarioRegistradoCM extends TransactionManager
 			if( daoUsuario.isUserRole( id, tipo, password, Usuario.USUARIO_REGISTRADO ) )
 			{
 				resp = dao.asistenciaCliente( id, tipo );
+				connection.commit( );
+			}
+			else
+			{
+				throw new Exception( "Credenciales incorrectas del usuario" );
+			}
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( dao );
+		}
+		return resp;
+	}
+	public List<RFC12> clientesCheveres(Long id, String tipo, String password,Integer n) throws Exception
+	{
+		DAOUsuarioRegistrado dao = new DAOUsuarioRegistrado( );
+		DAOUsuario daoUsuario = new DAOUsuario( );
+		List<RFC12> resp;
+		try
+		{
+			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
+			daoUsuario.setConnection( this.connection );
+			dao.setConnection( this.connection );
+			
+			if( daoUsuario.isUserRole( id, tipo, password, Usuario.USUARIO_ADMINISTRADOR ) )
+			{
+				resp = dao.clientesCheveres(n);
 				connection.commit( );
 			}
 			else

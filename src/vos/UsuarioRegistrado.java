@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class UsuarioRegistrado extends Usuario
 {
 	@JsonProperty( value = "edad" )
-	private Integer edad;
+	protected Integer edad;
 	
 	public UsuarioRegistrado( )
 	{
