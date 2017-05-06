@@ -1,7 +1,7 @@
 package rest;
 
 import tm.BoletaCM;
-import utilities.DateUtils;
+import utilities.SQLUtils;
 import vos.Boleta;
 
 import javax.servlet.ServletContext;
@@ -59,7 +59,7 @@ public class BoletaServices extends Services
 		try
 		{
 			// TODO: 8/04/2017 Fecha milis...
-			list = tm.createBoletas( idUsuario, tipo, DateUtils.milisToDate( fechaMilis ), idLugar, idLocalidad, cantBoletas );
+			list = tm.createBoletas( idUsuario, tipo, SQLUtils.DateUtils.milisToDate( fechaMilis ), idLugar, idLocalidad, cantBoletas );
 		}
 		catch( Exception e )
 		{

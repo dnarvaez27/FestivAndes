@@ -10,7 +10,8 @@ public interface DataControl
 	 */
 	Integer FESTIVAL_MAX_DAY_LENGTH = 365;
 	
-	Integer NUM_FESTIVALES = 32;
+	//	Integer NUM_FESTIVALES = 32;
+	Integer NUM_FESTIVALES = 5;
 	
 	/**
 	 * Numero de Compañias <strong><u>por Festival</strong></u>

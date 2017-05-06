@@ -1,6 +1,6 @@
 package dao;
 
-import utilities.DateUtils;
+import utilities.SQLUtils;
 import vos.Usuario;
 import vos.UsuarioRegistrado;
 import vos.reportes.RFC7;
@@ -198,8 +198,8 @@ public class DAOUsuarioRegistrado extends DAO
 			else
 			{
 				Calendar c = Calendar.getInstance( );
-				Calendar d = DateUtils.dateToCalendar( rs.getTimestamp( "FECHA" ) );
-				Calendar e = DateUtils.dateToCalendar( rs.getTimestamp( "FECHA" ) );
+				Calendar d = SQLUtils.DateUtils.dateToCalendar( rs.getTimestamp( "FECHA" ) );
+				Calendar e = SQLUtils.DateUtils.dateToCalendar( rs.getTimestamp( "FECHA" ) );
 				e.add( Calendar.MINUTE, rs.getInt( "DURACION" ) );
 				
 				if( c.getTimeInMillis( ) < d.getTimeInMillis( ) )

@@ -1,6 +1,6 @@
 package dao;
 
-import utilities.DateUtils;
+import utilities.SQLUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -50,7 +50,7 @@ public abstract class DAO
 		c.setTime( date );
 		c.add( Calendar.DATE, 1 );
 		date = c.getTime( );
-		return DateUtils.toDate( date );
+		return SQLUtils.DateUtils.toDate( date );
 	}
 	
 	public String toDateTime( Date date )
@@ -59,11 +59,16 @@ public abstract class DAO
 		c.setTime( date );
 		//		c.add( Calendar.DATE, 1 );
 		date = c.getTime( );
-		return DateUtils.toDateTime( date );
+		return SQLUtils.DateUtils.toDateTime( date );
 	}
 	
 	public String toDate( String date )
 	{
-		return DateUtils.toDate( date );
+		return SQLUtils.DateUtils.toDate( date );
+	}
+	
+	public String toTime( Date date )
+	{
+		return SQLUtils.DateUtils.getTime( date );
 	}
 }

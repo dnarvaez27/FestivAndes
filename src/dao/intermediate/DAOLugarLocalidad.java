@@ -23,7 +23,7 @@ public class DAOLugarLocalidad extends DAO
 		sql.append( "VALUES ( " );
 		sql.append( String.format( "%s, ", ll.getIdLugar( ) ) );
 		sql.append( String.format( "%s, ", ll.getIdLocalidad( ) ) );
-		sql.append( String.format( "%s, ", ll.getEsNumerada( ) ) );
+		sql.append( String.format( "%s, ", ll.getEsNumerado( ) ) );
 		sql.append( String.format( "%s ", ll.getCapacidad( ) ) );
 		sql.append( ") " );
 		
@@ -121,7 +121,7 @@ public class DAOLugarLocalidad extends DAO
 		StringBuilder sql = new StringBuilder( );
 		sql.append( "UPDATE LUGAR_LOCALIDAD " );
 		sql.append( "SET " );
-		sql.append( String.format( "es_numerado = %s, ", lugarLocalidad.getEsNumerada( ) ) );
+		sql.append( String.format( "es_numerado = %s, ", lugarLocalidad.getEsNumerado( ) ) );
 		sql.append( String.format( "capacidad = %s ", lugarLocalidad.getCapacidad( ) ) );
 		sql.append( String.format( "WHERE id_lugar = %s ", idLugar ) );
 		sql.append( String.format( "  AND id_localidad = %s ", idLocalidad ) );

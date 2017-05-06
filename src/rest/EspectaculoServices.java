@@ -4,7 +4,7 @@ import tm.EspectaculoCM;
 import tm.intermediate.EspectaculoGeneroTM;
 import tm.intermediate.EspectaculoRequerimientoTM;
 import tm.intermediate.OfrecenTM;
-import utilities.DateUtils;
+import utilities.SQLUtils;
 import vos.CompaniaDeTeatro;
 import vos.Espectaculo;
 import vos.Genero;
@@ -291,7 +291,7 @@ public class EspectaculoServices extends Services
 		EspectaculoCM tm = new EspectaculoCM( getPath( ) );
 		try
 		{
-			list = tm.getEspectaculosPopulares( DateUtils.format( fInicio ), DateUtils.format( fFin ) );
+			list = tm.getEspectaculosPopulares( SQLUtils.DateUtils.format( fInicio ), SQLUtils.DateUtils.format( fFin ) );
 		}
 		catch( SQLException e )
 		{

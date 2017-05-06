@@ -4,7 +4,7 @@ import dao.DAOEspectaculo;
 import dao.DAOFestival;
 import dao.DAOFuncion;
 import dao.DAOUsuario;
-import utilities.DateUtils;
+import utilities.SQLUtils;
 import vos.Espectaculo;
 import vos.Festival;
 import vos.Funcion;
@@ -44,7 +44,7 @@ public class FuncionCM extends TransactionManager
 				if( espectaculo != null )
 				{
 					Festival festival = daoFestival.getFestival( espectaculo.getIdFestival( ) );
-					if( !DateUtils.isDateBetween( funcion.getFecha( ), festival.getFechaInicio( ), festival.getFechaFin( ) ) )
+					if( !SQLUtils.DateUtils.isDateBetween( funcion.getFecha( ), festival.getFechaInicio( ), festival.getFechaFin( ) ) )
 					{
 						connection.rollback( );
 						throw new Exception( "Las fechas de la función están fuera del rango del espectaculo" );

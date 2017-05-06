@@ -4,7 +4,7 @@ import dao.DAOAbono;
 import dao.DAOFestival;
 import dao.DAOFuncion;
 import dao.intermediate.DAOAbonoFuncion;
-import utilities.DateUtils;
+import utilities.SQLUtils;
 import vos.Abono;
 import vos.Festival;
 import vos.intermediate.CostoLocalidad;
@@ -46,7 +46,7 @@ public class AbonoCM extends TransactionManager
 				connection.rollback( );
 				throw new Exception( String.format( "El festival %s no existe en la base de datos", abono.getIdFestival( ) ) );
 			}
-			Calendar c = DateUtils.dateToCalendar( festival.getFechaInicio( ) );
+			Calendar c = SQLUtils.DateUtils.dateToCalendar( festival.getFechaInicio( ) );
 			c.add( Calendar.WEEK_OF_YEAR, -3 );
 			if( hoy.after( c ) )
 			{
@@ -267,7 +267,7 @@ public class AbonoCM extends TransactionManager
 				throw new Exception( String.format( "No existe el festival con el id %s ", idFestival ) );
 			}
 			
-			Calendar c = DateUtils.dateToCalendar( festival.getFechaInicio( ) );
+			Calendar c = SQLUtils.DateUtils.dateToCalendar( festival.getFechaInicio( ) );
 			c.add( Calendar.WEEK_OF_YEAR, -3 );
 			if( Calendar.getInstance( ).after( c ) )
 			{

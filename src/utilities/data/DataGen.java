@@ -1,9 +1,10 @@
 package utilities.data;
 
-import utilities.DateUtils;
+import utilities.SQLUtils;
 import vos.*;
 import vos.intermediate.CostoLocalidad;
 
+import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.*;
@@ -339,7 +340,7 @@ public class DataGen implements DataConstant, DataControl
 	
 	private String keyOf( Funcion funcion )
 	{
-		return String.format( "%s (%s)", DateUtils.timeToString( funcion.getFecha( ) ), funcion.getIdLugar( ) );
+		return String.format( "%s (%s)", SQLUtils.DateUtils.timeToString( funcion.getFecha( ) ), funcion.getIdLugar( ) );
 	}
 	
 	private String textOf( int min, int max )
@@ -379,29 +380,39 @@ public class DataGen implements DataConstant, DataControl
 		             .toLowerCase( );
 	}
 	
-	public static void main( String[] args )
+	private void toFile( String path ) throws Exception
 	{
-		Long init = System.currentTimeMillis( );
-		DataGen d = new DataGen( );
+		//		File file = new File( path );
+		//		PrintWriter out = new PrintWriter( new FileOutputStream( file ) );
+		PrintWriter out = new PrintWriter( System.out, true );
 		
-		System.out.println( String.format( "Festivales: %s", d.festivales.size( ) ) );
-		System.out.println( String.format( "Companias: %s", d.companias.size( ) ) );
-		System.out.println( String.format( "Espectaculos: %s", d.espectaculos.size( ) ) );
-		System.out.println( String.format( "Funciones: %s", d.funciones.size( ) ) );
-		System.out.println( String.format( "Sillas: %s", d.sillas.entrySet( ).stream( ).mapToInt( l -> l.getValue( ).size( ) ).sum( ) ) );
-		System.out.println( String.format( "Localidades: %s", d.lugarLocalidades.entrySet( )
-		                                                                        .stream( )
-		                                                                        .mapToInt( l -> l.getValue( ).size( ) )
-		                                                                        .sum( ) ) );
-		System.out.println( String.format( "Costo_Localidad: %s", d.costoLocalidades.entrySet( )
-		                                                                            .stream( )
-		                                                                            .mapToInt( l -> l.getValue( ).size( ) )
-		                                                                            .sum( ) ) );
-		System.out.println( String.format( "Boletas: %s", d.boletas.size( ) ) );
-		System.out.println( String.format( "Abonos: %s", d.abonos.size( ) ) );
-		
-		System.out.println( System.currentTimeMillis( ) - init + " ms" );
-		
+		for( Festival festival : festivales )
+		{
+			out.println( DataSQL.Insert.festival( festival ) );
+		}
+	}
+	
+	public void statistics( )
+	{
+		System.out.println( String.format( "Festivales: %s", festivales.size( ) ) );
+		System.out.println( String.format( "Companias: %s", companias.size( ) ) );
+		System.out.println( String.format( "Espectaculos: %s", espectaculos.size( ) ) );
+		System.out.println( String.format( "Funciones: %s", funciones.size( ) ) );
+		System.out.println( String.format( "Sillas: %s", sillas.entrySet( ).stream( ).mapToInt( l -> l.getValue( ).size( ) ).sum( ) ) );
+		System.out.println( String.format( "Localidades: %s", lugarLocalidades.entrySet( )
+		                                                                      .stream( )
+		                                                                      .mapToInt( l -> l.getValue( ).size( ) )
+		                                                                      .sum( ) ) );
+		System.out.println( String.format( "Costo_Localidad: %s", costoLocalidades.entrySet( )
+		                                                                          .stream( )
+		                                                                          .mapToInt( l -> l.getValue( ).size( ) )
+		                                                                          .sum( ) ) );
+		System.out.println( String.format( "Boletas: %s", boletas.size( ) ) );
+		System.out.println( String.format( "Abonos: %s", abonos.size( ) ) );
+	}
+	
+	public void menu( )
+	{
 		System.out.println( "Ingrese una opcion: \n -FESTIVALES\n -COMPANIAS\n -ESPECTACULOS\n -FUNCIONES\n -SILLAS\n -LOCALIDADES\n -COSTO_LOCALIDAD\n -BOLETAS\n -ABONOS \n--END" );
 		Scanner sc = new Scanner( System.in );
 		String line;
@@ -411,42 +422,56 @@ public class DataGen implements DataConstant, DataControl
 			{
 				case "FESTIVALES":
 					System.out.println( "Ingrese el indice del festival deseado" );
-					System.out.println( d.festivales.get( Integer.parseInt( sc.nextLine( ) ) ) );
+					System.out.println( festivales.get( Integer.parseInt( sc.nextLine( ) ) ) );
 					break;
 				case "COMPANIAS":
 					System.out.println( "Ingrese el indice de la compania deseada" );
-					System.out.println( d.companias.get( Integer.parseInt( sc.nextLine( ) ) ) );
+					System.out.println( companias.get( Integer.parseInt( sc.nextLine( ) ) ) );
 					break;
 				case "ESPECTACULOS":
 					System.out.println( "Ingrese el indice del espectaculo deseado" );
-					System.out.println( d.espectaculos.get( Integer.parseInt( sc.nextLine( ) ) ) );
+					System.out.println( espectaculos.get( Integer.parseInt( sc.nextLine( ) ) ) );
 					break;
 				case "FUNCIONES":
 					System.out.println( "Ingrese el indice de la funcion deseada" );
-					System.out.println( d.funciones.entrySet( ).toArray( new Map.Entry[ 0 ] )[ Integer.parseInt( sc.nextLine( ) ) ].getValue( ) );
+					System.out.println( funciones.entrySet( ).toArray( new Map.Entry[ 0 ] )[ Integer.parseInt( sc.nextLine( ) ) ].getValue( ) );
 					break;
 				case "SILLAS":
 					System.out.println( "Ingrese el indice de la silla deseada" );
-					System.out.println( d.sillas.entrySet( ).toArray( new Map.Entry[ 0 ] )[ Integer.parseInt( sc.nextLine( ) ) ] );
+					System.out.println( sillas.entrySet( ).toArray( new Map.Entry[ 0 ] )[ Integer.parseInt( sc.nextLine( ) ) ] );
 					break;
 				case "LOCALIDADES":
 					System.out.println( "Ingrese el indice de la localidad deseada" );
-					System.out.println( d.lugarLocalidades.get( Long.parseLong( sc.nextLine( ) ) ) );
+					System.out.println( lugarLocalidades.get( Long.parseLong( sc.nextLine( ) ) ) );
 					break;
 				case "COSTO_LOCALIDAD":
 					System.out.println( "Ingrese el indice del costo-localidad deseado" );
-					System.out.println( d.costoLocalidades.entrySet( ).toArray( new Map.Entry[ 0 ] )[ Integer.parseInt( sc.nextLine( ) ) ] );
+					System.out.println( costoLocalidades.entrySet( ).toArray( new Map.Entry[ 0 ] )[ Integer.parseInt( sc.nextLine( ) ) ] );
 					break;
 				case "BOLETAS":
 					System.out.println( "Ingrese el indice de la boleta deseada" );
-					System.out.println( d.boletas.get( Integer.parseInt( sc.nextLine( ) ) ) );
+					System.out.println( boletas.get( Integer.parseInt( sc.nextLine( ) ) ) );
 					break;
 				case "ABONOS":
 					System.out.println( "Ingrese el indice del abono deseado" );
-					System.out.println( d.abonos.get( Integer.parseInt( sc.nextLine( ) ) ) );
+					System.out.println( abonos.get( Integer.parseInt( sc.nextLine( ) ) ) );
 					break;
 			}
 		}
 		sc.close( );
+	}
+	
+	public static void main( String[] args )
+	{
+		DataGen d = new DataGen( );
+		d.statistics( );
+		try
+		{
+			d.toFile( "" );
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace( );
+		}
 	}
 }

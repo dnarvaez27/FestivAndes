@@ -2,7 +2,7 @@ package rest;
 
 import tm.FuncionCM;
 import tm.intermediate.CostoLocalidadTM;
-import utilities.DateUtils;
+import utilities.SQLUtils;
 import vos.Funcion;
 import vos.Localidad;
 import vos.intermediate.CostoLocalidad;
@@ -90,7 +90,7 @@ public class FuncionServices extends Services
 		FuncionCM tm = new FuncionCM( getPath( ) );
 		try
 		{
-			funcion = tm.getFuncion( fecha.contains( "T" ) ? DateUtils.format( fecha ) : DateUtils.milisToDate( Long.parseLong( fecha ) ), idFecha );
+			funcion = tm.getFuncion( fecha.contains( "T" ) ? SQLUtils.DateUtils.format( fecha ) : SQLUtils.DateUtils.milisToDate( Long.parseLong( fecha ) ), idFecha );
 		}
 		catch( SQLException e )
 		{
@@ -109,7 +109,7 @@ public class FuncionServices extends Services
 		FuncionCM tm = new FuncionCM( getPath( ) );
 		try
 		{
-			funcion = tm.updateFuncion( idUsuario, tipoId, password, DateUtils.format( fecha ), idFecha, funcion );
+			funcion = tm.updateFuncion( idUsuario, tipoId, password, SQLUtils.DateUtils.format( fecha ), idFecha, funcion );
 		}
 		catch( Exception e )
 		{
@@ -125,7 +125,7 @@ public class FuncionServices extends Services
 		FuncionCM tm = new FuncionCM( getPath( ) );
 		try
 		{
-			tm.deleteFuncion( DateUtils.format( fecha ), idLugar );
+			tm.deleteFuncion( SQLUtils.DateUtils.format( fecha ), idLugar );
 		}
 		catch( SQLException e )
 		{
@@ -141,7 +141,7 @@ public class FuncionServices extends Services
 			@PathParam( "id_lugar" ) Long idLugar, @PathParam( "fecha_funcion" ) String fechaFuncion, CostoLocalidad costoLocalidad )
 	{
 		costoLocalidad.setIdLugar( idLugar );
-		costoLocalidad.setFecha( DateUtils.format( fechaFuncion ) );
+		costoLocalidad.setFecha( SQLUtils.DateUtils.format( fechaFuncion ) );
 		
 		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
 		try
@@ -163,7 +163,7 @@ public class FuncionServices extends Services
 		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
 		try
 		{
-			list = tm.getCostoLocalidadesFromFuncion( DateUtils.format( fechaFuncion ), idLugar );
+			list = tm.getCostoLocalidadesFromFuncion( SQLUtils.DateUtils.format( fechaFuncion ), idLugar );
 		}
 		catch( SQLException e )
 		{
@@ -181,7 +181,7 @@ public class FuncionServices extends Services
 		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
 		try
 		{
-			costoLocalidad = tm.getCostoLocalidadFrom( DateUtils.format( fechaFuncion ), idLugar, idLocalidad );
+			costoLocalidad = tm.getCostoLocalidadFrom( SQLUtils.DateUtils.format( fechaFuncion ), idLugar, idLocalidad );
 		}
 		catch( SQLException e )
 		{
@@ -199,7 +199,7 @@ public class FuncionServices extends Services
 		CostoLocalidadTM tm = new CostoLocalidadTM( getPath( ) );
 		try
 		{
-			costoLocalidad = tm.updateCostoLocalidad( DateUtils.format( fecha ), idLugar, idLocalidad, costoLocalidad );
+			costoLocalidad = tm.updateCostoLocalidad( SQLUtils.DateUtils.format( fecha ), idLugar, idLocalidad, costoLocalidad );
 		}
 		catch( SQLException e )
 		{
@@ -250,7 +250,7 @@ public class FuncionServices extends Services
 		
 		try
 		{
-			rfc3 = tm.generarReporte3( DateUtils.format( fecha ), idLugar );
+			rfc3 = tm.generarReporte3( SQLUtils.DateUtils.format( fecha ), idLugar );
 		}
 		catch( SQLException e )
 		{
@@ -270,7 +270,7 @@ public class FuncionServices extends Services
 		Double d = -1D;
 		try
 		{
-			Date laFecha = fecha.contains( "T" ) ? DateUtils.format( fecha ) : DateUtils.milisToDate( Long.parseLong( fecha ) );
+			Date laFecha = fecha.contains( "T" ) ? SQLUtils.DateUtils.format( fecha ) : SQLUtils.DateUtils.milisToDate( Long.parseLong( fecha ) );
 			d = tm.cancelarFuncion( id, tipo, password, laFecha, idLugar );
 			if( d == -1 )
 			{

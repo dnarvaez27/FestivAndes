@@ -10,18 +10,18 @@ public class LugarLocalidad
 	@JsonProperty( value = "idLocalidad" )
 	private Long idLocalidad;
 	
-	@JsonProperty( value = "esNumerada" )
-	private Integer esNumerada;
+	@JsonProperty( value = "esNumerado" )
+	private Integer esNumerado;
 	
 	@JsonProperty( value = "capacidad" )
 	private Integer capacidad;
 	
-	public LugarLocalidad( Long idLugar, Long idLocalidad, Integer esNumerada, Integer capacidad )
+	public LugarLocalidad( Long idLugar, Long idLocalidad, Integer esNumerado, Integer capacidad )
 	{
 		super( );
 		this.idLugar = idLugar;
 		this.idLocalidad = idLocalidad;
-		this.esNumerada = esNumerada;
+		this.esNumerado = esNumerado;
 		this.capacidad = capacidad;
 	}
 	
@@ -50,14 +50,14 @@ public class LugarLocalidad
 		this.idLocalidad = idLocalidad;
 	}
 	
-	public Integer getEsNumerada( )
+	public Integer getEsNumerado( )
 	{
-		return esNumerada;
+		return esNumerado;
 	}
 	
-	public void setEsNumerada( Integer esNumerada )
+	public void setEsNumerado( Integer esNumerado )
 	{
-		this.esNumerada = esNumerada;
+		this.esNumerado = esNumerado;
 	}
 	
 	public Integer getCapacidad( )

@@ -3,7 +3,7 @@ package tm;
 import dao.DAOBoleta;
 import dao.DAOFuncion;
 import dao.DAOUsuario;
-import utilities.DateUtils;
+import utilities.SQLUtils;
 import vos.Boleta;
 import vos.Silla;
 import vos.Usuario;
@@ -346,7 +346,7 @@ public class BoletaCM extends TransactionManager
 			if( boleta != null )
 			{
 				Calendar hoy = Calendar.getInstance( );
-				Calendar c = DateUtils.dateToCalendar( boleta.getFecha( ) );
+				Calendar c = SQLUtils.DateUtils.dateToCalendar( boleta.getFecha( ) );
 				c.add( Calendar.DAY_OF_MONTH, -5 );
 				if( hoy.before( c ) || hoy.equals( c ) )
 				{
