@@ -11,6 +11,7 @@ import dao.DAOBoleta;
 import dao.DAOEspectaculo;
 import dao.DAOFuncion;
 import dao.DAOUsuarioRegistrado;
+import dao.intermediate.DAOOfrecen;
 import vos.Boleta;
 import vos.Espectaculo;
 import vos.Funcion;
@@ -19,13 +20,13 @@ import vos.UsuarioRegistrado;
 
 public class InstruccionesDeControl {
 
-	public List<UsuarioRegistrado> rfc9(Date inicio, Date fin, Long compania) throws SQLException {
+	public List<UsuarioRegistrado> rfc9(Date inicio, Date fin, Long companiaId) throws SQLException {
 		List<UsuarioRegistrado> resp = new ArrayList<>();
 		List<UsuarioRegistrado> todosUsuarios = new DAOUsuarioRegistrado().getUsuarioRegistrados();
 		List<Funcion> todasFunciones = new DAOFuncion().getFunciones();
 		List<Espectaculo> todosEspectaculos = new DAOEspectaculo().getEspectaculos();
 		List<Boleta> todasBoletas = new DAOBoleta().getBoletas();
-		List<Long[]> todosOfrecen = null;
+		List<Long[]> todosOfrecen = new DAOOfrecen().getOfrecen();
 		for (UsuarioRegistrado u : todosUsuarios) {
 			for (Boleta b : todasBoletas) {
 				if (b.getIdUsuario().equals(u.getIdentificacion())
@@ -36,7 +37,7 @@ public class InstruccionesDeControl {
 								for (Espectaculo e : todosEspectaculos) {
 									if (e.getId().equals(f.getIdEspectaculo())) {
 										for (Long[] a : todosOfrecen) {
-											if (a[0].equals(compania) && a[1].equals(e.getId())) {
+											if (a[0].equals(companiaId) && a[1].equals(e.getId())) {
 												resp.add(u);
 											}
 										}
@@ -250,7 +251,7 @@ public class InstruccionesDeControl {
 		int minActual = c.get(Calendar.MINUTE);
 
 		Calendar d = Calendar.getInstance();
-		c.setTime(actual);
+		c.setTime(inicio);
 		int horaInicio = d.get(Calendar.HOUR_OF_DAY);
 		int minInicio = d.get(Calendar.MINUTE);
 
