@@ -427,33 +427,33 @@ public class DataGen implements DataConstant, DataControl
 		PrintWriter out = new PrintWriter( new FileOutputStream( path ), true );
 		for( Genero genero : GENEROS )
 		{
-			out.println( DataSQL.Insert.genero( genero ) );
+			out.println( formatSQL( DataSQL.Insert.genero( genero ) + ";"  ) );
 		}
 		out.println( );
 		for( Clasificacion clasificacion : CLASIFICACIONES )
 		{
-			out.println( DataSQL.Insert.clasificacion( clasificacion ) );
+			out.println( formatSQL( DataSQL.Insert.clasificacion( clasificacion ) + ";"  ) );
 		}
 		out.println( );
 		for( Accesibilidad accesibilidad : ACCESIBILIDADES )
 		{
-			out.println( DataSQL.Insert.accesibilidad( accesibilidad ) );
+			out.println( formatSQL( DataSQL.Insert.accesibilidad( accesibilidad ) + ";"  ) );
 		}
 		out.println( );
 		for( RequerimientoTecnico requerimiento : REQUERIMIENTOS )
 		{
-			out.println( DataSQL.Insert.requerimientoTecnico( requerimiento ) );
+			out.println( formatSQL( DataSQL.Insert.requerimientoTecnico( requerimiento ) + ";"  ) );
 		}
 		out.println( );
 		for( Localidad localidad : LOCALIDADES )
 		{
-			out.println( DataSQL.Insert.localidad( localidad ) );
+			out.println( formatSQL( DataSQL.Insert.localidad( localidad ) + ";"  ) );
 		}
 		out.println( );
 		for( Lugar lugar : LUGARES )
 		{
-			out.println( DataSQL.Insert.lugar( lugar ) );
-			for( Accesibilidad accesibilidad : lugar.getAccesibilidades( ) )
+			out.println( formatSQL( DataSQL.Insert.lugar( lugar )  ) );
+			for( Accesibilidad accesibilidad : lugar.getAccesibilidades( )  )
 			{
 				tempLugarAccesibilidades.add( new Long[] { lugar.getId( ), accesibilidad.getId( ) } );
 			}
@@ -465,27 +465,27 @@ public class DataGen implements DataConstant, DataControl
 		out.println( );
 		for( Festival festival : festivales )
 		{
-			out.println( DataSQL.Insert.festival( festival ) );
+			out.println( formatSQL( DataSQL.Insert.festival( festival ) + ";"  ) );
 		}
 		out.println( );
 		for( Usuario usuario : usuarios )
 		{
-			out.println( DataSQL.Insert.usuario( usuario ) );
+			out.println( formatSQL( DataSQL.Insert.usuario( usuario ) + ";"  ) );
 		}
 		out.println( );
 		for( UsuarioRegistrado usuario : usuariosRegistrados )
 		{
-			out.println( DataSQL.Insert.usuarioRegistrado( usuario ) );
+			out.println( formatSQL( DataSQL.Insert.usuarioRegistrado( usuario ) + ";"  ) );
 		}
 		out.println( );
 		for( CompaniaDeTeatro companiaDeTeatro : companias )
 		{
-			out.println( DataSQL.Insert.companiaDeTeatro( companiaDeTeatro ) );
+			out.println( formatSQL( DataSQL.Insert.companiaDeTeatro( companiaDeTeatro ) + ";"  ) );
 		}
 		out.println( );
 		for( Espectaculo espectaculo : espectaculos )
 		{
-			out.println( DataSQL.Insert.espectaculo( espectaculo ) );
+			out.println( formatSQL( DataSQL.Insert.espectaculo( espectaculo ) + ";"  ) );
 			for( CompaniaDeTeatro c : espectaculo.getCompanias( ) )
 			{
 				tempOfrecen.add( new Long[] { c.getIdentificacion( ), espectaculo.getId( ) } );
@@ -502,22 +502,22 @@ public class DataGen implements DataConstant, DataControl
 		out.println( );
 		for( Funcion funcion : funciones.values( ) )
 		{
-			out.println( DataSQL.Insert.funcion( funcion ) );
+			out.println( formatSQL( DataSQL.Insert.funcion( funcion ) + ";"  ) );
 		}
 		out.println( );
 		for( Long[] ofrece : tempOfrecen )
 		{
-			out.println( DataSQL.Insert.ofrecen( ofrece[ 0 ], ofrece[ 1 ] ) );
+			out.println( formatSQL( DataSQL.Insert.ofrecen( ofrece[ 0 ], ofrece[ 1 ] ) + ";"  ) );
 		}
 		out.println( );
 		for( Long[] genero : tempGeneroEspectaculo )
 		{
-			out.println( DataSQL.Insert.espectaculoGeneros( genero[ 0 ], genero[ 1 ] ) );
+			out.println( formatSQL( DataSQL.Insert.espectaculoGeneros( genero[ 0 ], genero[ 1 ] ) + ";"  ) );
 		}
 		out.println( );
 		for( Long[] requerimiento : tempRequerimientos )
 		{
-			out.println( DataSQL.Insert.espectaculoRequerimiento( requerimiento[ 0 ], requerimiento[ 1 ] ) );
+			out.println( formatSQL( DataSQL.Insert.espectaculoRequerimiento( requerimiento[ 0 ], requerimiento[ 1 ] ) + ";"  ) );
 		}
 		out.println( );
 		for( Map.Entry<Long, List<Localidad>> entry : lugarLocalidades.entrySet( ) )
@@ -531,7 +531,7 @@ public class DataGen implements DataConstant, DataControl
 				ll.setIdLugar( idLugar );
 				ll.setIdLocalidad( localidad.getId( ) );
 				
-				out.println( DataSQL.Insert.lugarLocalidad( ll ) );
+				out.println( formatSQL( DataSQL.Insert.lugarLocalidad( ll ) + ";"  ) );
 			}
 		}
 		out.println( );
@@ -539,7 +539,7 @@ public class DataGen implements DataConstant, DataControl
 		{
 			for( CostoLocalidad costoLocalidad : entry.getValue( ) )
 			{
-				out.println( DataSQL.Insert.costoLocalidad( costoLocalidad ) );
+				out.println( formatSQL( DataSQL.Insert.costoLocalidad( costoLocalidad ) + ";"  ) );
 			}
 		}
 		out.println( );
@@ -547,33 +547,33 @@ public class DataGen implements DataConstant, DataControl
 		{
 			for( Silla silla : list )
 			{
-				out.println( DataSQL.Insert.silla( silla ) );
+				out.println( formatSQL( DataSQL.Insert.silla( silla ) + ";"  ) );
 			}
 		}
 		out.println( );
 		for( Boleta boleta : boletas )
 		{
-			out.println( DataSQL.Insert.boleta( boleta ) );
+			out.println( formatSQL( DataSQL.Insert.boleta( boleta ) + ";"  ) );
 		}
 		out.println( );
 		for( Long[] lugarAccesibilidad : tempLugarAccesibilidades )
 		{
-			out.println( DataSQL.Insert.lugarAccesibilidad( lugarAccesibilidad[ 0 ], lugarAccesibilidad[ 1 ] ) );
+			out.println( formatSQL( DataSQL.Insert.lugarAccesibilidad( lugarAccesibilidad[ 0 ], lugarAccesibilidad[ 1 ] ) + ";"  ) );
 		}
 		out.println( );
 		for( Long[] lugarReqs : tempLugarReq )
 		{
-			out.println( DataSQL.Insert.lugarRequerimiento( lugarReqs[ 0 ], lugarReqs[ 1 ] ) );
+			out.println( formatSQL( DataSQL.Insert.lugarRequerimiento( lugarReqs[ 0 ], lugarReqs[ 1 ] ) + ";"  ) );
 		}
 		out.println( );
 		for( Object[] prefGenero : preferenciaGenero )
 		{
-			out.println( DataSQL.Insert.preferenciaGenero( ( long ) prefGenero[ 0 ], ( String ) prefGenero[ 1 ], ( long ) prefGenero[ 2 ] ) );
+			out.println( formatSQL( DataSQL.Insert.preferenciaGenero( ( long ) prefGenero[ 0 ], ( String ) prefGenero[ 1 ], ( long ) prefGenero[ 2 ] ) + ";"  ) );
 		}
 		out.println( );
 		for( Object[] prefLugar : preferenciaLugares )
 		{
-			out.println( DataSQL.Insert.preferenciaLugar( ( long ) prefLugar[ 0 ], ( String ) prefLugar[ 1 ], ( long ) prefLugar[ 2 ] ) );
+			out.println( formatSQL( DataSQL.Insert.preferenciaLugar( ( long ) prefLugar[ 0 ], ( String ) prefLugar[ 1 ], ( long ) prefLugar[ 2 ] ) + ";"  ) );
 		}
 		out.println( );
 		for( Abono abono : abonos )
@@ -581,10 +581,15 @@ public class DataGen implements DataConstant, DataControl
 			out.println( DataSQL.Insert.abono( abono ) );
 			for( CostoLocalidad clf : abono.getFunciones( ) )
 			{
-				out.println( DataSQL.Insert.abonoFuncion( abono, clf.getIdLugar( ), clf.getIdLocalidad( ), clf.getFecha( ) ) );
+				out.println( formatSQL( DataSQL.Insert.abonoFuncion( abono, clf.getIdLugar( ), clf.getIdLocalidad( ), clf.getFecha( ) ) + ";"  ) );
 			}
 		}
 		out.println( );
+	}
+	
+	private String formatSQL( String sql )
+	{
+		return sql.replace( "'", "''" );
 	}
 	
 	public void statistics( )
