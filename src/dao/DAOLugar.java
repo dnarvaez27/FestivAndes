@@ -26,8 +26,8 @@ public class DAOLugar extends DAO
 		sql.append( "( " );
 		sql.append( String.format( "%s, ", lugar.getId( ) ) );
 		sql.append( String.format( "'%s', ", lugar.getNombre( ) ) );
-		sql.append( String.format( "%s, ", toDate( lugar.getDisponibilidadInicio( ) ) ) );
-		sql.append( String.format( "%s, ", toDate( lugar.getDisponibilidadFin( ) ) ) );
+		sql.append( String.format( "%s, ", toDateTime( lugar.getDisponibilidadInicio( ) ) ) );
+		sql.append( String.format( "%s, ", toDateTime( lugar.getDisponibilidadFin( ) ) ) );
 		sql.append( String.format( "%s, ", lugar.getEsAbierto( ) ) );
 		sql.append( String.format( "'%s' ", lugar.getTipo( ) ) );
 		sql.append( ")" );

@@ -190,8 +190,8 @@ public class DataSQL
 			sql.append( "( " );
 			sql.append( String.format( "%s, ", lugar.getId( ) ) );
 			sql.append( String.format( "'%s', ", formatSQL( lugar.getNombre( ) ) ) );
-			sql.append( String.format( "%s, ", DateUtils.toDate( lugar.getDisponibilidadInicio( ) ) ) );
-			sql.append( String.format( "%s, ", DateUtils.toDate( lugar.getDisponibilidadFin( ) ) ) );
+			sql.append( String.format( "%s, ", DateUtils.toDateTime( lugar.getDisponibilidadInicio( ) ) ) );
+			sql.append( String.format( "%s, ", DateUtils.toDateTime( lugar.getDisponibilidadFin( ) ) ) );
 			sql.append( String.format( "%s, ", lugar.getEsAbierto( ) ) );
 			sql.append( String.format( "'%s' ", formatSQL( lugar.getTipo( ) ) ) );
 			sql.append( ")" );
