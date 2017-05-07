@@ -9,7 +9,6 @@ import java.lang.reflect.Field;
  */
 public class SQLFormat
 {
-	
 	public static String create( Class<?> c, String name )
 	{
 		StringBuilder sBuilder = new StringBuilder( );

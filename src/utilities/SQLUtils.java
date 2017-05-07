@@ -15,7 +15,6 @@ public class SQLUtils
 {
 	public static class DateUtils
 	{
-		
 		private static final String dateStringFormat = "yyyy-MM-dd";
 		
 		private static final String dateTimeStringFormat = "yyyy-MM-dd HH:mm";

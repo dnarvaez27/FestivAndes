@@ -88,4 +88,12 @@ public interface DataControl
 	Integer MIN_FUNCIONES_ABONO = 5;
 	
 	Integer MAX_FUNCION_ABONO = 15;
+	
+	Integer MIN_PREFERENCIA_GENEROS_USER = 5;
+	
+	Integer MAX_PREFERENCIA_GENEROS_USER = 10;
+	
+	Integer MIN_PREFERENCIA_LUGAR_USER = 5;
+	
+	Integer MAX_PREFERENCIA_LUGAR_USER = 10;
 }

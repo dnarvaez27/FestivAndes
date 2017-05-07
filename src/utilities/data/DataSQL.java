@@ -1,8 +1,13 @@
 package utilities.data;
 
 import vos.*;
+import vos.intermediate.CostoLocalidad;
+import vos.intermediate.LugarLocalidad;
+
+import java.util.Date;
 
 import static utilities.SQLUtils.DateUtils;
+import static utilities.SQLUtils.DateUtils.toDateTime;
 
 /**
  * Created by dnarv on 3/05/2017.
@@ -51,7 +56,7 @@ public class DataSQL
 			sBuilder.append( String.format( "%s, ", boleta.getNumeroFila( ) ) );
 			sBuilder.append( String.format( "%s, ", boleta.getIdLocalidad( ) ) );
 			sBuilder.append( String.format( "%s, ", boleta.getIdLugar( ) ) );
-			sBuilder.append( String.format( "%s, ", DateUtils.toDateTime( boleta.getFecha( ) ) ) );
+			sBuilder.append( String.format( "%s, ", toDateTime( boleta.getFecha( ) ) ) );
 			sBuilder.append( String.format( "%s, ", boleta.getIdUsuario( ) ) );
 			sBuilder.append( String.format( "'%s' ", boleta.getTipoIdUsuario( ) ) );
 			sBuilder.append( ") " );
@@ -135,7 +140,7 @@ public class DataSQL
 			sBuilder.append( "( fecha, id_lugar, id_espectaculo, se_realiza ) " );
 			sBuilder.append( "VALUES " );
 			sBuilder.append( "( " );
-			sBuilder.append( String.format( "%s, ", DateUtils.toDateTime( funcion.getFecha( ) ) ) );
+			sBuilder.append( String.format( "%s, ", toDateTime( funcion.getFecha( ) ) ) );
 			sBuilder.append( String.format( "%s, ", funcion.getIdLugar( ) ) );
 			sBuilder.append( String.format( "%s, ", funcion.getIdEspectaculo( ) ) );
 			sBuilder.append( String.format( "%s ", funcion.getSeRealiza( ) ) );
@@ -254,7 +259,143 @@ public class DataSQL
 		
 		public static String ofrecen( Long idCompania, Long idEspectaculo )
 		{
-			return null;
+			StringBuilder sql = new StringBuilder( );
+			sql.append( "INSERT INTO OFRECE " );
+			sql.append( "( id_compania_de_teatro, tipo_id, id_espectaculo )" );
+			sql.append( "VALUES ( " );
+			sql.append( String.format( "%s, ", idCompania ) );
+			sql.append( String.format( "'%s', ", CompaniaDeTeatro.TIPO_ID ) );
+			sql.append( String.format( "%s ", idEspectaculo ) );
+			sql.append( ")" );
+			
+			return sql.toString( );
+		}
+		
+		public static String lugarLocalidad( LugarLocalidad ll )
+		{
+			StringBuilder sql = new StringBuilder( );
+			sql.append( "INSERT INTO LUGAR_LOCALIDAD " );
+			sql.append( "( id_lugar, id_localidad, es_numerado, capacidad )" );
+			sql.append( "VALUES ( " );
+			sql.append( String.format( "%s, ", ll.getIdLugar( ) ) );
+			sql.append( String.format( "%s, ", ll.getIdLocalidad( ) ) );
+			sql.append( String.format( "%s, ", ll.getEsNumerado( ) ) );
+			sql.append( String.format( "%s ", ll.getCapacidad( ) ) );
+			sql.append( ") " );
+			
+			return sql.toString( );
+		}
+		
+		public static String costoLocalidad( CostoLocalidad costoLocalidad )
+		{
+			StringBuilder sql = new StringBuilder( );
+			sql.append( "INSERT INTO COSTO_LOCALIDAD " );
+			sql.append( "( fecha, id_lugar, id_localidad, costo )" );
+			sql.append( "VALUES ( " );
+			sql.append( String.format( "%s, ", toDateTime( costoLocalidad.getFecha( ) ) ) );
+			sql.append( String.format( "%s, ", costoLocalidad.getIdLugar( ) ) );
+			sql.append( String.format( "%s, ", costoLocalidad.getIdLocalidad( ) ) );
+			sql.append( String.format( "%s ", costoLocalidad.getCosto( ) ) );
+			sql.append( ") " );
+			
+			return sql.toString( );
+		}
+		
+		public static String espectaculoGeneros( Long idEspectaculo, Long idGenero )
+		{
+			StringBuilder sql = new StringBuilder( );
+			sql.append( "INSERT INTO ESPECTACULO_GENEROS " );
+			sql.append( "( id_espectaculo, id_genero )" );
+			sql.append( "VALUES ( " );
+			sql.append( String.format( "%s, ", idEspectaculo ) );
+			sql.append( String.format( "%s ", idGenero ) );
+			sql.append( ")" );
+			
+			return sql.toString( );
+		}
+		
+		public static String espectaculoRequerimiento( Long idEspectaculo, Long idRequerimiento )
+		{
+			StringBuilder sql = new StringBuilder( );
+			sql.append( "INSERT INTO ESPECTACULO_REQUERIMIENTO " );
+			sql.append( "( id_espectaculo, id_requerimiento )" );
+			sql.append( "VALUES ( " );
+			sql.append( String.format( "%s, ", idEspectaculo ) );
+			sql.append( String.format( "%s ", idRequerimiento ) );
+			sql.append( ")" );
+			
+			return sql.toString( );
+		}
+		
+		public static String lugarAccesibilidad( Long idLugar, Long idAccesibilidad )
+		{
+			StringBuilder sql = new StringBuilder( );
+			sql.append( "INSERT INTO LUGAR_ACCESIBILIDAD " );
+			sql.append( "( id_lugar, id_accesibilidad )" );
+			sql.append( "VALUES ( " );
+			sql.append( String.format( "%s, ", idLugar ) );
+			sql.append( String.format( "%s ", idAccesibilidad ) );
+			sql.append( ") " );
+			
+			return sql.toString( );
+		}
+		
+		public static String lugarRequerimiento( Long idLugar, Long idRequerimiento )
+		{
+			StringBuilder sql = new StringBuilder( );
+			sql.append( "INSERT INTO LUGAR_REQUERIMIENTO " );
+			sql.append( "( id_lugar, id_requerimiento )" );
+			sql.append( "VALUES ( " );
+			sql.append( String.format( "%s, ", idLugar ) );
+			sql.append( String.format( "%s ", idRequerimiento ) );
+			sql.append( ") " );
+			
+			return sql.toString( );
+		}
+		
+		public static String preferenciaGenero( Long idUsuario, String tipo, Long idGenero )
+		{
+			StringBuilder sql = new StringBuilder( );
+			sql.append( "INSERT INTO PREFERENCIA_GENEROS " );
+			sql.append( "( id_usuario, id_tipo, id_genero )" );
+			sql.append( "VALUES ( " );
+			sql.append( String.format( "%s, ", idUsuario ) );
+			sql.append( String.format( "'%s', ", tipo ) );
+			sql.append( String.format( "%s ", idGenero ) );
+			sql.append( ") " );
+			
+			return sql.toString( );
+		}
+		
+		public static String preferenciaLugar( Long idUsuario, String tipo, Long idLugar )
+		{
+			StringBuilder sql = new StringBuilder( );
+			sql.append( "INSERT INTO PREFERENCIA_LUGARES " );
+			sql.append( "( id_lugar, id_usuario, id_tipo )" );
+			sql.append( "VALUES ( " );
+			sql.append( String.format( "%s, ", idLugar ) );
+			sql.append( String.format( "%s, ", idUsuario ) );
+			sql.append( String.format( "'%s' ", tipo ) );
+			sql.append( ") " );
+			
+			return sql.toString( );
+		}
+		
+		public static String abonoFuncion( Abono abono, Long idLugarFuncion, Long idLocalidadFuncion, Date fechaFuncion )
+		{
+			StringBuilder sql = new StringBuilder( );
+			sql.append( "INSERT INTO ABONO_FUNCION " );
+			sql.append( "(ID_FESTIVAL, ID_USUARIO, TIPO_ID, FECHA, ID_LUGAR, ID_LOCALIDAD) " );
+			sql.append( "VALUES ( " );
+			sql.append( String.format( "%s, ", abono.getIdFestival( ) ) );
+			sql.append( String.format( "%s, ", abono.getIdUsuario( ) ) );
+			sql.append( String.format( "'%s', ", abono.getTipoId( ) ) );
+			sql.append( String.format( "%s, ", toDateTime( fechaFuncion ) ) );
+			sql.append( String.format( "%s, ", idLugarFuncion ) );
+			sql.append( String.format( "%s ", idLocalidadFuncion ) );
+			sql.append( ") " );
+			
+			return sql.toString( );
 		}
 	}
 }

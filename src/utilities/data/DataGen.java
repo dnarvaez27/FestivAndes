@@ -3,7 +3,9 @@ package utilities.data;
 import utilities.SQLUtils;
 import vos.*;
 import vos.intermediate.CostoLocalidad;
+import vos.intermediate.LugarLocalidad;
 
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -36,6 +38,10 @@ public class DataGen implements DataConstant, DataControl
 	
 	private List<Abono> abonos;
 	
+	private List<Object[]> preferenciaGenero;
+	
+	private List<Object[]> preferenciaLugares;
+	
 	public DataGen( )
 	{
 		festivales = new LinkedList<>( );
@@ -49,6 +55,8 @@ public class DataGen implements DataConstant, DataControl
 		usuariosRegistrados = new LinkedList<>( );
 		boletas = new LinkedList<>( );
 		abonos = new LinkedList<>( );
+		preferenciaGenero = new LinkedList<>( );
+		preferenciaLugares = new LinkedList<>( );
 		
 		// Lugar( Localidades( Sillas ), Requerimientos, Accesibilidad )
 		generarInfoLugares( );
@@ -65,6 +73,9 @@ public class DataGen implements DataConstant, DataControl
 		// Usuarios Registrados
 		generarUsuariosRegistrados( );
 		System.out.println( "Registrados Done" );
+		
+		generarPreferencias( );
+		System.out.println( "Preferencias Done" );
 		
 		// Boletas
 		generarBoletas( );
@@ -331,6 +342,31 @@ public class DataGen implements DataConstant, DataControl
 		}
 	}
 	
+	private void generarPreferencias( )
+	{
+		for( UsuarioRegistrado registrado : usuariosRegistrados )
+		{
+			int cant = nextIntBetween( MIN_PREFERENCIA_GENEROS_USER, MAX_PREFERENCIA_GENEROS_USER );
+			for( Genero genero : GENEROS )
+			{
+				preferenciaGenero.add( new Object[] { registrado.getIdentificacion( ), registrado.getTipoIdentificacion( ), genero.getId( ) } );
+				if( --cant == 0 )
+				{
+					break;
+				}
+			}
+			cant = nextIntBetween( MIN_PREFERENCIA_LUGAR_USER, MAX_PREFERENCIA_LUGAR_USER );
+			for( Lugar lugar : LUGARES )
+			{
+				preferenciaLugares.add( new Object[] { registrado.getIdentificacion( ), registrado.getTipoIdentificacion( ), lugar.getId( ) } );
+				if( --cant == 0 )
+				{
+					break;
+				}
+			}
+		}
+	}
+	
 	// -------------------------------------------------------------------
 	
 	private String keyOf( Long idLugar, Long idLocalidad )
@@ -382,14 +418,173 @@ public class DataGen implements DataConstant, DataControl
 	
 	private void toFile( String path ) throws Exception
 	{
-		//		File file = new File( path );
-		//		PrintWriter out = new PrintWriter( new FileOutputStream( file ) );
-		PrintWriter out = new PrintWriter( System.out, true );
+		List<Long[]> tempOfrecen = new LinkedList<>( );
+		List<Long[]> tempGeneroEspectaculo = new LinkedList<>( );
+		List<Long[]> tempRequerimientos = new LinkedList<>( );
+		List<Long[]> tempLugarAccesibilidades = new LinkedList<>( );
+		List<Long[]> tempLugarReq = new LinkedList<>( );
 		
+		PrintWriter out = new PrintWriter( new FileOutputStream( path ), true );
+		for( Genero genero : GENEROS )
+		{
+			out.println( DataSQL.Insert.genero( genero ) );
+		}
+		out.println( );
+		for( Clasificacion clasificacion : CLASIFICACIONES )
+		{
+			out.println( DataSQL.Insert.clasificacion( clasificacion ) );
+		}
+		out.println( );
+		for( Accesibilidad accesibilidad : ACCESIBILIDADES )
+		{
+			out.println( DataSQL.Insert.accesibilidad( accesibilidad ) );
+		}
+		out.println( );
+		for( RequerimientoTecnico requerimiento : REQUERIMIENTOS )
+		{
+			out.println( DataSQL.Insert.requerimientoTecnico( requerimiento ) );
+		}
+		out.println( );
+		for( Localidad localidad : LOCALIDADES )
+		{
+			out.println( DataSQL.Insert.localidad( localidad ) );
+		}
+		out.println( );
+		for( Lugar lugar : LUGARES )
+		{
+			out.println( DataSQL.Insert.lugar( lugar ) );
+			for( Accesibilidad accesibilidad : lugar.getAccesibilidades( ) )
+			{
+				tempLugarAccesibilidades.add( new Long[] { lugar.getId( ), accesibilidad.getId( ) } );
+			}
+			for( RequerimientoTecnico requerimientoTecnico : lugar.getRequerimientosTecnicos( ) )
+			{
+				tempLugarReq.add( new Long[] { lugar.getId( ), requerimientoTecnico.getId( ) } );
+			}
+		}
+		out.println( );
 		for( Festival festival : festivales )
 		{
 			out.println( DataSQL.Insert.festival( festival ) );
 		}
+		out.println( );
+		for( Usuario usuario : usuarios )
+		{
+			out.println( DataSQL.Insert.usuario( usuario ) );
+		}
+		out.println( );
+		for( UsuarioRegistrado usuario : usuariosRegistrados )
+		{
+			out.println( DataSQL.Insert.usuarioRegistrado( usuario ) );
+		}
+		out.println( );
+		for( CompaniaDeTeatro companiaDeTeatro : companias )
+		{
+			out.println( DataSQL.Insert.companiaDeTeatro( companiaDeTeatro ) );
+		}
+		out.println( );
+		for( Espectaculo espectaculo : espectaculos )
+		{
+			out.println( DataSQL.Insert.espectaculo( espectaculo ) );
+			for( CompaniaDeTeatro c : espectaculo.getCompanias( ) )
+			{
+				tempOfrecen.add( new Long[] { c.getIdentificacion( ), espectaculo.getId( ) } );
+			}
+			for( Genero genero : espectaculo.getGeneros( ) )
+			{
+				tempGeneroEspectaculo.add( new Long[] { espectaculo.getId( ), genero.getId( ) } );
+			}
+			for( RequerimientoTecnico requerimiento : espectaculo.getReqs( ) )
+			{
+				tempRequerimientos.add( new Long[] { espectaculo.getId( ), requerimiento.getId( ) } );
+			}
+		}
+		out.println( );
+		for( Funcion funcion : funciones.values( ) )
+		{
+			out.println( DataSQL.Insert.funcion( funcion ) );
+		}
+		out.println( );
+		for( Long[] ofrece : tempOfrecen )
+		{
+			out.println( DataSQL.Insert.ofrecen( ofrece[ 0 ], ofrece[ 1 ] ) );
+		}
+		out.println( );
+		for( Long[] genero : tempGeneroEspectaculo )
+		{
+			out.println( DataSQL.Insert.espectaculoGeneros( genero[ 0 ], genero[ 1 ] ) );
+		}
+		out.println( );
+		for( Long[] requerimiento : tempRequerimientos )
+		{
+			out.println( DataSQL.Insert.espectaculoRequerimiento( requerimiento[ 0 ], requerimiento[ 1 ] ) );
+		}
+		out.println( );
+		for( Map.Entry<Long, List<Localidad>> entry : lugarLocalidades.entrySet( ) )
+		{
+			Long idLugar = entry.getKey( );
+			for( Localidad localidad : entry.getValue( ) )
+			{
+				LugarLocalidad ll = new LugarLocalidad( );
+				ll.setCapacidad( localidad.getCapacidad( ) );
+				ll.setEsNumerado( localidad.getEsNumerada( ) );
+				ll.setIdLugar( idLugar );
+				ll.setIdLocalidad( localidad.getId( ) );
+				
+				out.println( DataSQL.Insert.lugarLocalidad( ll ) );
+			}
+		}
+		out.println( );
+		for( Map.Entry<String, List<CostoLocalidad>> entry : costoLocalidades.entrySet( ) )
+		{
+			for( CostoLocalidad costoLocalidad : entry.getValue( ) )
+			{
+				out.println( DataSQL.Insert.costoLocalidad( costoLocalidad ) );
+			}
+		}
+		out.println( );
+		for( List<Silla> list : sillas.values( ) )
+		{
+			for( Silla silla : list )
+			{
+				out.println( DataSQL.Insert.silla( silla ) );
+			}
+		}
+		out.println( );
+		for( Boleta boleta : boletas )
+		{
+			out.println( DataSQL.Insert.boleta( boleta ) );
+		}
+		out.println( );
+		for( Long[] lugarAccesibilidad : tempLugarAccesibilidades )
+		{
+			out.println( DataSQL.Insert.lugarAccesibilidad( lugarAccesibilidad[ 0 ], lugarAccesibilidad[ 1 ] ) );
+		}
+		out.println( );
+		for( Long[] lugarReqs : tempLugarReq )
+		{
+			out.println( DataSQL.Insert.lugarRequerimiento( lugarReqs[ 0 ], lugarReqs[ 1 ] ) );
+		}
+		out.println( );
+		for( Object[] prefGenero : preferenciaGenero )
+		{
+			out.println( DataSQL.Insert.preferenciaGenero( ( long ) prefGenero[ 0 ], ( String ) prefGenero[ 1 ], ( long ) prefGenero[ 2 ] ) );
+		}
+		out.println( );
+		for( Object[] prefLugar : preferenciaLugares )
+		{
+			out.println( DataSQL.Insert.preferenciaLugar( ( long ) prefLugar[ 0 ], ( String ) prefLugar[ 1 ], ( long ) prefLugar[ 2 ] ) );
+		}
+		out.println( );
+		for( Abono abono : abonos )
+		{
+			out.println( DataSQL.Insert.abono( abono ) );
+			for( CostoLocalidad clf : abono.getFunciones( ) )
+			{
+				out.println( DataSQL.Insert.abonoFuncion( abono, clf.getIdLugar( ), clf.getIdLocalidad( ), clf.getFecha( ) ) );
+			}
+		}
+		out.println( );
 	}
 	
 	public void statistics( )
@@ -467,7 +662,7 @@ public class DataGen implements DataConstant, DataControl
 		d.statistics( );
 		try
 		{
-			d.toFile( "hola.sql" );
+			d.toFile( "data.sql" );
 		}
 		catch( Exception e )
 		{
