@@ -58,7 +58,7 @@ public class InstruccionesDeControl {
 		List<Funcion> todasFunciones = new DAOFuncion().getFunciones();
 		List<Espectaculo> todosEspectaculos = new DAOEspectaculo().getEspectaculos();
 		List<Boleta> todasBoletas = new DAOBoleta().getBoletas();
-		List<Long[]> todosOfrecen = null;
+		List<Long[]> todosOfrecen = new DAOOfrecen().getOfrecen();
 		boolean tiene = false;
 		for (UsuarioRegistrado u : todosUsuarios) {
 			for (Boleta b : todasBoletas) {
