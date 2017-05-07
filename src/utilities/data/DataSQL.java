@@ -14,6 +14,11 @@ import static utilities.SQLUtils.DateUtils.toDateTime;
  */
 public class DataSQL
 {
+	public static String formatSQL( String sql )
+	{
+		return sql.replace( "'", "''" );
+	}
+	
 	public static class Insert
 	{
 		public static String abono( Abono abono )
@@ -24,7 +29,7 @@ public class DataSQL
 			sBuilder.append( "VALUES ( " );
 			sBuilder.append( String.format( "%s, ", abono.getIdFestival( ) ) );
 			sBuilder.append( String.format( "%s, ", abono.getIdUsuario( ) ) );
-			sBuilder.append( String.format( "'%s', ", abono.getTipoId( ) ) );
+			sBuilder.append( String.format( "'%s', ", formatSQL( abono.getTipoId( ) ) ) );
 			sBuilder.append( String.format( "%s ", abono.getDescuento( ) ) );
 			sBuilder.append( ") " );
 			return sBuilder.toString( );
@@ -38,7 +43,7 @@ public class DataSQL
 			sBuilder.append( "VALUES " );
 			sBuilder.append( "( " );
 			sBuilder.append( String.format( "%s, ", accesibilidad.getId( ) ) );
-			sBuilder.append( String.format( "'%s' ", accesibilidad.getNombre( ) ) );
+			sBuilder.append( String.format( "'%s' ", formatSQL( accesibilidad.getNombre( ) ) ) );
 			sBuilder.append( ")" );
 			
 			return sBuilder.toString( );
@@ -58,7 +63,7 @@ public class DataSQL
 			sBuilder.append( String.format( "%s, ", boleta.getIdLugar( ) ) );
 			sBuilder.append( String.format( "%s, ", toDateTime( boleta.getFecha( ) ) ) );
 			sBuilder.append( String.format( "%s, ", boleta.getIdUsuario( ) ) );
-			sBuilder.append( String.format( "'%s' ", boleta.getTipoIdUsuario( ) ) );
+			sBuilder.append( String.format( "'%s' ", formatSQL( boleta.getTipoIdUsuario( ) ) ) );
 			sBuilder.append( ") " );
 			
 			return sBuilder.toString( );
@@ -72,7 +77,7 @@ public class DataSQL
 			sBuilder.append( "VALUES " );
 			sBuilder.append( "( " );
 			sBuilder.append( String.format( "%s, ", clasificacion.getId( ) ) );
-			sBuilder.append( String.format( "'%s' ", clasificacion.getNombre( ) ) );
+			sBuilder.append( String.format( "'%s' ", formatSQL( clasificacion.getNombre( ) ) ) );
 			sBuilder.append( ")" );
 			return sBuilder.toString( );
 		}
@@ -85,11 +90,11 @@ public class DataSQL
 			sql.append( "VALUES " );
 			sql.append( "( " );
 			sql.append( String.format( "%s, ", companiaDeTeatro.getIdentificacion( ) ) );
-			sql.append( String.format( "'%s', ", companiaDeTeatro.getTipoIdentificacion( ) ) );
-			sql.append( String.format( "'%s', ", companiaDeTeatro.getNombre( ) ) );
-			sql.append( String.format( "'%s', ", companiaDeTeatro.getNombreRepresentante( ) ) );
-			sql.append( String.format( "'%s', ", companiaDeTeatro.getPaisOrigen( ) ) );
-			sql.append( String.format( "'%s', ", companiaDeTeatro.getPaginaWeb( ) ) );
+			sql.append( String.format( "'%s', ", formatSQL( companiaDeTeatro.getTipoIdentificacion( ) ) ) );
+			sql.append( String.format( "'%s', ", formatSQL( companiaDeTeatro.getNombre( ) ) ) );
+			sql.append( String.format( "'%s', ", formatSQL( companiaDeTeatro.getNombreRepresentante( ) ) ) );
+			sql.append( String.format( "'%s', ", formatSQL( companiaDeTeatro.getPaisOrigen( ) ) ) );
+			sql.append( String.format( "'%s', ", formatSQL( companiaDeTeatro.getPaginaWeb( ) ) ) );
 			sql.append( String.format( "%s, ", DateUtils.toDate( companiaDeTeatro.getFechaLlegada( ) ) ) );
 			sql.append( String.format( "%s ", DateUtils.toDate( companiaDeTeatro.getFechaSalida( ) ) ) );
 			sql.append( ")" );
@@ -105,11 +110,11 @@ public class DataSQL
 			sBuilder.append( "VALUES " );
 			sBuilder.append( "( " );
 			sBuilder.append( String.format( "%s, ", espectaculo.getId( ) ) );
-			sBuilder.append( String.format( "'%s', ", espectaculo.getNombre( ) ) );
+			sBuilder.append( String.format( "'%s', ", formatSQL( espectaculo.getNombre( ) ) ) );
 			sBuilder.append( String.format( "%s, ", espectaculo.getDuracion( ) ) );
-			sBuilder.append( String.format( "'%s', ", espectaculo.getIdioma( ) ) );
+			sBuilder.append( String.format( "'%s', ", formatSQL( espectaculo.getIdioma( ) ) ) );
 			sBuilder.append( String.format( "%s, ", espectaculo.getCostoRealizacion( ) ) );
-			sBuilder.append( String.format( "'%s', ", espectaculo.getDescripcion( ) ) );
+			sBuilder.append( String.format( "'%s', ", formatSQL( espectaculo.getDescripcion( ) ) ) );
 			sBuilder.append( String.format( "%s, ", espectaculo.getIdFestival( ) ) );
 			sBuilder.append( String.format( "%s ", espectaculo.getIdClasificacion( ) ) );
 			sBuilder.append( ") " );
@@ -127,7 +132,7 @@ public class DataSQL
 			sBuilder.append( String.format( "%s, ", festival.getId( ) ) );
 			sBuilder.append( String.format( "%s, ", DateUtils.toDate( festival.getFechaInicio( ) ) ) );
 			sBuilder.append( String.format( "%s, ", DateUtils.toDate( festival.getFechaFin( ) ) ) );
-			sBuilder.append( String.format( "'%s' ", festival.getCiudad( ) ) );
+			sBuilder.append( String.format( "'%s' ", formatSQL( festival.getCiudad( ) ) ) );
 			sBuilder.append( ")" );
 			
 			return sBuilder.toString( );
@@ -157,7 +162,7 @@ public class DataSQL
 			sql.append( "VALUES " );
 			sql.append( "( " );
 			sql.append( String.format( "%s, ", genero.getId( ) ) );
-			sql.append( String.format( "'%s' ", genero.getNombre( ) ) );
+			sql.append( String.format( "'%s' ", formatSQL( genero.getNombre( ) ) ) );
 			sql.append( ")" );
 			return sql.toString( );
 		}
@@ -170,7 +175,7 @@ public class DataSQL
 			sql.append( "VALUES " );
 			sql.append( "( " );
 			sql.append( String.format( "%s, ", localidad.getId( ) ) );
-			sql.append( String.format( "'%s' ", localidad.getNombre( ) ) );
+			sql.append( String.format( "'%s' ", formatSQL( localidad.getNombre( ) ) ) );
 			sql.append( ")" );
 			
 			return sql.toString( );
@@ -184,11 +189,11 @@ public class DataSQL
 			sql.append( "VALUES " );
 			sql.append( "( " );
 			sql.append( String.format( "%s, ", lugar.getId( ) ) );
-			sql.append( String.format( "'%s', ", lugar.getNombre( ) ) );
+			sql.append( String.format( "'%s', ", formatSQL( lugar.getNombre( ) ) ) );
 			sql.append( String.format( "%s, ", DateUtils.toDate( lugar.getDisponibilidadInicio( ) ) ) );
 			sql.append( String.format( "%s, ", DateUtils.toDate( lugar.getDisponibilidadFin( ) ) ) );
 			sql.append( String.format( "%s, ", lugar.getEsAbierto( ) ) );
-			sql.append( String.format( "'%s' ", lugar.getTipo( ) ) );
+			sql.append( String.format( "'%s' ", formatSQL( lugar.getTipo( ) ) ) );
 			sql.append( ")" );
 			
 			return sql.toString( );
@@ -202,7 +207,7 @@ public class DataSQL
 			sql.append( "VALUES " );
 			sql.append( "( " );
 			sql.append( String.format( "%s, ", requerimientoTecnico.getId( ) ) );
-			sql.append( String.format( "'%s' ", requerimientoTecnico.getNombre( ) ) );
+			sql.append( String.format( "'%s' ", formatSQL( requerimientoTecnico.getNombre( ) ) ) );
 			sql.append( ")" );
 			
 			return sql.toString( );
@@ -231,11 +236,11 @@ public class DataSQL
 			sql.append( "VALUES " );
 			sql.append( "( " );
 			sql.append( String.format( "%s, ", usuario.getIdentificacion( ) ) );
-			sql.append( String.format( "'%s', ", usuario.getTipoIdentificacion( ) ) );
-			sql.append( String.format( "'%s', ", usuario.getEmail( ) ) );
-			sql.append( String.format( "'%s', ", usuario.getPassword( ) ) );
-			sql.append( String.format( "'%s', ", usuario.getNombre( ) ) );
-			sql.append( String.format( "'%s', ", usuario.getRol( ) ) );
+			sql.append( String.format( "'%s', ", formatSQL( usuario.getTipoIdentificacion( ) ) ) );
+			sql.append( String.format( "'%s', ", formatSQL( usuario.getEmail( ) ) ) );
+			sql.append( String.format( "'%s', ", formatSQL( usuario.getPassword( ) ) ) );
+			sql.append( String.format( "'%s', ", formatSQL( usuario.getNombre( ) ) ) );
+			sql.append( String.format( "'%s', ", formatSQL( usuario.getRol( ) ) ) );
 			sql.append( String.format( "%s ", usuario.getIdFestival( ) ) );
 			sql.append( ")" );
 			
@@ -250,7 +255,7 @@ public class DataSQL
 			sql.append( "VALUES " );
 			sql.append( "( " );
 			sql.append( String.format( "%s, ", usuarioRegistrado.getIdentificacion( ) ) );
-			sql.append( String.format( "'%s', ", usuarioRegistrado.getTipoIdentificacion( ) ) );
+			sql.append( String.format( "'%s', ", formatSQL( usuarioRegistrado.getTipoIdentificacion( ) ) ) );
 			sql.append( String.format( "%s ", usuarioRegistrado.getEdad( ) ) );
 			sql.append( ") " );
 			
@@ -264,7 +269,7 @@ public class DataSQL
 			sql.append( "( id_compania_de_teatro, tipo_id, id_espectaculo )" );
 			sql.append( "VALUES ( " );
 			sql.append( String.format( "%s, ", idCompania ) );
-			sql.append( String.format( "'%s', ", CompaniaDeTeatro.TIPO_ID ) );
+			sql.append( String.format( "'%s', ", formatSQL( CompaniaDeTeatro.TIPO_ID ) ) );
 			sql.append( String.format( "%s ", idEspectaculo ) );
 			sql.append( ")" );
 			
@@ -360,7 +365,7 @@ public class DataSQL
 			sql.append( "( id_usuario, id_tipo, id_genero )" );
 			sql.append( "VALUES ( " );
 			sql.append( String.format( "%s, ", idUsuario ) );
-			sql.append( String.format( "'%s', ", tipo ) );
+			sql.append( String.format( "'%s', ", formatSQL( tipo ) ) );
 			sql.append( String.format( "%s ", idGenero ) );
 			sql.append( ") " );
 			
@@ -375,7 +380,7 @@ public class DataSQL
 			sql.append( "VALUES ( " );
 			sql.append( String.format( "%s, ", idLugar ) );
 			sql.append( String.format( "%s, ", idUsuario ) );
-			sql.append( String.format( "'%s' ", tipo ) );
+			sql.append( String.format( "'%s' ", formatSQL( tipo ) ) );
 			sql.append( ") " );
 			
 			return sql.toString( );
@@ -389,7 +394,7 @@ public class DataSQL
 			sql.append( "VALUES ( " );
 			sql.append( String.format( "%s, ", abono.getIdFestival( ) ) );
 			sql.append( String.format( "%s, ", abono.getIdUsuario( ) ) );
-			sql.append( String.format( "'%s', ", abono.getTipoId( ) ) );
+			sql.append( String.format( "'%s', ", formatSQL( abono.getTipoId( ) ) ) );
 			sql.append( String.format( "%s, ", toDateTime( fechaFuncion ) ) );
 			sql.append( String.format( "%s, ", idLugarFuncion ) );
 			sql.append( String.format( "%s ", idLocalidadFuncion ) );
