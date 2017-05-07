@@ -86,12 +86,11 @@ public class DataSQL
 		{
 			StringBuilder sql = new StringBuilder( );
 			sql.append( "INSERT INTO COMPANIAS_DE_TEATRO " );
-			sql.append( "( id, tipo_id, nombre, nombre_representante, pais_origen, pagina_web, fecha_llegada, fecha_salida ) " );
+			sql.append( "( id, tipo_id, nombre_representante, pais_origen, pagina_web, fecha_llegada, fecha_salida ) " );
 			sql.append( "VALUES " );
 			sql.append( "( " );
 			sql.append( String.format( "%s, ", companiaDeTeatro.getIdentificacion( ) ) );
 			sql.append( String.format( "'%s', ", formatSQL( companiaDeTeatro.getTipoIdentificacion( ) ) ) );
-			sql.append( String.format( "'%s', ", formatSQL( companiaDeTeatro.getNombre( ) ) ) );
 			sql.append( String.format( "'%s', ", formatSQL( companiaDeTeatro.getNombreRepresentante( ) ) ) );
 			sql.append( String.format( "'%s', ", formatSQL( companiaDeTeatro.getPaisOrigen( ) ) ) );
 			sql.append( String.format( "'%s', ", formatSQL( companiaDeTeatro.getPaginaWeb( ) ) ) );
