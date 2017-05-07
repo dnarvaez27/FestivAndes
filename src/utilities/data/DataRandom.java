@@ -36,6 +36,7 @@ public class DataRandom
 	public static Date generateNextRandomDate( Date date, int maxDays )
 	{
 		int days = random.nextInt( maxDays );
+		days = days == 0 ? maxDays : days;
 		Calendar c = Calendar.getInstance( );
 		c.setTime( date );
 		c.add( Calendar.DAY_OF_YEAR, days );

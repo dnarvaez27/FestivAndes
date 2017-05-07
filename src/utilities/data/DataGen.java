@@ -131,10 +131,11 @@ public class DataGen implements DataConstant, DataControl
 	
 	private void generarEspectaculos( Long idFestival )
 	{
-		for( int i = 0; i < NUM_ESPECTACULOS; i++ )
+		int espS = espectaculos.size( );
+		for( int i = espS; i < espS + NUM_ESPECTACULOS; i++ )
 		{
 			Espectaculo espectaculo = new Espectaculo( );
-			espectaculo.setId( espectaculos.size( ) + Integer.toUnsignedLong( i ) );
+			espectaculo.setId( Integer.toUnsignedLong( i ) );
 			espectaculo.setIdFestival( idFestival );
 			espectaculo.setDuracion( nextIntBetween( MIN_DURATION_ESPECTACULO, MAX_DURATION_ESPECTACULO ) );
 			espectaculo.setCostoRealizacion( nextFloatBetween( MIN_COSTO_ESPECTACULO, MAX_COSTO_ESPECTACULO ) );
@@ -295,7 +296,7 @@ public class DataGen implements DataConstant, DataControl
 		usuario.setNombre( nombre );
 		usuario.setIdFestival( idFestival );
 		usuario.setPassword( generatePassword( ) );
-		usuario.setEmail( nombre );
+		usuario.setEmail( getEmail( nombre ) );
 		usuario.setTipoIdentificacion( TIPOS_ID[ nextInt( TIPOS_ID.length ) ] );
 		return usuario;
 	}
@@ -318,6 +319,8 @@ public class DataGen implements DataConstant, DataControl
 	
 	private void generarAbonos( )
 	{
+		HashMap<String, Abono> temp = new HashMap<>( );
+		
 		for( Festival festival : festivales )
 		{
 			for( int i = 0; i < NUM_ABONOS; i++ )
@@ -337,9 +340,10 @@ public class DataGen implements DataConstant, DataControl
 				abono.setIdUsuario( user.getIdentificacion( ) );
 				abono.setTipoId( user.getTipoIdentificacion( ) );
 				
-				abonos.add( abono );
+				temp.put( keyofAbono( abono ), abono );
 			}
 		}
+		abonos.addAll( temp.values( ) );
 	}
 	
 	private void generarPreferencias( )
@@ -368,6 +372,11 @@ public class DataGen implements DataConstant, DataControl
 	}
 	
 	// -------------------------------------------------------------------
+	
+	private String keyofAbono( Abono abono )
+	{
+		return String.format( "%s:%s:%s", abono.getIdFestival(), abono.getIdUsuario(), abono.getTipoId() );
+	}
 	
 	private String keyOf( Long idLugar, Long idLocalidad )
 	{
@@ -425,42 +434,42 @@ public class DataGen implements DataConstant, DataControl
 		List<Long[]> tempLugarReq = new LinkedList<>( );
 		
 		int i = 1;
-		PrintWriter out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Generos" ) ), true );
+		PrintWriter out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Generos" ) ), true );
 		for( Genero genero : GENEROS )
 		{
 			out.println( DataSQL.Insert.genero( genero ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Clasificaciones" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Clasificaciones" ) ), true );
 		for( Clasificacion clasificacion : CLASIFICACIONES )
 		{
 			out.println( DataSQL.Insert.clasificacion( clasificacion ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Accesibilidades" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Accesibilidades" ) ), true );
 		for( Accesibilidad accesibilidad : ACCESIBILIDADES )
 		{
 			out.println( DataSQL.Insert.accesibilidad( accesibilidad ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Requerimientos" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Requerimientos" ) ), true );
 		for( RequerimientoTecnico requerimiento : REQUERIMIENTOS )
 		{
 			out.println( DataSQL.Insert.requerimientoTecnico( requerimiento ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Localidades" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Localidades" ) ), true );
 		for( Localidad localidad : LOCALIDADES )
 		{
 			out.println( DataSQL.Insert.localidad( localidad ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Lugares" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Lugares" ) ), true );
 		for( Lugar lugar : LUGARES )
 		{
 			out.println( DataSQL.Insert.lugar( lugar ) + ";" );
@@ -475,35 +484,35 @@ public class DataGen implements DataConstant, DataControl
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Festivales" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Festivales" ) ), true );
 		for( Festival festival : festivales )
 		{
 			out.println( DataSQL.Insert.festival( festival ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Usuarios" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Usuarios" ) ), true );
 		for( Usuario usuario : usuarios )
 		{
 			out.println( DataSQL.Insert.usuario( usuario ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Usuarios Registrados" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Usuarios Registrados" ) ), true );
 		for( UsuarioRegistrado usuario : usuariosRegistrados )
 		{
 			out.println( DataSQL.Insert.usuarioRegistrado( usuario ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Companias" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Companias" ) ), true );
 		for( CompaniaDeTeatro companiaDeTeatro : companias )
 		{
 			out.println( DataSQL.Insert.companiaDeTeatro( companiaDeTeatro ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Espectaculos" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Espectaculos" ) ), true );
 		for( Espectaculo espectaculo : espectaculos )
 		{
 			out.println( DataSQL.Insert.espectaculo( espectaculo ) + ";" );
@@ -522,35 +531,35 @@ public class DataGen implements DataConstant, DataControl
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Funciones" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Funciones" ) ), true );
 		for( Funcion funcion : funciones.values( ) )
 		{
 			out.println( DataSQL.Insert.funcion( funcion ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Ofrecen" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Ofrecen" ) ), true );
 		for( Long[] ofrece : tempOfrecen )
 		{
 			out.println( DataSQL.Insert.ofrecen( ofrece[ 0 ], ofrece[ 1 ] ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "EspectaculoGenero" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "EspectaculoGenero" ) ), true );
 		for( Long[] genero : tempGeneroEspectaculo )
 		{
 			out.println( DataSQL.Insert.espectaculoGeneros( genero[ 0 ], genero[ 1 ] ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "EspectaculoRequerimientos" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "EspectaculoRequerimientos" ) ), true );
 		for( Long[] requerimiento : tempRequerimientos )
 		{
 			out.println( DataSQL.Insert.espectaculoRequerimiento( requerimiento[ 0 ], requerimiento[ 1 ] ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "LugarLocalidades" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "LugarLocalidades" ) ), true );
 		for( Map.Entry<Long, List<Localidad>> entry : lugarLocalidades.entrySet( ) )
 		{
 			Long idLugar = entry.getKey( );
@@ -567,7 +576,7 @@ public class DataGen implements DataConstant, DataControl
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "CostoLocalidades" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "CostoLocalidades" ) ), true );
 		for( Map.Entry<String, List<CostoLocalidad>> entry : costoLocalidades.entrySet( ) )
 		{
 			for( CostoLocalidad costoLocalidad : entry.getValue( ) )
@@ -577,7 +586,7 @@ public class DataGen implements DataConstant, DataControl
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Sillas" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Sillas" ) ), true );
 		for( List<Silla> list : sillas.values( ) )
 		{
 			for( Silla silla : list )
@@ -587,54 +596,50 @@ public class DataGen implements DataConstant, DataControl
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Boletas" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Boletas" ) ), true );
 		for( Boleta boleta : boletas )
 		{
 			out.println( DataSQL.Insert.boleta( boleta ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "LugarAccesibilidades" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "LugarAccesibilidades" ) ), true );
 		for( Long[] lugarAccesibilidad : tempLugarAccesibilidades )
 		{
 			out.println( DataSQL.Insert.lugarAccesibilidad( lugarAccesibilidad[ 0 ], lugarAccesibilidad[ 1 ] ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "LugarRequerimientos" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "LugarRequerimientos" ) ), true );
 		for( Long[] lugarReqs : tempLugarReq )
 		{
 			out.println( DataSQL.Insert.lugarRequerimiento( lugarReqs[ 0 ], lugarReqs[ 1 ] ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "PreferenciaGeneros" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "PreferenciaGeneros" ) ), true );
 		for( Object[] prefGenero : preferenciaGenero )
 		{
 			out.println( DataSQL.Insert.preferenciaGenero( ( long ) prefGenero[ 0 ], ( String ) prefGenero[ 1 ], ( long ) prefGenero[ 2 ] ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "PreferenciaLugares" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "PreferenciaLugares" ) ), true );
 		for( Object[] prefLugar : preferenciaLugares )
 		{
 			out.println( DataSQL.Insert.preferenciaLugar( ( long ) prefLugar[ 0 ], ( String ) prefLugar[ 1 ], ( long ) prefLugar[ 2 ] ) + ";" );
 		}
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "Abonos" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "Abonos" ) ), true );
 		for( Abono abono : abonos )
 		{
 			out.println( DataSQL.Insert.abono( abono ) );
-			for( CostoLocalidad clf : abono.getFunciones( ) )
-			{
-				out.println( DataSQL.Insert.abonoFuncion( abono, clf.getIdLugar( ), clf.getIdLocalidad( ), clf.getFecha( ) ) + ";" );
-			}
 		}
 		
 		out.close( );
 		
-		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s", path, i++, "AbonoFunciones" ) ), true );
+		out = new PrintWriter( new FileOutputStream( String.format( "%s/%s. %s.sql", path, i++, "AbonoFunciones" ) ), true );
 		for( Abono abono : abonos )
 		{
 			for( CostoLocalidad clf : abono.getFunciones( ) )
