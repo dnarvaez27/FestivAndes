@@ -467,7 +467,7 @@ public class DataGen implements DataConstant, DataControl
 		d.statistics( );
 		try
 		{
-			d.toFile( "" );
+			d.toFile( "hola.sql" );
 		}
 		catch( Exception e )
 		{
