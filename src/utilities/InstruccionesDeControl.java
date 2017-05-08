@@ -10,37 +10,31 @@ import vos.*;
 import java.sql.SQLException;
 import java.util.*;
 
-public class InstruccionesDeControl
-{
-	public List<UsuarioRegistrado> rfc9( Date inicio, Date fin, Long companiaId ) throws SQLException
-	{
-		List<UsuarioRegistrado> resp = new ArrayList<>( );
-		List<UsuarioRegistrado> todosUsuarios = new DAOUsuarioRegistrado( ).getUsuarioRegistrados( );
-		List<Funcion> todasFunciones = new DAOFuncion( ).getFunciones( );
-		List<Espectaculo> todosEspectaculos = new DAOEspectaculo( ).getEspectaculos( );
-		List<Boleta> todasBoletas = new DAOBoleta( ).getBoletas( );
-		List<Long[]> todosOfrecen = new DAOOfrecen( ).getOfrecen( );
-		for( UsuarioRegistrado u : todosUsuarios )
-		{
-			for( Boleta b : todasBoletas )
-			{
-				if( b.getIdUsuario( ).equals( u.getIdentificacion( ) ) && b.getTipoIdUsuario( ).equals( u.getTipoIdentificacion( ) ) )
-				{
-					for( Funcion f : todasFunciones )
-					{
-						if( f.getFecha( ).equals( b.getFecha( ) ) && f.getIdLugar( ).equals( b.getIdLugar( ) ) )
-						{
-							if( f.getFecha( ).before( fin ) && f.getFecha( ).after( inicio ) )
-							{
-								for( Espectaculo e : todosEspectaculos )
-								{
-									if( e.getId( ).equals( f.getIdEspectaculo( ) ) )
-									{
-										for( Long[] a : todosOfrecen )
-										{
-											if( a[ 0 ].equals( companiaId ) && a[ 1 ].equals( e.getId( ) ) )
-											{
-												resp.add( u );
+public class InstruccionesDeControl {
+
+	private static final int POR_EDAD = 1;
+	private static final int POR_TIPO_ID = 2;
+	private static final int POR_NOMBRE = 3;
+
+	public List<UsuarioRegistrado> rfc9(Date inicio, Date fin, Long companiaId, Integer criterio) throws SQLException {
+		List<UsuarioRegistrado> resp = new ArrayList<>();
+		List<UsuarioRegistrado> todosUsuarios = new DAOUsuarioRegistrado().getUsuarioRegistrados();
+		List<Funcion> todasFunciones = new DAOFuncion().getFunciones();
+		List<Espectaculo> todosEspectaculos = new DAOEspectaculo().getEspectaculos();
+		List<Boleta> todasBoletas = new DAOBoleta().getBoletas();
+		List<Long[]> todosOfrecen = new DAOOfrecen().getOfrecen();
+		for (UsuarioRegistrado u : todosUsuarios) {
+			for (Boleta b : todasBoletas) {
+				if (b.getIdUsuario().equals(u.getIdentificacion())
+						&& b.getTipoIdUsuario().equals(u.getTipoIdentificacion())) {
+					for (Funcion f : todasFunciones) {
+						if (f.getFecha().equals(b.getFecha()) && f.getIdLugar().equals(b.getIdLugar())) {
+							if (f.getFecha().before(fin) && f.getFecha().after(inicio)) {
+								for (Espectaculo e : todosEspectaculos) {
+									if (e.getId().equals(f.getIdEspectaculo())) {
+										for (Long[] a : todosOfrecen) {
+											if (a[0].equals(companiaId) && a[1].equals(e.getId())) {
+												resp.add(u);
 											}
 										}
 									}
@@ -51,43 +45,56 @@ public class InstruccionesDeControl
 				}
 			}
 		}
+		if (criterio == POR_EDAD)
+			resp.sort(new Comparator<UsuarioRegistrado>() {
+
+				@Override
+				public int compare(UsuarioRegistrado o1, UsuarioRegistrado o2) {
+					return o1.getEdad().compareTo(o2.getEdad());
+				}
+			});
+		else if (criterio == POR_TIPO_ID)
+			resp.sort(new Comparator<UsuarioRegistrado>() {
+
+				@Override
+				public int compare(UsuarioRegistrado o1, UsuarioRegistrado o2) {
+					return o1.getTipoIdentificacion().compareTo(o2.getTipoIdentificacion());
+				}
+			});
+		else if (criterio == POR_NOMBRE)
+			resp.sort(new Comparator<UsuarioRegistrado>() {
+
+				@Override
+				public int compare(UsuarioRegistrado o1, UsuarioRegistrado o2) {
+					return o1.getNombre().compareTo(o2.getNombre());
+				}
+			});
 		return resp;
-		
+
 	}
-	
-	public List<UsuarioRegistrado> rfc10( Date inicio, Date fin, Long compania ) throws SQLException
-	{
-		List<UsuarioRegistrado> resp = new ArrayList<>( );
-		List<UsuarioRegistrado> todosUsuarios = new DAOUsuarioRegistrado( ).getUsuarioRegistrados( );
-		List<Funcion> todasFunciones = new DAOFuncion( ).getFunciones( );
-		List<Espectaculo> todosEspectaculos = new DAOEspectaculo( ).getEspectaculos( );
-		List<Boleta> todasBoletas = new DAOBoleta( ).getBoletas( );
-		List<Long[]> todosOfrecen = new DAOOfrecen( ).getOfrecen( );
+
+	public List<UsuarioRegistrado> rfc10(Date inicio, Date fin, Long compania, Integer criterio) throws SQLException {
+		List<UsuarioRegistrado> resp = new ArrayList<>();
+		List<UsuarioRegistrado> todosUsuarios = new DAOUsuarioRegistrado().getUsuarioRegistrados();
+		List<Funcion> todasFunciones = new DAOFuncion().getFunciones();
+		List<Espectaculo> todosEspectaculos = new DAOEspectaculo().getEspectaculos();
+		List<Boleta> todasBoletas = new DAOBoleta().getBoletas();
+		List<Long[]> todosOfrecen = new DAOOfrecen().getOfrecen();
 		boolean tiene = false;
-		for( UsuarioRegistrado u : todosUsuarios )
-		{
-			for( Boleta b : todasBoletas )
-			{
-				if( tiene )
-				{
+		for (UsuarioRegistrado u : todosUsuarios) {
+			for (Boleta b : todasBoletas) {
+				if (tiene) {
 					break;
 				}
-				if( b.getIdUsuario( ).equals( u.getIdentificacion( ) ) && b.getTipoIdUsuario( ).equals( u.getTipoIdentificacion( ) ) )
-				{
-					for( Funcion f : todasFunciones )
-					{
-						if( f.getFecha( ).equals( b.getFecha( ) ) && f.getIdLugar( ).equals( b.getIdLugar( ) ) )
-						{
-							if( f.getFecha( ).before( fin ) && f.getFecha( ).after( inicio ) )
-							{
-								for( Espectaculo e : todosEspectaculos )
-								{
-									if( e.getId( ).equals( f.getIdEspectaculo( ) ) )
-									{
-										for( Long[] a : todosOfrecen )
-										{
-											if( a[ 0 ].equals( compania ) && a[ 1 ].equals( e.getId( ) ) )
-											{
+				if (b.getIdUsuario().equals(u.getIdentificacion())
+						&& b.getTipoIdUsuario().equals(u.getTipoIdentificacion())) {
+					for (Funcion f : todasFunciones) {
+						if (f.getFecha().equals(b.getFecha()) && f.getIdLugar().equals(b.getIdLugar())) {
+							if (f.getFecha().before(fin) && f.getFecha().after(inicio)) {
+								for (Espectaculo e : todosEspectaculos) {
+									if (e.getId().equals(f.getIdEspectaculo())) {
+										for (Long[] a : todosOfrecen) {
+											if (a[0].equals(compania) && a[1].equals(e.getId())) {
 												tiene = true;
 											}
 										}
@@ -98,78 +105,85 @@ public class InstruccionesDeControl
 					}
 				}
 			}
-			if( !tiene )
-			{
-				resp.add( u );
+			if (!tiene) {
+				resp.add(u);
 			}
 			tiene = false;
 		}
+		if (criterio == POR_EDAD)
+			resp.sort(new Comparator<UsuarioRegistrado>() {
+
+				@Override
+				public int compare(UsuarioRegistrado o1, UsuarioRegistrado o2) {
+					return o1.getEdad().compareTo(o2.getEdad());
+				}
+			});
+		else if (criterio == POR_TIPO_ID)
+			resp.sort(new Comparator<UsuarioRegistrado>() {
+
+				@Override
+				public int compare(UsuarioRegistrado o1, UsuarioRegistrado o2) {
+					return o1.getTipoIdentificacion().compareTo(o2.getTipoIdentificacion());
+				}
+			});
+		else if (criterio == POR_NOMBRE)
+			resp.sort(new Comparator<UsuarioRegistrado>() {
+
+				@Override
+				public int compare(UsuarioRegistrado o1, UsuarioRegistrado o2) {
+					return o1.getNombre().compareTo(o2.getNombre());
+				}
+			});
 		return resp;
 	}
-	
-	public List<BoletaFuncion> rfc11( Date inicio, Date fin, Long localidadId, Integer dia, List<RequerimientoTecnico> reqs, Date inicioHorario, Date finHorario ) throws SQLException
-	{
-		
-		List<BoletaFuncion> resp = new ArrayList<>( );
-		List<Funcion> todasFunciones = new DAOFuncion( ).getFunciones( );
-		List<Espectaculo> todosEspectaculos = new DAOEspectaculo( ).getEspectaculos( );
-		List<Boleta> todasBoletas = new DAOBoleta( ).getBoletas( );
-		for( Espectaculo e : todosEspectaculos )
-		{
+
+	public List<BoletaFuncion> rfc11(Date inicio, Date fin, Long localidadId, Integer dia,
+			List<RequerimientoTecnico> reqs, Date inicioHorario, Date finHorario) throws SQLException {
+
+		List<BoletaFuncion> resp = new ArrayList<>();
+		List<Funcion> todasFunciones = new DAOFuncion().getFunciones();
+		List<Espectaculo> todosEspectaculos = new DAOEspectaculo().getEspectaculos();
+		List<Boleta> todasBoletas = new DAOBoleta().getBoletas();
+		for (Espectaculo e : todosEspectaculos) {
 			boolean cumple = true;
-			if( reqs != null )
-			{
-				for( RequerimientoTecnico r : reqs )
-				{
-					if( !e.getReqs( ).contains( r ) )
-					{
+			if (reqs != null) {
+				for (RequerimientoTecnico r : reqs) {
+					if (!e.getReqs().contains(r)) {
 						cumple = false;
 						break;
 					}
 				}
 			}
-			if( cumple )
-			{
-				for( Funcion f : todasFunciones )
-				{
-					if( !f.getIdEspectaculo( ).equals( e.getId( ) ) )
-					{
+			if (cumple) {
+				for (Funcion f : todasFunciones) {
+					if (!f.getIdEspectaculo().equals(e.getId())) {
 						break;
 					}
 					cumple = true;
-					if( inicio != null )
-					{
-						cumple = f.getFecha( ).after( inicio );
+					if (inicio != null) {
+						cumple = f.getFecha().after(inicio);
 					}
-					if( fin != null )
-					{
-						cumple = f.getFecha( ).before( fin );
+					if (fin != null) {
+						cumple = f.getFecha().before(fin);
 					}
-					if( inicioHorario != null )
-					{
-						cumple = despuesHora( inicioHorario, f.getFecha( ) );
+					if (inicioHorario != null) {
+						cumple = despuesHora(inicioHorario, f.getFecha());
 					}
-					if( finHorario != null )
-					{
-						cumple = antesHora( finHorario, f.getFecha( ) );
+					if (finHorario != null) {
+						cumple = antesHora(finHorario, f.getFecha());
 					}
-					if( dia != null )
-					{
-						Calendar c = Calendar.getInstance( );
-						c.setTime( f.getFecha( ) );
-						cumple = dia == c.get( Calendar.DAY_OF_WEEK );
+					if (dia != null) {
+						Calendar c = Calendar.getInstance();
+						c.setTime(f.getFecha());
+						cumple = dia == c.get(Calendar.DAY_OF_WEEK);
 					}
-					if( cumple )
-					{
-						for( Boleta b : todasBoletas )
-						{
-							if( !b.getFecha( ).equals( f.getFecha( ) ) && b.getIdLugar( ).equals( f.getIdLugar( ) ) )
-							{
+					if (cumple) {
+						for (Boleta b : todasBoletas) {
+							if (!b.getFecha().equals(f.getFecha()) && b.getIdLugar().equals(f.getIdLugar())) {
 								break;
 							}
-							if( b.getIdLocalidad( ).equals( localidadId ) )
-							{
-								resp.add( new BoletaFuncion( b, f, e.getNombre( ) ) );
+							if (b.getIdLocalidad().equals(localidadId)) {
+								resp.add(new BoletaFuncion(b, f, e.getNombre()));
 							}
 						}
 					}
@@ -178,139 +192,118 @@ public class InstruccionesDeControl
 		}
 		return resp;
 	}
-	
-	public List<UsuarioBoleta> rfc12( Integer n ) throws SQLException
-	{
-		List<UsuarioBoleta> resp = new ArrayList<>( );
-		List<UsuarioRegistrado> todosUsuarios = new DAOUsuarioRegistrado( ).getUsuarioRegistrados( );
-		List<Boleta> todasBoletas = new DAOBoleta( ).getBoletas( );
-		for( UsuarioRegistrado u : todosUsuarios )
-		{
-			UsuarioBoleta temp = new UsuarioBoleta( u );
-			for( Boleta b : todasBoletas )
-			{
-				if( b.getIdUsuario( ).equals( u.getIdentificacion( ) ) && u.getTipoIdentificacion( )
-				                                                           .equals( b.getTipoIdUsuario( ) ) && b.getIdLocalidad( ).equals( 1L ) )
-				{
-					temp.agregarBoleta( b );
+
+	public List<UsuarioBoleta> rfc12(Integer n) throws SQLException {
+		List<UsuarioBoleta> resp = new ArrayList<>();
+		List<UsuarioRegistrado> todosUsuarios = new DAOUsuarioRegistrado().getUsuarioRegistrados();
+		List<Boleta> todasBoletas = new DAOBoleta().getBoletas();
+		for (UsuarioRegistrado u : todosUsuarios) {
+			UsuarioBoleta temp = new UsuarioBoleta(u);
+			for (Boleta b : todasBoletas) {
+				if (b.getIdUsuario().equals(u.getIdentificacion())
+						&& u.getTipoIdentificacion().equals(b.getTipoIdUsuario()) && b.getIdLocalidad().equals(1L)) {
+					temp.agregarBoleta(b);
 				}
 			}
-			resp.add( temp );
+			resp.add(temp);
 		}
-		List<UsuarioBoleta> ans = new ArrayList<>( );
-		for( UsuarioBoleta ub : resp )
-		{
-			if( ub.getBoletas( ).size( ) >= n )
-			{
-				ans.add( ub );
+		List<UsuarioBoleta> ans = new ArrayList<>();
+		for (UsuarioBoleta ub : resp) {
+			if (ub.getBoletas().size() >= n) {
+				ans.add(ub);
 			}
 		}
 		return ans;
 	}
-	
-	class BoletaFuncion
-	{
+
+	class BoletaFuncion {
 		private Boleta b;
-		
+
 		private Funcion f;
-		
+
 		private String nombreEspectaculo;
-		
-		public Boleta getB( )
-		{
+
+		public Boleta getB() {
 			return b;
 		}
-		
-		public void setB( Boleta b )
-		{
+
+		public void setB(Boleta b) {
 			this.b = b;
 		}
-		
-		public Funcion getF( )
-		{
+
+		public Funcion getF() {
 			return f;
 		}
-		
-		public void setF( Funcion f )
-		{
+
+		public void setF(Funcion f) {
 			this.f = f;
 		}
-		
-		public String getNombreEspectaculo( )
-		{
+
+		public String getNombreEspectaculo() {
 			return nombreEspectaculo;
 		}
-		
-		public void setNombreEspectaculo( String nombreEspectaculo )
-		{
+
+		public void setNombreEspectaculo(String nombreEspectaculo) {
 			this.nombreEspectaculo = nombreEspectaculo;
 		}
-		
-		public BoletaFuncion( Boleta b, Funcion f, String nombreEspectaculo )
-		{
-			super( );
+
+		public BoletaFuncion(Boleta b, Funcion f, String nombreEspectaculo) {
+			super();
 			this.b = b;
 			this.f = f;
 			this.nombreEspectaculo = nombreEspectaculo;
 		}
-		
+
 	}
-	
-	class UsuarioBoleta
-	{
+
+	class UsuarioBoleta {
 		private UsuarioRegistrado u;
-		
+
 		private List<Boleta> bs;
-		
-		public UsuarioBoleta( UsuarioRegistrado u )
-		{
+
+		public UsuarioBoleta(UsuarioRegistrado u) {
 			this.u = u;
-			bs = new LinkedList<>( );
+			bs = new LinkedList<>();
 		}
-		
-		public void agregarBoleta( Boleta boleta )
-		{
-			bs.add( boleta );
+
+		public void agregarBoleta(Boleta boleta) {
+			bs.add(boleta);
 		}
-		
-		public UsuarioRegistrado getUser( )
-		{
+
+		public UsuarioRegistrado getUser() {
 			return u;
 		}
-		
-		public List<Boleta> getBoletas( )
-		{
+
+		public List<Boleta> getBoletas() {
 			return bs;
 		}
 	}
-	
-	static boolean antesHora( Date fin, Date actual )
-	{
-		Calendar c = Calendar.getInstance( );
-		c.setTime( actual );
-		int horaActual = c.get( Calendar.HOUR_OF_DAY );
-		int minActual = c.get( Calendar.MINUTE );
-		
-		Calendar d = Calendar.getInstance( );
-		c.setTime( actual );
-		int horaFin = d.get( Calendar.HOUR_OF_DAY );
-		int minFin = d.get( Calendar.MINUTE );
-		
+
+	static boolean antesHora(Date fin, Date actual) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(actual);
+		int horaActual = c.get(Calendar.HOUR_OF_DAY);
+		int minActual = c.get(Calendar.MINUTE);
+
+		Calendar d = Calendar.getInstance();
+		c.setTime(actual);
+		int horaFin = d.get(Calendar.HOUR_OF_DAY);
+		int minFin = d.get(Calendar.MINUTE);
+
 		return horaActual < horaFin || horaActual == horaFin && minActual <= minFin;
 	}
-	
-	static boolean despuesHora( Date inicio, Date actual )
-	{
-		Calendar c = Calendar.getInstance( );
-		c.setTime( actual );
-		int horaActual = c.get( Calendar.HOUR_OF_DAY );
-		int minActual = c.get( Calendar.MINUTE );
-		
-		Calendar d = Calendar.getInstance( );
-		c.setTime( inicio );
-		int horaInicio = d.get( Calendar.HOUR_OF_DAY );
-		int minInicio = d.get( Calendar.MINUTE );
-		
+
+	static boolean despuesHora(Date inicio, Date actual) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(actual);
+		int horaActual = c.get(Calendar.HOUR_OF_DAY);
+		int minActual = c.get(Calendar.MINUTE);
+
+		Calendar d = Calendar.getInstance();
+		c.setTime(inicio);
+		int horaInicio = d.get(Calendar.HOUR_OF_DAY);
+		int minInicio = d.get(Calendar.MINUTE);
+
 		return horaActual > horaInicio || horaActual == horaInicio && minActual >= minInicio;
 	}
 }
