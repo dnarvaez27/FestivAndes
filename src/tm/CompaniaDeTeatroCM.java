@@ -324,7 +324,7 @@ public class CompaniaDeTeatroCM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			this.connection.setAutoCommit( false );
-			this.connection.setTransactionIsolation( Connection.TRANSACTION_READ_UNCOMMITTED );
+			this.connection.setTransactionIsolation( Connection.TRANSACTION_READ_COMMITTED );
 			
 			dao.setConnection( this.connection );
 			list = dao.rfc9( idCompania, fInicio, fEnd );
@@ -362,7 +362,7 @@ public class CompaniaDeTeatroCM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			this.connection.setAutoCommit( false );
-			this.connection.setTransactionIsolation( Connection.TRANSACTION_READ_UNCOMMITTED );
+			this.connection.setTransactionIsolation( Connection.TRANSACTION_READ_COMMITTED);
 			
 			dao.setConnection( this.connection );
 			list = dao.rfc10( idCompania, fInicio, fEnd );
