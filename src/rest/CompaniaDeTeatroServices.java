@@ -1,5 +1,6 @@
 package rest;
 
+import exceptions.IncompleteReplyException;
 import protocolos.ProtocoloCompania;
 import tm.CompaniaDeTeatroCM;
 import tm.intermediate.OfrecenTM;
@@ -122,6 +123,10 @@ public class CompaniaDeTeatroServices extends Services
 		try
 		{
 			list = tm.deleteCompaniaDeTeatroRemote( id );
+		}
+		catch( IncompleteReplyException e )
+		{
+			return Response.status( Response.Status.OK ).entity( e.getPartialResponse( ) ).build( );
 		}
 		catch( Exception e )
 		{

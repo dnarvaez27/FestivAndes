@@ -181,7 +181,7 @@ public class AbonoCM extends TransactionManager
 			}
 			
 			AbonoJMS jms = AbonoJMS.getInstance( this );
-			jms.setUpJMSManager( NUMBER_APPS, QUEUE_ABONO, AbonoJMS.TOPIC_ABONOS_GLOBAL );
+			jms.setUpJMSManager( NUMBER_APPS, QUEUE_ABONO, QUEUE_ABONO_RESPONSE, AbonoJMS.TOPIC_ABONOS_GLOBAL );
 			jms.setAbono( abono );
 			list.addAll( jms.getResponse( ) );
 		}

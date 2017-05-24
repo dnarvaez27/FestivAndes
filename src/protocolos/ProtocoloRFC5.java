@@ -45,13 +45,17 @@ public class ProtocoloRFC5 implements Protocolo<ProtocoloRFC5>
 		@JsonProperty( value = "producido" )
 		private Double producido;
 		
-		RFC5Funcion( String respuesta )
+		public RFC5Funcion( String respuesta )
 		{
 			String[] componentes = respuesta.split( SEPARADOR_DATOS_ELEMENTOS_LISTA );
 			this.idFuncion = Long.parseLong( componentes[ 0 ] );
 			this.asistentes = Integer.parseInt( componentes[ 1 ] );
 			this.proporcionAsistencia = Double.parseDouble( componentes[ 2 ] );
 			this.producido = Double.parseDouble( componentes[ 3 ] );
+		}
+		
+		public RFC5Funcion( )
+		{
 		}
 		
 		public Long getIdFuncion( )
@@ -108,7 +112,11 @@ public class ProtocoloRFC5 implements Protocolo<ProtocoloRFC5>
 		
 	}
 	
-	private ProtocoloRFC5( String respuesta )
+	public ProtocoloRFC5( )
+	{
+	}
+	
+	public ProtocoloRFC5( String respuesta )
 	{
 		String[] componentes = respuesta.split( SEPARADOR_PARAMS );
 		

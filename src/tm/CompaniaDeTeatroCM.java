@@ -1,15 +1,17 @@
 package tm;
 
 import dao.DAOCompaniaDeTeatro;
+import dao.DAOFuncion;
 import dao.DAOUsuario;
+import dao.intermediate.DAOOfrecen;
 import exceptions.IncompleteReplyException;
 import exceptions.NonReplyException;
 import jms.CompaniaDeTeatroJMS;
+import jms.FuncionRFC5JMS;
 import jms.JMSConstantes;
 import protocolos.ProtocoloCompania;
-import vos.CompaniaDeTeatro;
-import vos.Usuario;
-import vos.UsuarioRegistrado;
+import protocolos.ProtocoloRFC5;
+import vos.*;
 import vos.reportes.RFC8;
 
 import java.sql.Connection;
@@ -186,10 +188,12 @@ public class CompaniaDeTeatroCM extends TransactionManager
 	{
 		ProtocoloCompania protocoloCompania = new ProtocoloCompania( );
 		protocoloCompania.setAppName( APP );
-		protocoloCompania.setResponse( 0 );
+		protocoloCompania.setResponse( 0D );
 		
 		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
 		DAOUsuario daoUsuario = new DAOUsuario( );
+		DAOOfrecen daoOfrecen = new DAOOfrecen( );
+		DAOFuncion daoFuncion = new DAOFuncion( );
 		try
 		{
 			this.connection = getConnection( );
@@ -202,7 +206,21 @@ public class CompaniaDeTeatroCM extends TransactionManager
 			{
 				dao.deleteCompaniaDeTeatro( id );
 				daoUsuario.deleteUsuario( id, CompaniaDeTeatro.TIPO_ID );
-				protocoloCompania.setResponse( 1 );
+				
+				double sum = 0;
+				List<Espectaculo> espectaculos = daoOfrecen.getEspectaculosFromCompania( id );
+				for( Espectaculo espectaculo : espectaculos )
+				{
+					for( Funcion funcion : daoFuncion.getFuncionesFrom( espectaculo.getId( ) ) )
+					{
+						if( daoFuncion.validarCancelacion( funcion.getFecha( ), funcion.getIdLugar( ) ) )
+						{
+							sum += daoFuncion.cantidadDevuelta( funcion.getFecha( ), funcion.getIdLugar( ) );
+						}
+					}
+				}
+				
+				protocoloCompania.setResponse( sum );
 				
 				connection.commit( );
 			}
@@ -238,7 +256,7 @@ public class CompaniaDeTeatroCM extends TransactionManager
 			list.add( deleteCompaniaDeTeatro( id ) );
 			
 			CompaniaDeTeatroJMS jms = new CompaniaDeTeatroJMS( );
-			jms.setUpJMSManager( NUMBER_APPS, QUEUE_COMPANIA, JMSConstantes.TOPIC_COMPANIA_GLOBAL );
+			jms.setUpJMSManager( NUMBER_APPS, QUEUE_COMPANIA, QUEUE_COMPANIA_RESPONSE, JMSConstantes.TOPIC_COMPANIA_GLOBAL );
 			jms.setIdCompania( id );
 			jms.setTipoIdCompania( CompaniaDeTeatro.TIPO_ID );
 			list.addAll( jms.getResponse( ) );
@@ -449,4 +467,123 @@ public class CompaniaDeTeatroCM extends TransactionManager
 		}
 		return list;
 	}
+	
+	// -------------------------------------------------------------------------------------------------
+	
+	public List<ProtocoloRFC5> requerimiento5Remoto( String fechaInic, String fechaFin, Long idUsuario, String tipoId, String criterio ) throws Exception
+	{
+		List<ProtocoloRFC5> lista = new LinkedList<>( );
+		
+		try
+		{
+			this.connection = getConnection( );
+			
+			lista.addAll( requerimiento5Local( fechaInic, fechaFin, idUsuario, tipoId, criterio ) );
+			
+			FuncionRFC5JMS jms = FuncionRFC5JMS.getInstance( this );
+			
+			jms.setUpJMSManager( NUMBER_APPS, QUEUE_REPORTE, QUEUE_REPORTE_RESPONSE, JMSConstantes.TOPIC_REPORTE_GLOBAL );
+			
+			lista.addAll( jms.getResponse( ) );
+			connection.commit( );
+		}
+		catch( NonReplyException e )
+		{
+			throw new IncompleteReplyException( "No Reply from apps", lista );
+		}
+		catch( IncompleteReplyException e )
+		{
+			List<ProtocoloRFC5> partialResponse = ( List<ProtocoloRFC5> ) e.getPartialResponse( );
+			lista.addAll( partialResponse );
+			throw new IncompleteReplyException( "Incomplete Reply:", partialResponse );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			if( connection != null )
+			{
+				connection.close( );
+			}
+		}
+		
+		return lista;
+	}
+	
+	public List<ProtocoloRFC5> requerimiento5Local( String fechaInic, String fechaFin, Long idUsuario, String tipoId, String criterio ) throws Exception
+	{
+		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
+		List<ProtocoloRFC5> rta = new LinkedList<>( );
+		try
+		{
+			//////Transacción
+			this.connection = getConnection( );
+			dao.setConnection( connection );
+			connection.setAutoCommit( false );
+			connection.setTransactionIsolation( Connection.TRANSACTION_SERIALIZABLE );
+			if( criterio.equals( "SITIO" ) )
+			{
+				rta = dao.requerimiento5Sitio( fechaInic, fechaFin, idUsuario, tipoId );
+			}
+			else if( criterio.equals( "TIPO_DE_SITIO" ) )
+			{
+				rta = dao.requerimiento5TipodeSitio( fechaInic, fechaFin, idUsuario, tipoId );
+			}
+			else if( criterio.equals( "ESPECTACULO" ) )
+			{
+				rta = dao.requerimiento5Espectaculo( fechaInic, fechaFin, idUsuario, tipoId );
+			}
+			else if( criterio.equals( "CATEGORIA" ) )
+			{
+				rta = dao.requerimiento5Categoria( fechaInic, fechaFin, idUsuario, tipoId );
+			}
+			connection.commit( );
+			
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException:" + e.getMessage( ) );
+			e.printStackTrace( );
+			connection.rollback( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException:" + e.getMessage( ) );
+			e.printStackTrace( );
+			connection.rollback( );
+			throw e;
+		}
+		finally
+		{
+			try
+			{
+				dao.cerrarRecursos( );
+				if( this.connection != null )
+				{
+					this.connection.close( );
+				}
+			}
+			catch( SQLException exception )
+			{
+				System.err.println( "SQLException closing resources:" + exception.getMessage( ) );
+				exception.printStackTrace( );
+				throw exception;
+			}
+		}
+		return rta;
+	}
+	
 }

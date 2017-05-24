@@ -238,6 +238,7 @@ public class FuncionServices extends Services
 		{
 			list = tm.generarReporte1( nombreGenero, nombreCompania, ciudad, pais, nombreEspectaculo, idioma, fechaInicio, fechaFin, duracionInicio, duracionFin, lugar, accesoEspecial, publicoObjetivo, order, asc == null || asc == 1 );
 		}
+		
 		catch( SQLException e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );

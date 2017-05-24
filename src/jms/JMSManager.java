@@ -114,7 +114,9 @@ public abstract class JMSManager<T> implements MessageListener, ExceptionListene
 	/**
 	 * Personal Application Queue
 	 */
-	private String myQueue;
+	private String queueAsk;
+	
+	private String queueResponse;
 	
 	// ----------------------------------------
 	// CONFIGURATION
@@ -124,16 +126,18 @@ public abstract class JMSManager<T> implements MessageListener, ExceptionListene
 	 * Method that initializes the JMSManager with the given parameters<br>
 	 * The method generates the suscriptions and publications to the Queues and Topics
 	 *
-	 * @param numerApps  - Total application number
-	 * @param myQueue    - Personal application Route
-	 * @param topicTheme - Route of the Topic
+	 * @param numerApps     - Total application number
+	 * @param queueAsk      - Queue de pregunta
+	 * @param queueResponse - Queue de respuesta
+	 * @param topicTheme    - Route of the Topic
 	 */
-	public void setUpJMSManager( int numerApps, String myQueue, String topicTheme )
+	public void setUpJMSManager( int numerApps, String queueAsk, String queueResponse, String topicTheme )
 	{
 		try
 		{
 			this.numberAppsTotal = numerApps - 1;
-			this.myQueue = myQueue;
+			this.queueAsk = queueAsk;
+			this.queueResponse = queueResponse;
 			setupMyQueue( ); // 1
 			setupSubscriptions( topicTheme ); // 2
 			waiting = false;
@@ -179,7 +183,7 @@ public abstract class JMSManager<T> implements MessageListener, ExceptionListene
 	{
 		// conecta a la cola para respuestas propias.
 		InitialContext ctx = new InitialContext( );
-		Queue queue = ( Queue ) ctx.lookup( this.myQueue );
+		Queue queue = ( Queue ) ctx.lookup( this.queueAsk );
 		QueueConnectionFactory connFactory = ( QueueConnectionFactory ) ctx.lookup( REMOTE_CONNECTION_FACTORY );
 		QueueConnection queueConn = connFactory.createQueueConnection( );
 		QueueSession queueSession = queueConn.createQueueSession( false, Session.AUTO_ACKNOWLEDGE );
@@ -187,6 +191,17 @@ public abstract class JMSManager<T> implements MessageListener, ExceptionListene
 		queueReceiver.setMessageListener( this );
 		queueConn.setExceptionListener( this );
 		queueConn.start( );
+		
+		// Connecta a la cola para respuestas ajenas
+		InitialContext ctx2 = new InitialContext( );
+		Queue queue2 = ( Queue ) ctx2.lookup( this.queueResponse );
+		QueueConnectionFactory connFactory2 = ( QueueConnectionFactory ) ctx2.lookup( REMOTE_CONNECTION_FACTORY );
+		QueueConnection queueConn2 = connFactory2.createQueueConnection( );
+		QueueSession queueSession2 = queueConn2.createQueueSession( false, Session.AUTO_ACKNOWLEDGE );
+		QueueReceiver queueReceiver2 = queueSession2.createReceiver( queue2 );
+		queueReceiver2.setMessageListener( this );
+		queueConn2.setExceptionListener( this );
+		queueConn2.start( );
 	}
 	
 	// ----------------------------------------
@@ -238,18 +253,18 @@ public abstract class JMSManager<T> implements MessageListener, ExceptionListene
 			byte[] arr = new byte[ ( int ) msg.getBodyLength( ) ];
 			msg.readBytes( arr );
 			
-			String protocolo = new String( arr, StandardCharsets.UTF_16 );
+			String protocolo = new String( arr, StandardCharsets.UTF_8 );
 			System.out.println( "Received: " + protocolo );
 			String[] parts = protocolo.split( CONNECTOR );
 			if( parts.length >= 2 )
 			{
 				String command = parts[ 0 ];
-				String queue = parts[ 1 ];
-				boolean mePreguntoAMi = queue.equals( this.myQueue );
+				//				String queue = parts[ 1 ];
+				// boolean mePreguntoAMi = queue.equals( this.queueAsk );
 				
-				if( command.equals( ask ) && !mePreguntoAMi )  // Respondo
+				if( command.equals( ask ) )  // Respondo
 				{
-					response.queue = queue;
+					response.queue = this.queueResponse;
 					if( parts.length == 3 )
 					{
 						response.params = parts[ 2 ];
@@ -277,7 +292,7 @@ public abstract class JMSManager<T> implements MessageListener, ExceptionListene
 	 */
 	void sendMessageSetUp( String ask, String params ) throws JMSException, NamingException
 	{
-		String protocol = ask + CONNECTOR + this.myQueue + CONNECTOR + params;
+		String protocol = ask + CONNECTOR + this.queueAsk + CONNECTOR + params;
 		
 		// Conecta al Topic para mandar la petición
 		TopicPublisher topicPublisher = this.topicSession.createPublisher( this.topic );

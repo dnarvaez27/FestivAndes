@@ -1,5 +1,6 @@
 package dao;
 
+import protocolos.ProtocoloRFC5;
 import vos.CompaniaDeTeatro;
 import vos.Usuario;
 import vos.UsuarioRegistrado;
@@ -372,5 +373,402 @@ public class DAOCompaniaDeTeatro extends DAO
 		rs.close( );
 		s.close( );
 		return list;
+	}
+	
+	// --------------------------------------------------------------------------------------------------------------------------
+	
+	public List<ProtocoloRFC5> requerimiento5Sitio( String fechaInic, String fechaFin, Long idUsuario, String tipoId ) throws SQLException, Exception
+	{
+		List<ProtocoloRFC5> rta = new LinkedList<>( );
+		
+		StringBuilder sentenciaBoletas = new StringBuilder( );
+		sentenciaBoletas.append( "SELECT * FROM BOLETA " );
+		sentenciaBoletas.append( "WHERE FECHA_DE_COMPRA BETWEEN " );
+		sentenciaBoletas.append( toDate( fechaInic ) );
+		sentenciaBoletas.append( " AND " );
+		sentenciaBoletas.append( toDate( fechaFin ) );
+		
+		StringBuilder sentenciaCompSit = new StringBuilder( );
+		sentenciaCompSit.append( "SELECT ID_SITIO, ID_FUNCION FROM " );
+		sentenciaCompSit.append( "((((SELECT * FROM COMPANIA_TEATRO " );
+		sentenciaCompSit.append( "WHERE " );
+		sentenciaCompSit.append( String.format( "ID_USUARIO = %s", idUsuario ) );
+		sentenciaCompSit.append( " AND " );
+		sentenciaCompSit.append( String.format( "TIPO_ID = '%s'", tipoId ) );
+		sentenciaCompSit.append( ") " );
+		sentenciaCompSit.append( "NATURAL INNER JOIN OFRECE) " );
+		sentenciaCompSit.append( "NATURAL INNER JOIN FUNCION) " );
+		sentenciaCompSit.append( "NATURAL INNER JOIN SITIO)" );
+		
+		StringBuilder sentenciaReq = new StringBuilder( );
+		sentenciaReq.append( "SELECT ID_SITIO, ID_FUNCION, COUNT(*) AS ASISTENTES, SUM(COSTO) AS PRODUCIDO " );
+		sentenciaReq.append( "FROM ((" );
+		sentenciaReq.append( "(" + sentenciaCompSit.toString( ) + ")" );
+		sentenciaReq.append( " NATURAL INNER JOIN " );
+		sentenciaReq.append( "(" + sentenciaBoletas.toString( ) + ")" );
+		sentenciaReq.append( ") NATURAL INNER JOIN FUNCION_COSTO_LOCALIDAD) " );
+		sentenciaReq.append( "GROUP BY ID_SITIO, ID_FUNCION " );
+		sentenciaReq.append( "ORDER BY ID_SITIO " );
+		
+		PreparedStatement prepStmt2 = connection.prepareStatement( sentenciaReq.toString( ) );
+		recursos.add( prepStmt2 );
+		ResultSet rs2 = prepStmt2.executeQuery( );
+		
+		Long idSitio = ( long ) -1;
+		Integer totVendidos = 0;
+		Double totFacturado = ( double ) 0;
+		List<ProtocoloRFC5.RFC5Funcion> funciones = new LinkedList<>( );
+		while( rs2.next( ) )
+		{
+			ProtocoloRFC5 nuevo = new ProtocoloRFC5( );
+			if( idSitio != rs2.getLong( "ID_SITIO" ) && idSitio != -1 )
+			{
+				nuevo.setNombreSitio( nombreSitio( idSitio ) );
+				nuevo.setBoletasVendidas( totVendidos );
+				nuevo.setValorTotalFacturado( totFacturado );
+				nuevo.setFunciones( funciones );
+				rta.add( nuevo );
+				
+				totVendidos = 0;
+				totFacturado = ( double ) 0;
+				funciones = new ArrayList<>( );
+			}
+			idSitio = rs2.getLong( "ID_SITIO" );
+			Long idFuncion = rs2.getLong( "ID_FUNCION" );
+			Integer asistentes = rs2.getInt( "ASISTENTES" );
+			Double producido = rs2.getDouble( "PRODUCIDO" );
+			Integer capacidad = capacidadSitioFuncion( idFuncion );
+			Double proporcion = ( double ) asistentes / capacidad;
+			totVendidos += asistentes;
+			totFacturado += producido;
+			ProtocoloRFC5.RFC5Funcion func = nuevo.new RFC5Funcion( );
+			func.setIdFuncion( idFuncion );
+			func.setAsistentes( asistentes );
+			func.setProducido( producido );
+			func.setProporcionAsistencia( proporcion );
+			funciones.add( func );
+		}
+		
+		ProtocoloRFC5 nuevo = new ProtocoloRFC5( );
+		nuevo.setNombreSitio( nombreSitio( idSitio ) );
+		nuevo.setBoletasVendidas( totVendidos );
+		nuevo.setValorTotalFacturado( totFacturado );
+		nuevo.setFunciones( funciones );
+		rta.add( nuevo );
+		
+		return rta;
+	}
+	
+	public List<ProtocoloRFC5> requerimiento5TipodeSitio( String fechaInic, String fechaFin, Long idUsuario, String tipoId ) throws SQLException, Exception
+	{
+		List<ProtocoloRFC5> rta = new ArrayList<>( );
+		
+		StringBuilder sentenciaBoletas = new StringBuilder( );
+		sentenciaBoletas.append( "SELECT * FROM BOLETA " );
+		sentenciaBoletas.append( "WHERE FECHA_DE_COMPRA BETWEEN " );
+		sentenciaBoletas.append( toDate( fechaInic ) );
+		sentenciaBoletas.append( " AND " );
+		sentenciaBoletas.append( toDate( fechaFin ) );
+		
+		StringBuilder sentenciaCompSit = new StringBuilder( );
+		sentenciaCompSit.append( "SELECT ID_SITIO, ID_FUNCION, TIPO_ESPACIO FROM " );
+		sentenciaCompSit.append( "((((SELECT * FROM COMPANIA_TEATRO " );
+		sentenciaCompSit.append( "WHERE " );
+		sentenciaCompSit.append( String.format( "ID_USUARIO = %s", idUsuario ) );
+		sentenciaCompSit.append( " AND " );
+		sentenciaCompSit.append( String.format( "TIPO_ID = '%s'", tipoId ) );
+		sentenciaCompSit.append( ") " );
+		sentenciaCompSit.append( "NATURAL INNER JOIN OFRECE) " );
+		sentenciaCompSit.append( "NATURAL INNER JOIN FUNCION) " );
+		sentenciaCompSit.append( "NATURAL INNER JOIN SITIO)" );
+		
+		StringBuilder sentenciaReq = new StringBuilder( );
+		sentenciaReq.append( "SELECT TIPO_ESPACIO, ID_FUNCION, COUNT(*) AS ASISTENTES, SUM(COSTO) AS PRODUCIDO " );
+		sentenciaReq.append( "FROM ((" );
+		sentenciaReq.append( "(" + sentenciaCompSit.toString( ) + ")" );
+		sentenciaReq.append( " NATURAL INNER JOIN " );
+		sentenciaReq.append( "(" + sentenciaBoletas.toString( ) + ")" );
+		sentenciaReq.append( ") NATURAL INNER JOIN FUNCION_COSTO_LOCALIDAD) " );
+		sentenciaReq.append( "GROUP BY TIPO_ESPACIO, ID_FUNCION " );
+		sentenciaReq.append( "ORDER BY TIPO_ESPACIO " );
+		
+		PreparedStatement prepStmt2 = connection.prepareStatement( sentenciaReq.toString( ) );
+		recursos.add( prepStmt2 );
+		ResultSet rs2 = prepStmt2.executeQuery( );
+		
+		String tipoEspacio = "";
+		Integer totVendidos = 0;
+		Double totFacturado = ( double ) 0;
+		List<ProtocoloRFC5.RFC5Funcion> funciones = new ArrayList<>( );
+		while( rs2.next( ) )
+		{
+			ProtocoloRFC5 nuevo = new ProtocoloRFC5( );
+			if( !tipoEspacio.equals( rs2.getString( "TIPO_ESPACIO" ) ) && !tipoEspacio.equals( "" ) )
+			{
+				nuevo.setTipoDeSitio( tipoEspacio );
+				nuevo.setBoletasVendidas( totVendidos );
+				nuevo.setValorTotalFacturado( totFacturado );
+				nuevo.setFunciones( funciones );
+				rta.add( nuevo );
+				
+				totVendidos = 0;
+				totFacturado = ( double ) 0;
+				funciones = new ArrayList<>( );
+			}
+			tipoEspacio = rs2.getString( "TIPO_ESPACIO" );
+			Long idFuncion = rs2.getLong( "ID_FUNCION" );
+			Integer asistentes = rs2.getInt( "ASISTENTES" );
+			Double producido = rs2.getDouble( "PRODUCIDO" );
+			Integer capacidad = capacidadSitioFuncion( idFuncion );
+			Double proporcion = ( double ) asistentes / capacidad;
+			totVendidos += asistentes;
+			totFacturado += producido;
+			ProtocoloRFC5.RFC5Funcion func = nuevo.new RFC5Funcion( );
+			func.setIdFuncion( idFuncion );
+			func.setAsistentes( asistentes );
+			func.setProducido( producido );
+			func.setProporcionAsistencia( proporcion );
+			funciones.add( func );
+		}
+		
+		ProtocoloRFC5 nuevo = new ProtocoloRFC5( );
+		nuevo.setTipoDeSitio( tipoEspacio );
+		nuevo.setBoletasVendidas( totVendidos );
+		nuevo.setValorTotalFacturado( totFacturado );
+		nuevo.setFunciones( funciones );
+		rta.add( nuevo );
+		
+		return rta;
+	}
+	
+	public List<ProtocoloRFC5> requerimiento5Espectaculo( String fechaInic, String fechaFin, Long idUsuario, String tipoId ) throws SQLException, Exception
+	{
+		List<ProtocoloRFC5> rta = new ArrayList<>( );
+		
+		StringBuilder sentenciaBoletas = new StringBuilder( );
+		sentenciaBoletas.append( "SELECT * FROM BOLETA " );
+		sentenciaBoletas.append( "WHERE FECHA_DE_COMPRA BETWEEN " );
+		sentenciaBoletas.append( toDate( fechaInic ) );
+		sentenciaBoletas.append( " AND " );
+		sentenciaBoletas.append( toDate( fechaFin ) );
+		
+		StringBuilder sentenciaCompSit = new StringBuilder( );
+		sentenciaCompSit.append( "SELECT ID_ESPECTACULO, ID_FUNCION FROM " );
+		sentenciaCompSit.append( "(((SELECT * FROM COMPANIA_TEATRO " );
+		sentenciaCompSit.append( "WHERE " );
+		sentenciaCompSit.append( String.format( "ID_USUARIO = %s", idUsuario ) );
+		sentenciaCompSit.append( " AND " );
+		sentenciaCompSit.append( String.format( "TIPO_ID = '%s'", tipoId ) );
+		sentenciaCompSit.append( ") " );
+		sentenciaCompSit.append( "NATURAL INNER JOIN OFRECE) " );
+		sentenciaCompSit.append( "NATURAL INNER JOIN FUNCION) " );
+		
+		StringBuilder sentenciaReq = new StringBuilder( );
+		sentenciaReq.append( "SELECT ID_ESPECTACULO, ID_FUNCION, COUNT(*) AS ASISTENTES, SUM(COSTO) AS PRODUCIDO " );
+		sentenciaReq.append( "FROM ((" );
+		sentenciaReq.append( "(" ).append( sentenciaCompSit.toString( ) ).append( ")" );
+		sentenciaReq.append( " NATURAL INNER JOIN " );
+		sentenciaReq.append( "(" ).append( sentenciaBoletas.toString( ) ).append( ")" );
+		sentenciaReq.append( ") NATURAL INNER JOIN FUNCION_COSTO_LOCALIDAD) " );
+		sentenciaReq.append( "GROUP BY ID_ESPECTACULO, ID_FUNCION " );
+		sentenciaReq.append( "ORDER BY ID_ESPECTACULO " );
+		
+		PreparedStatement prepStmt2 = connection.prepareStatement( sentenciaReq.toString( ) );
+		recursos.add( prepStmt2 );
+		ResultSet rs2 = prepStmt2.executeQuery( );
+		
+		Long idEspectaculo = ( long ) -1;
+		Integer totVendidos = 0;
+		Double totFacturado = ( double ) 0;
+		List<ProtocoloRFC5.RFC5Funcion> funciones = new LinkedList<>( );
+		while( rs2.next( ) )
+		{
+			ProtocoloRFC5 nuevo = new ProtocoloRFC5( );
+			if( idEspectaculo != rs2.getLong( "ID_ESPECTACULO" ) && idEspectaculo != -1 )
+			{
+				nuevo.setEspectaculo( nombreEspectaculo( idEspectaculo ) );
+				nuevo.setBoletasVendidas( totVendidos );
+				nuevo.setValorTotalFacturado( totFacturado );
+				nuevo.setFunciones( funciones );
+				rta.add( nuevo );
+				
+				totVendidos = 0;
+				totFacturado = ( double ) 0;
+				funciones = new ArrayList<>( );
+			}
+			idEspectaculo = rs2.getLong( "ID_ESPECTACULO" );
+			Long idFuncion = rs2.getLong( "ID_FUNCION" );
+			Integer asistentes = rs2.getInt( "ASISTENTES" );
+			Double producido = rs2.getDouble( "PRODUCIDO" );
+			Integer capacidad = capacidadSitioFuncion( idFuncion );
+			Double proporcion = ( double ) asistentes / capacidad;
+			totVendidos += asistentes;
+			totFacturado += producido;
+			ProtocoloRFC5.RFC5Funcion func = nuevo.new RFC5Funcion( );
+			func.setIdFuncion( idFuncion );
+			func.setAsistentes( asistentes );
+			func.setProducido( producido );
+			func.setProporcionAsistencia( proporcion );
+			funciones.add( func );
+		}
+		
+		ProtocoloRFC5 nuevo = new ProtocoloRFC5( );
+		nuevo.setEspectaculo( nombreEspectaculo( idEspectaculo ) );
+		nuevo.setBoletasVendidas( totVendidos );
+		nuevo.setValorTotalFacturado( totFacturado );
+		nuevo.setFunciones( funciones );
+		rta.add( nuevo );
+		
+		return rta;
+	}
+	
+	public List<ProtocoloRFC5> requerimiento5Categoria( String fechaInic, String fechaFin, Long idUsuario, String tipoId ) throws SQLException, Exception
+	{
+		List<ProtocoloRFC5> rta = new ArrayList<>( );
+		
+		StringBuilder sentenciaBoletas = new StringBuilder( );
+		sentenciaBoletas.append( "SELECT * FROM BOLETA " );
+		sentenciaBoletas.append( "WHERE FECHA_DE_COMPRA BETWEEN " );
+		sentenciaBoletas.append( toDate( fechaInic ) );
+		sentenciaBoletas.append( " AND " );
+		sentenciaBoletas.append( toDate( fechaFin ) );
+		
+		StringBuilder sentenciaCompSit = new StringBuilder( );
+		sentenciaCompSit.append( "SELECT ID_CATEGORIA, ID_FUNCION FROM " );
+		sentenciaCompSit.append( "((((SELECT * FROM COMPANIA_TEATRO " );
+		sentenciaCompSit.append( "WHERE " );
+		sentenciaCompSit.append( String.format( "ID_USUARIO = %s", idUsuario ) );
+		sentenciaCompSit.append( " AND " );
+		sentenciaCompSit.append( String.format( "TIPO_ID = '%s'", tipoId ) );
+		sentenciaCompSit.append( ") " );
+		sentenciaCompSit.append( "NATURAL INNER JOIN OFRECE) " );
+		sentenciaCompSit.append( "NATURAL INNER JOIN FUNCION) " );
+		sentenciaCompSit.append( "NATURAL INNER JOIN ESPECTACULO_CATEGORIAS)" );
+		
+		StringBuilder sentenciaReq = new StringBuilder( );
+		sentenciaReq.append( "SELECT ID_CATEGORIA, ID_FUNCION, COUNT(*) AS ASISTENTES, SUM(COSTO) AS PRODUCIDO " );
+		sentenciaReq.append( "FROM ((" );
+		sentenciaReq.append( "(" ).append( sentenciaCompSit.toString( ) ).append( ")" );
+		sentenciaReq.append( " NATURAL INNER JOIN " );
+		sentenciaReq.append( "(" ).append( sentenciaBoletas.toString( ) ).append( ")" );
+		sentenciaReq.append( ") NATURAL INNER JOIN FUNCION_COSTO_LOCALIDAD) " );
+		sentenciaReq.append( "GROUP BY ID_CATEGORIA, ID_FUNCION " );
+		sentenciaReq.append( "ORDER BY ID_CATEGORIA " );
+		
+		PreparedStatement prepStmt2 = connection.prepareStatement( sentenciaReq.toString( ) );
+		recursos.add( prepStmt2 );
+		ResultSet rs2 = prepStmt2.executeQuery( );
+		
+		Long idCategoria = ( long ) -1;
+		Integer totVendidos = 0;
+		Double totFacturado = ( double ) 0;
+		List<ProtocoloRFC5.RFC5Funcion> funciones = new ArrayList<>( );
+		while( rs2.next( ) )
+		{
+			ProtocoloRFC5 nuevo = new ProtocoloRFC5( );
+			if( idCategoria != rs2.getLong( "ID_CATEGORIA" ) && idCategoria != -1 )
+			{
+				nuevo.setCategoria( nombreCategoria( idCategoria ) );
+				nuevo.setBoletasVendidas( totVendidos );
+				nuevo.setValorTotalFacturado( totFacturado );
+				nuevo.setFunciones( funciones );
+				rta.add( nuevo );
+				
+				totVendidos = 0;
+				totFacturado = ( double ) 0;
+				funciones = new LinkedList<>( );
+			}
+			idCategoria = rs2.getLong( "ID_CATEGORIA" );
+			Long idFuncion = rs2.getLong( "ID_FUNCION" );
+			Integer asistentes = rs2.getInt( "ASISTENTES" );
+			Double producido = rs2.getDouble( "PRODUCIDO" );
+			Integer capacidad = capacidadSitioFuncion( idFuncion );
+			Double proporcion = ( double ) asistentes / capacidad;
+			totVendidos += asistentes;
+			totFacturado += producido;
+			ProtocoloRFC5.RFC5Funcion func = nuevo.new RFC5Funcion( );
+			func.setIdFuncion( idFuncion );
+			func.setAsistentes( asistentes );
+			func.setProducido( producido );
+			func.setProporcionAsistencia( proporcion );
+			funciones.add( func );
+		}
+		
+		ProtocoloRFC5 nuevo = new ProtocoloRFC5( );
+		nuevo.setCategoria( nombreCategoria( idCategoria ) );
+		nuevo.setBoletasVendidas( totVendidos );
+		nuevo.setValorTotalFacturado( totFacturado );
+		nuevo.setFunciones( funciones );
+		rta.add( nuevo );
+		
+		return rta;
+	}
+	
+	private String nombreCategoria( Long idAsociado ) throws SQLException, Exception
+	{
+		String sql = "SELECT NOMBRE FROM GENEROS WHERE ID= " + idAsociado;
+		
+		PreparedStatement prepStmt = connection.prepareStatement( sql );
+		recursos.add( prepStmt );
+		ResultSet rs = prepStmt.executeQuery( );
+		
+		if( rs.next( ) )
+		{
+			return rs.getString( "NOMBRE" );
+		}
+		
+		return null;
+	}
+	
+	private String nombreEspectaculo( Long idAsociado ) throws SQLException, Exception
+	{
+		String sql = "SELECT NOMBRE FROM ESPECTACULOS WHERE ID = " + idAsociado;
+		
+		PreparedStatement prepStmt = connection.prepareStatement( sql );
+		recursos.add( prepStmt );
+		ResultSet rs = prepStmt.executeQuery( );
+		
+		if( rs.next( ) )
+		{
+			return rs.getString( "NOMBRE" );
+		}
+		
+		return null;
+	}
+	
+	private String nombreSitio( Long idAsociado ) throws SQLException, Exception
+	{
+		String sql = "SELECT NOMBRE FROM LUGARES WHERE ID = " + idAsociado;
+		
+		PreparedStatement prepStmt = connection.prepareStatement( sql );
+		recursos.add( prepStmt );
+		ResultSet rs = prepStmt.executeQuery( );
+		
+		if( rs.next( ) )
+		{
+			return rs.getString( "NOMBRE" );
+		}
+		
+		return null;
+	}
+	
+	private Integer capacidadSitioFuncion( Long idFuncion ) throws SQLException, Exception
+	{
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT SUM(LL.CAPACIDAD) AS CAPACIDAD " );
+		sql.append( "FROM LUGARES l " );
+		sql.append( "  INNER JOIN LUGAR_LOCALIDAD LL " );
+		sql.append( "    ON l.ID = LL.ID_LUGAR " );
+		sql.append( String.format( "WHERE L.ID = %s ", idFuncion ) );
+		
+		PreparedStatement prepStmt = connection.prepareStatement( sql.toString( ) );
+		recursos.add( prepStmt );
+		ResultSet rs = prepStmt.executeQuery( );
+		
+		if( rs.next( ) )
+		{
+			return rs.getInt( "CAPACIDAD" );
+		}
+		return null;
 	}
 }

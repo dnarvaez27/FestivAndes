@@ -7,10 +7,11 @@ public class ProtocoloCompania implements Protocolo<ProtocoloCompania>
 {
 	private String appName;
 	
-	private Integer response;
+	private Double response;
 	
-	public ProtocoloCompania( Integer response )
+	public ProtocoloCompania( String appName, Double response )
 	{
+		this.appName = appName;
 		this.response = response;
 	}
 	
@@ -24,7 +25,7 @@ public class ProtocoloCompania implements Protocolo<ProtocoloCompania>
 		String[] componentes = protocolo.split( SEPARADOR_PARAMS );
 		
 		appName = componentes[ 0 ];
-		response = Integer.parseInt( componentes[ 1 ] );
+		response = Double.parseDouble( componentes[ 1 ] );
 	}
 	
 	/**
@@ -32,7 +33,7 @@ public class ProtocoloCompania implements Protocolo<ProtocoloCompania>
 	 *
 	 * @return The response of the ProtocoloCompania
 	 */
-	public Integer getResponse( )
+	public Double getResponse( )
 	{
 		return response;
 	}
@@ -42,7 +43,7 @@ public class ProtocoloCompania implements Protocolo<ProtocoloCompania>
 	 *
 	 * @param response The new response of the ProtocoloCompania
 	 */
-	public void setResponse( Integer response )
+	public void setResponse( Double response )
 	{
 		this.response = response;
 	}

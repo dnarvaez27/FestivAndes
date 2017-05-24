@@ -72,7 +72,7 @@ public class CompaniaDeTeatroJMS extends JMSManager<ProtocoloCompania>
 				}
 				catch( Exception e )
 				{
-					protocoloCompania.setResponse( 0 );
+					protocoloCompania.setResponse( 0D );
 				}
 				enqueueResponse( response.getQueue( ), protocoloCompania.toString( ) );
 			}

@@ -1,11 +1,13 @@
 package jms;
 
+import protocolos.Protocolo;
 import protocolos.ProtocoloFuncion;
 import tm.FuncionCM;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.naming.NamingException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -89,6 +91,7 @@ public class FuncionJMS extends JMSManager<ProtocoloFuncion>
 			}
 			else
 			{
+				initFields( response.getParams( ) );
 				String protocol = ALL_FUNCIONES_RESPONSE + CONNECTOR + listToProtocol( FuncionCM.funcionesToProtocol( transactionManager.generarReporte1( nombreCategoria, nombreCompania, ciudad, pais, nombreEspectaculo, idioma, fechaInicio, fechaFin, duracionInicio, duracionFin, lugar, accesoEspecial, publicoObjetivo, order, asc ) ) );
 				enqueueResponse( response.getQueue( ), protocol );
 			}
@@ -97,6 +100,31 @@ public class FuncionJMS extends JMSManager<ProtocoloFuncion>
 		{
 			e.printStackTrace( );
 		}
+	}
+	
+	private void initFields( String protocol )
+	{
+		String[] split = protocol.split( Protocolo.SEPARADOR_PARAMS );
+		this.nombreCategoria = split[ 0 ];
+		this.nombreCompania = split[ 1 ];
+		this.ciudad = split[ 2 ];
+		this.pais = split[ 3 ];
+		this.nombreEspectaculo = split[ 4 ];
+		this.idioma = split[ 5 ];
+		this.fechaInicio = split[ 6 ];
+		this.fechaFin = split[ 7 ];
+		this.duracionInicio = isNill( split[ 8 ] ) ? null : Integer.parseInt( split[ 8 ] );
+		this.duracionFin = isNill( split[ 9 ] ) ? null : Integer.parseInt( split[ 9 ] );
+		this.lugar = split[ 10 ];
+		this.accesoEspecial = split[ 11 ];
+		this.publicoObjetivo = split[ 12 ];
+		this.order = isNill( split[ 13 ] ) ? null : Collections.singletonList( split[ 13 ] );
+		this.asc = !isNill( split[ 14 ] ) && Boolean.parseBoolean( split[ 14 ] );
+	}
+	
+	private boolean isNill( String string )
+	{
+		return string == null || string.equals( "null" );
 	}
 	
 	/**
@@ -108,7 +136,30 @@ public class FuncionJMS extends JMSManager<ProtocoloFuncion>
 	@Override
 	void sendMessage( ) throws NamingException, JMSException
 	{
-		sendMessageSetUp( ALL_FUNCIONES_ASK, "" );
+		sendMessageSetUp( ALL_FUNCIONES_ASK, fieldsToParam( ) );
+	}
+	
+	private String fieldsToParam( )
+	{
+		StringBuilder sBuilder = new StringBuilder( );
+		
+		sBuilder.append( nombreCategoria ).append( Protocolo.SEPARADOR_PARAMS );
+		sBuilder.append( nombreCompania ).append( Protocolo.SEPARADOR_PARAMS );
+		sBuilder.append( ciudad ).append( Protocolo.SEPARADOR_PARAMS );
+		sBuilder.append( pais ).append( Protocolo.SEPARADOR_PARAMS );
+		sBuilder.append( nombreEspectaculo ).append( Protocolo.SEPARADOR_PARAMS );
+		sBuilder.append( idioma ).append( Protocolo.SEPARADOR_PARAMS );
+		sBuilder.append( fechaInicio ).append( Protocolo.SEPARADOR_PARAMS );
+		sBuilder.append( fechaFin ).append( Protocolo.SEPARADOR_PARAMS );
+		sBuilder.append( duracionInicio ).append( Protocolo.SEPARADOR_PARAMS );
+		sBuilder.append( duracionFin ).append( Protocolo.SEPARADOR_PARAMS );
+		sBuilder.append( lugar ).append( Protocolo.SEPARADOR_PARAMS );
+		sBuilder.append( accesoEspecial ).append( Protocolo.SEPARADOR_PARAMS );
+		sBuilder.append( publicoObjetivo ).append( Protocolo.SEPARADOR_PARAMS );
+		sBuilder.append( order == null ? null : order.get( 0 ) ).append( Protocolo.SEPARADOR_PARAMS );
+		sBuilder.append( asc );
+		
+		return sBuilder.toString( );
 	}
 	
 	public void setUpParams( String nombreCategoria, String nombreCompania, String ciudad, String pais, String nombreEspectaculo, String idioma, String fechaInicio, String fechaFin, Integer duracionInicio, Integer duracionFin, String lugar, String accesoEspecial, String publicoObjetivo, List<String> order, boolean asc )

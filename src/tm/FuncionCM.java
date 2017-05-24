@@ -373,7 +373,7 @@ public class FuncionCM extends TransactionManager
 			list.addAll( funcionesToProtocol( generarReporte1( nombreCategoria, nombreCompania, ciudad, pais, nombreEspectaculo, idioma, fechaInicio, fechaFin, duracionInicio, duracionFin, lugar, accesoEspecial, publicoObjetivo, order, asc ) ) );
 			
 			FuncionJMS jms = new FuncionJMS( );
-			jms.setUpJMSManager( NUMBER_APPS, QUEUE_FUNCION, JMSConstantes.TOPIC_ALL_FUNCIONES_GLOBAL );
+			jms.setUpJMSManager( NUMBER_APPS, QUEUE_FUNCION, QUEUE_FUNCION_RESPONSE, JMSConstantes.TOPIC_ALL_FUNCIONES_GLOBAL );
 			jms.setUpParams( nombreCategoria, nombreCompania, ciudad, pais, nombreEspectaculo, idioma, fechaInicio, fechaFin, duracionInicio, duracionFin, lugar, accesoEspecial, publicoObjetivo, order, asc );
 			list.addAll( jms.getResponse( ) );
 			
@@ -571,11 +571,11 @@ public class FuncionCM extends TransactionManager
 	public static ProtocoloFuncion funcionToProtocol( Funcion funcion )
 	{
 		ProtocoloFuncion protocoloFuncion = new ProtocoloFuncion( );
+		protocoloFuncion.setAppName( APP );
 		protocoloFuncion.setFecha( timeToString( funcion.getFecha( ) ) );
 		protocoloFuncion.setIdEspectaculo( funcion.getIdEspectaculo( ) );
 		protocoloFuncion.setIdFuncion( -1 );
 		protocoloFuncion.setIdLugar( funcion.getIdLugar( ) );
-		protocoloFuncion.setAppName( APP );
 		protocoloFuncion.setRealizado( funcion.getSeRealiza( ) == 1 );
 		return protocoloFuncion;
 	}

@@ -96,12 +96,12 @@ public class FestivalCM extends TransactionManager
 		List<ProtocoloFestival> list = new LinkedList<>( );
 		try
 		{
-			list = festivalesToProtocol( getFestivals( ) );
+			//			list = festivalesToProtocol( getFestivals( ) );
 			this.connection = getConnection( );
 			this.connection.setAutoCommit( false );
 			
 			FestivalJMS jms = FestivalJMS.getInstance( this );
-			jms.setUpJMSManager( NUMBER_APPS, QUEUE_FESTIVAL, FestivalJMS.TOPIC_ALL_FESTIVALES_GLOBAL );
+			jms.setUpJMSManager( NUMBER_APPS, QUEUE_FESTIVAL, QUEUE_FESTIVAL_RESPONSE, FestivalJMS.TOPIC_ALL_FESTIVALES_GLOBAL );
 			list.addAll( jms.getResponse( ) );
 			
 			connection.commit( );

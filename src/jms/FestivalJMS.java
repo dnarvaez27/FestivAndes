@@ -65,6 +65,12 @@ public class FestivalJMS extends JMSManager<ProtocoloFestival>
 				String protocol = ALL_FESTIVALES_RESPONSE + CONNECTOR + listToProtocol( FestivalCM.festivalesToProtocol( transactionManager.getFestivals( ) ) );
 				enqueueResponse( response.getQueue( ), protocol );
 			}
+			//			else
+			//			{
+			//				System.out.println( "Me respondo a mi mismo! :d" );
+			//				String protocol = ALL_FESTIVALES_RESPONSE + CONNECTOR + listToProtocol( FestivalCM.festivalesToProtocol( transactionManager.getFestivals( ) ) );
+			//				enqueueResponse( TMConstantes.QUEUE_FESTIVAL, protocol );
+			//			}
 		}
 		catch( Exception e )
 		{
