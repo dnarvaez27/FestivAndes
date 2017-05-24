@@ -2,6 +2,11 @@ package tm;
 
 import dao.DAOCompaniaDeTeatro;
 import dao.DAOUsuario;
+import exceptions.IncompleteReplyException;
+import exceptions.NonReplyException;
+import jms.CompaniaDeTeatroJMS;
+import jms.JMSConstantes;
+import protocolos.ProtocoloCompania;
 import vos.CompaniaDeTeatro;
 import vos.Usuario;
 import vos.UsuarioRegistrado;
@@ -177,8 +182,12 @@ public class CompaniaDeTeatroCM extends TransactionManager
 		return usuario;
 	}
 	
-	public void deleteCompaniaDeTeatro( Long id ) throws SQLException
+	public ProtocoloCompania deleteCompaniaDeTeatro( Long id ) throws Exception
 	{
+		ProtocoloCompania protocoloCompania = new ProtocoloCompania( );
+		protocoloCompania.setAppName( APP );
+		protocoloCompania.setResponse( 0 );
+		
 		DAOCompaniaDeTeatro dao = new DAOCompaniaDeTeatro( );
 		DAOUsuario daoUsuario = new DAOUsuario( );
 		try
@@ -189,10 +198,14 @@ public class CompaniaDeTeatroCM extends TransactionManager
 			daoUsuario.setConnection( this.connection );
 			dao.setConnection( this.connection );
 			
-			dao.deleteCompaniaDeTeatro( id );
-			daoUsuario.deleteUsuario( id, CompaniaDeTeatro.TIPO_ID );
-			
-			connection.commit( );
+			if( dao.getCompaniaDeTeatro( id ) != null )
+			{
+				dao.deleteCompaniaDeTeatro( id );
+				daoUsuario.deleteUsuario( id, CompaniaDeTeatro.TIPO_ID );
+				protocoloCompania.setResponse( 1 );
+				
+				connection.commit( );
+			}
 		}
 		catch( SQLException e )
 		{
@@ -213,6 +226,55 @@ public class CompaniaDeTeatroCM extends TransactionManager
 			closeDAO( daoUsuario );
 			closeDAO( dao );
 		}
+		return protocoloCompania;
+	}
+	
+	@SuppressWarnings( "unchecked" )
+	public List<ProtocoloCompania> deleteCompaniaDeTeatroRemote( Long id ) throws Exception
+	{
+		List<ProtocoloCompania> list = new LinkedList<>( );
+		try
+		{
+			list.add( deleteCompaniaDeTeatro( id ) );
+			
+			CompaniaDeTeatroJMS jms = new CompaniaDeTeatroJMS( );
+			jms.setUpJMSManager( NUMBER_APPS, QUEUE_COMPANIA, JMSConstantes.TOPIC_COMPANIA_GLOBAL );
+			jms.setIdCompania( id );
+			jms.setTipoIdCompania( CompaniaDeTeatro.TIPO_ID );
+			list.addAll( jms.getResponse( ) );
+		}
+		catch( NonReplyException e )
+		{
+			throw new IncompleteReplyException( "No Reply from apps", list );
+		}
+		catch( IncompleteReplyException e )
+		{
+			List<ProtocoloCompania> partialResponse = ( List<ProtocoloCompania> ) e.getPartialResponse( );
+			list.addAll( partialResponse );
+			throw new IncompleteReplyException( "Incomplete Reply:", partialResponse );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			if( connection != null )
+			{
+				connection.close( );
+			}
+		}
+		return list;
 	}
 	
 	public RFC8 informacionCompania( Long idCompania, String tipo, String password ) throws Exception
@@ -324,7 +386,7 @@ public class CompaniaDeTeatroCM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			this.connection.setAutoCommit( false );
-			this.connection.setTransactionIsolation( Connection.TRANSACTION_READ_UNCOMMITTED );
+			this.connection.setTransactionIsolation( Connection.TRANSACTION_READ_COMMITTED );
 			
 			dao.setConnection( this.connection );
 			list = dao.rfc9( idCompania, fInicio, fEnd );
@@ -362,7 +424,7 @@ public class CompaniaDeTeatroCM extends TransactionManager
 		{
 			this.connection = getConnection( );
 			this.connection.setAutoCommit( false );
-			this.connection.setTransactionIsolation( Connection.TRANSACTION_READ_UNCOMMITTED );
+			this.connection.setTransactionIsolation( Connection.TRANSACTION_READ_COMMITTED );
 			
 			dao.setConnection( this.connection );
 			list = dao.rfc10( idCompania, fInicio, fEnd );

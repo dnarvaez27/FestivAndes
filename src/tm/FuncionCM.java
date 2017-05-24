@@ -4,6 +4,11 @@ import dao.DAOEspectaculo;
 import dao.DAOFestival;
 import dao.DAOFuncion;
 import dao.DAOUsuario;
+import exceptions.IncompleteReplyException;
+import exceptions.NonReplyException;
+import jms.FuncionJMS;
+import jms.JMSConstantes;
+import protocolos.ProtocoloFuncion;
 import utilities.SQLUtils;
 import vos.Espectaculo;
 import vos.Festival;
@@ -12,10 +17,16 @@ import vos.Usuario;
 import vos.reportes.RFC11;
 import vos.reportes.RFC3;
 
+import javax.jms.JMSException;
+import javax.naming.NamingException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+
+import static utilities.SQLUtils.DateUtils.parseDateTime;
+import static utilities.SQLUtils.DateUtils.timeToString;
 
 public class FuncionCM extends TransactionManager
 {
@@ -149,6 +160,58 @@ public class FuncionCM extends TransactionManager
 		}
 		return list;
 	}
+	
+	//	@SuppressWarnings( "unchecked" )
+	//	public List<ProtocoloFuncion> getFuncionesRemote( ) throws IncompleteReplyException, SQLException, InterruptedException, JMSException, NamingException
+	//	{
+	//		List<ProtocoloFuncion> list = new LinkedList<>( );
+	//		try
+	//		{
+	//			// GET LOCAL
+	//			list = funcionesToProtocol( getFunciones( ) );
+	//			this.connection = getConnection( );
+	//			this.connection.setAutoCommit( false );
+	//
+	//			// GET REMOTE
+	//			FuncionJMS jms = FuncionJMS.getInstance( this );
+	//			jms.setUpJMSManager( NUMBER_APPS, QUEUE_FUNCION, FuncionJMS.TOPIC_ALL_FUNCIONES_GLOBAL );
+	//			list.addAll( jms.getResponse( ) );
+	//
+	//			connection.commit( );
+	//		}
+	//		catch( NonReplyException e )
+	//		{
+	//			throw new IncompleteReplyException( "No Reply from apps - Local Videos:", list );
+	//		}
+	//		catch( IncompleteReplyException e )
+	//		{
+	//			List<ProtocoloFuncion> partialResponse = ( List<ProtocoloFuncion> ) e.getPartialResponse( );
+	//			list.addAll( partialResponse );
+	//			throw new IncompleteReplyException( "Incomplete Reply:", partialResponse );
+	//		}
+	//		catch( SQLException e )
+	//		{
+	//			System.err.println( "SQLException: " + e.getMessage( ) );
+	//			connection.rollback( );
+	//			e.printStackTrace( );
+	//			throw e;
+	//		}
+	//		catch( Exception e )
+	//		{
+	//			System.err.println( "GeneralException: " + e.getMessage( ) );
+	//			connection.rollback( );
+	//			e.printStackTrace( );
+	//			throw e;
+	//		}
+	//		finally
+	//		{
+	//			if( connection != null )
+	//			{
+	//				connection.close( );
+	//			}
+	//		}
+	//		return list;
+	//	}
 	
 	public Funcion getFuncion( Date fecha, Long idLugar ) throws SQLException
 	{
@@ -301,6 +364,56 @@ public class FuncionCM extends TransactionManager
 		return list;
 	}
 	
+	@SuppressWarnings( "unchecked" )
+	public List<ProtocoloFuncion> generarReporte1Remoto( String nombreCategoria, String nombreCompania, String ciudad, String pais, String nombreEspectaculo, String idioma, String fechaInicio, String fechaFin, Integer duracionInicio, Integer duracionFin, String lugar, String accesoEspecial, String publicoObjetivo, List<String> order, boolean asc ) throws SQLException, IncompleteReplyException, InterruptedException, JMSException, NamingException
+	{
+		List<ProtocoloFuncion> list = new LinkedList<>( );
+		try
+		{
+			list.addAll( funcionesToProtocol( generarReporte1( nombreCategoria, nombreCompania, ciudad, pais, nombreEspectaculo, idioma, fechaInicio, fechaFin, duracionInicio, duracionFin, lugar, accesoEspecial, publicoObjetivo, order, asc ) ) );
+			
+			FuncionJMS jms = new FuncionJMS( );
+			jms.setUpJMSManager( NUMBER_APPS, QUEUE_FUNCION, JMSConstantes.TOPIC_ALL_FUNCIONES_GLOBAL );
+			jms.setUpParams( nombreCategoria, nombreCompania, ciudad, pais, nombreEspectaculo, idioma, fechaInicio, fechaFin, duracionInicio, duracionFin, lugar, accesoEspecial, publicoObjetivo, order, asc );
+			list.addAll( jms.getResponse( ) );
+			
+			connection.commit( );
+		}
+		catch( NonReplyException e )
+		{
+			throw new IncompleteReplyException( "No Reply from apps - Local Videos:", list );
+		}
+		catch( IncompleteReplyException e )
+		{
+			List<ProtocoloFuncion> partialResponse = ( List<ProtocoloFuncion> ) e.getPartialResponse( );
+			list.addAll( partialResponse );
+			throw new IncompleteReplyException( "Incomplete Reply:", partialResponse );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException:" + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException:" + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			if( connection != null )
+			{
+				connection.close( );
+			}
+		}
+		
+		return list;
+	}
+	
 	public RFC3 generarReporte3( Date fecha, Long idLugar ) throws SQLException
 	{
 		RFC3 rfc3;
@@ -433,5 +546,37 @@ public class FuncionCM extends TransactionManager
 			closeDAO( dao );
 		}
 		return list;
+	}
+	
+	public static List<ProtocoloFuncion> funcionesToProtocol( List<Funcion> list )
+	{
+		List<ProtocoloFuncion> resultList = new LinkedList<>( );
+		for( Funcion funcion : list )
+		{
+			resultList.add( funcionToProtocol( funcion ) );
+		}
+		return resultList;
+	}
+	
+	public static Funcion protocolToFuncion( ProtocoloFuncion protocoloFuncion )
+	{
+		Funcion funcion = new Funcion( );
+		funcion.setIdLugar( protocoloFuncion.getIdLugar( ) );
+		funcion.setIdEspectaculo( protocoloFuncion.getIdEspectaculo( ) );
+		funcion.setFecha( parseDateTime( protocoloFuncion.getFecha( ) ) );
+		funcion.setSeRealiza( protocoloFuncion.isRealizado( ) ? 1 : 0 );
+		return funcion;
+	}
+	
+	public static ProtocoloFuncion funcionToProtocol( Funcion funcion )
+	{
+		ProtocoloFuncion protocoloFuncion = new ProtocoloFuncion( );
+		protocoloFuncion.setFecha( timeToString( funcion.getFecha( ) ) );
+		protocoloFuncion.setIdEspectaculo( funcion.getIdEspectaculo( ) );
+		protocoloFuncion.setIdFuncion( -1 );
+		protocoloFuncion.setIdLugar( funcion.getIdLugar( ) );
+		protocoloFuncion.setAppName( APP );
+		protocoloFuncion.setRealizado( funcion.getSeRealiza( ) == 1 );
+		return protocoloFuncion;
 	}
 }

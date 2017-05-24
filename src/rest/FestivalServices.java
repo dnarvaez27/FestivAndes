@@ -1,5 +1,7 @@
 package rest;
 
+import exceptions.IncompleteReplyException;
+import protocolos.ProtocoloFestival;
 import tm.FestivalCM;
 import vos.Festival;
 
@@ -48,11 +50,32 @@ public class FestivalServices extends Services
 		{
 			list = tm.getFestivals( );
 		}
-		catch( SQLException e )
+		catch( Exception e )
 		{
-			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+			return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( doErrorMessage( e ) ).build( );
 		}
-		return Response.status( 200 ).entity( list ).build( );
+		return Response.status( Response.Status.OK ).entity( list ).build( );
+	}
+	
+	@GET
+	@Path( "/remote" )
+	public Response getFestivalsRemote( )
+	{
+		List<ProtocoloFestival> list;
+		FestivalCM tm = new FestivalCM( getPath( ) );
+		try
+		{
+			list = tm.getFestivalesRemote( );
+		}
+		catch( IncompleteReplyException e )
+		{
+			return Response.status( Response.Status.OK ).entity( e.getPartialResponse( ) ).build( );
+		}
+		catch( Exception e )
+		{
+			return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( Response.Status.OK ).entity( list ).build( );
 	}
 	
 	@GET

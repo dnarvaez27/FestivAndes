@@ -115,12 +115,14 @@ public class DataGen implements DataConstant, DataControl
 		{
 			Date fechaInicio = generateRandomDate( );
 			Date fechaFin = generateNextRandomDate( fechaInicio, FESTIVAL_MAX_DAY_LENGTH );
+			String ciudad = CIUDADES[ nextInt( CIUDADES.length ) ];
 			
 			Festival festival = new Festival( );
 			festival.setId( Integer.toUnsignedLong( i ) );
 			festival.setFechaInicio( fechaInicio );
 			festival.setFechaFin( fechaFin );
-			festival.setCiudad( CIUDADES[ nextInt( CIUDADES.length ) ] );
+			festival.setCiudad( ciudad );
+			festival.setNombre( "Festival de " + ciudad );
 			
 			festivales.add( festival );
 			
@@ -375,7 +377,7 @@ public class DataGen implements DataConstant, DataControl
 	
 	private String keyofAbono( Abono abono )
 	{
-		return String.format( "%s:%s:%s", abono.getIdFestival(), abono.getIdUsuario(), abono.getTipoId() );
+		return String.format( "%s:%s:%s", abono.getIdFestival( ), abono.getIdUsuario( ), abono.getTipoId( ) );
 	}
 	
 	private String keyOf( Long idLugar, Long idLocalidad )

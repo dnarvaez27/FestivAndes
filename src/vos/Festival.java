@@ -21,8 +21,31 @@ public class Festival
 	@JsonProperty( value = "ciudad" )
 	private String ciudad;
 	
+	@JsonProperty( value = "nombre" )
+	private String nombre;
+	
 	public Festival( )
 	{
+	}
+	
+	/**
+	 * Retrieves the nombre of the Festival
+	 *
+	 * @return The nombre of the Festival
+	 */
+	public String getNombre( )
+	{
+		return nombre;
+	}
+	
+	/**
+	 * Updates the nombre of the Festival by the one given by parameter
+	 *
+	 * @param nombre The new nombre of the Festival
+	 */
+	public void setNombre( String nombre )
+	{
+		this.nombre = nombre;
 	}
 	
 	/**
@@ -108,6 +131,6 @@ public class Festival
 	@Override
 	public String toString( )
 	{
-		return String.format( "%d: %s:\n\t%s\n\t%s\n", id, ciudad, fechaInicio, fechaFin );
+		return String.format( "%d: %s:\n\t%s\n\t%s\n\t%s\n", id, ciudad, fechaInicio, fechaFin, nombre );
 	}
 }

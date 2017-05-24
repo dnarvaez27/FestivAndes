@@ -1,5 +1,7 @@
 package rest;
 
+import exceptions.IncompleteReplyException;
+import protocolos.ProtocoloAbono;
 import tm.AbonoCM;
 import vos.Abono;
 
@@ -41,6 +43,26 @@ public class AbonoServices extends Services
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).entity( abono ).build( );
+	}
+	
+	@POST
+	public Response createAbonoRemote( ProtocoloAbono abono )
+	{
+		List<ProtocoloAbono> list;
+		AbonoCM tm = new AbonoCM( getPath( ) );
+		try
+		{
+			list = tm.createAbonoRemote( abono );
+		}
+		catch( IncompleteReplyException e )
+		{
+			return Response.status( Response.Status.OK ).entity( e.getPartialResponse( ) ).build( );
+		}
+		catch( Exception e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
 	}
 	
 	@GET

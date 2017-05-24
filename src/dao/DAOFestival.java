@@ -105,6 +105,27 @@ public class DAOFestival extends DAO
 		s.close( );
 	}
 	
+	public Festival searchFestival( String name ) throws SQLException
+	{
+		Festival festival = null;
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT * " );
+		sql.append( "  FROM FESTIVALES " );
+		sql.append( String.format( "WHERE NOMBRE = '%s' ", name ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		if( rs.next( ) )
+		{
+			festival = resultToFestival( rs );
+		}
+		
+		rs.close( );
+		s.close( );
+		return festival;
+	}
+	
 	private static Festival resultToFestival( ResultSet rs ) throws SQLException
 	{
 		Festival object = new Festival( );
@@ -112,6 +133,7 @@ public class DAOFestival extends DAO
 		object.setFechaFin( rs.getDate( "fecha_fin" ) );
 		object.setCiudad( rs.getString( "ciudad" ) );
 		object.setId( rs.getLong( "id" ) );
+		object.setNombre( rs.getString( "nombre" ) );
 		return object;
 	}
 }

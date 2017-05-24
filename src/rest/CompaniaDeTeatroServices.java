@@ -1,5 +1,6 @@
 package rest;
 
+import protocolos.ProtocoloCompania;
 import tm.CompaniaDeTeatroCM;
 import tm.intermediate.OfrecenTM;
 import utilities.SQLUtils;
@@ -105,14 +106,32 @@ public class CompaniaDeTeatroServices extends Services
 		{
 			tm.deleteCompaniaDeTeatro( id );
 		}
-		catch( SQLException e )
+		catch( Exception e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
 		return Response.status( 200 ).build( );
 	}
 	
+	@DELETE
+	@Path( "/remote/{id}" )
+	public Response deleteCompaniaDeTeatroRemote( @PathParam( "id" ) Long id )
+	{
+		List<ProtocoloCompania> list;
+		CompaniaDeTeatroCM tm = new CompaniaDeTeatroCM( getPath( ) );
+		try
+		{
+			list = tm.deleteCompaniaDeTeatroRemote( id );
+		}
+		catch( Exception e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
+	}
+	
 	// ESPECTACULOS
+	
 	@GET
 	@Path( "{id_compania}/espectaculos" )
 	public Response getEspectaculosFromCompania( @PathParam( "id_compania" ) Long idCompania )

@@ -90,6 +90,19 @@ public class SQLUtils
 			return dateTimeFormat.format( date );
 		}
 		
+		public static Date parseDateTime( String string )
+		{
+			try
+			{
+				return dateTimeFormat.parse( string );
+			}
+			catch( ParseException e )
+			{
+				e.printStackTrace( );
+				return null;
+			}
+		}
+		
 		public static String getTime( Date date )
 		{
 			Calendar c = Calendar.getInstance( );

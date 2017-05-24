@@ -9,7 +9,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public abstract class TransactionManager
+public abstract class TransactionManager implements TMConstantes
 {
 	/**
 	 * Atributo estático que contiene el path relativo del archivo que tiene los datos de la conexión
@@ -40,6 +40,8 @@ public abstract class TransactionManager
 	 * Atributo que guarda el driver que se va a usar para conectarse a la base de datos.
 	 */
 	protected String driver;
+	
+	public static final String APP = "APP2";
 	
 	/**
 	 * Conexión a la base de datos

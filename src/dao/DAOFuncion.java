@@ -526,4 +526,28 @@ public class DAOFuncion extends DAO
 	{
 		return String.format( "%s;%s;%s", nombreEspectaculo, toDateTime( fecha ), lugar );
 	}
+	
+	public Funcion search( String espectaculo, Date fecha ) throws SQLException
+	{
+		Funcion funcion = null;
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT F.* " );
+		sql.append( "FROM FUNCIONES F " );
+		sql.append( "  INNER JOIN " );
+		sql.append( "  ESPECTACULOS E " );
+		sql.append( "    ON F.ID_ESPECTACULO = E.ID " );
+		sql.append( String.format( "WHERE FECHA = %s ", SQLUtils.DateUtils.toDateTime( fecha ) ) );
+		sql.append( String.format( "      AND E.NOMBRE = '%s' ", espectaculo ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		if( rs.next( ) )
+		{
+			funcion = resultToFuncion( rs );
+		}
+		rs.close( );
+		s.close( );
+		return funcion;
+	}
 }

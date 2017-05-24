@@ -1,9 +1,15 @@
 package tm;
 
 import dao.DAOFestival;
+import exceptions.IncompleteReplyException;
+import exceptions.NonReplyException;
+import jms.FestivalJMS;
+import protocolos.ProtocoloFestival;
+import utilities.SQLUtils;
 import vos.Festival;
 
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 public class FestivalCM extends TransactionManager
@@ -80,6 +86,56 @@ public class FestivalCM extends TransactionManager
 		finally
 		{
 			closeDAO( dao );
+		}
+		return list;
+	}
+	
+	@SuppressWarnings( "unchecked" )
+	public List<ProtocoloFestival> getFestivalesRemote( ) throws Exception
+	{
+		List<ProtocoloFestival> list = new LinkedList<>( );
+		try
+		{
+			list = festivalesToProtocol( getFestivals( ) );
+			this.connection = getConnection( );
+			this.connection.setAutoCommit( false );
+			
+			FestivalJMS jms = FestivalJMS.getInstance( this );
+			jms.setUpJMSManager( NUMBER_APPS, QUEUE_FESTIVAL, FestivalJMS.TOPIC_ALL_FESTIVALES_GLOBAL );
+			list.addAll( jms.getResponse( ) );
+			
+			connection.commit( );
+		}
+		catch( NonReplyException e )
+		{
+			throw new IncompleteReplyException( "No Reply from apps", list );
+		}
+		catch( IncompleteReplyException e )
+		{
+			List<ProtocoloFestival> partialResponse = ( List<ProtocoloFestival> ) e.getPartialResponse( );
+			list.addAll( partialResponse );
+			throw new IncompleteReplyException( "Incomplete Reply:", partialResponse );
+		}
+		catch( SQLException e )
+		{
+			System.err.println( "SQLException: " + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			if( connection != null )
+			{
+				connection.close( );
+			}
 		}
 		return list;
 	}
@@ -187,5 +243,16 @@ public class FestivalCM extends TransactionManager
 		{
 			closeDAO( dao );
 		}
+	}
+	
+	public static List<ProtocoloFestival> festivalesToProtocol( List<Festival> list )
+	{
+		List<ProtocoloFestival> resultList = new LinkedList<>( );
+		for( Festival festival : list )
+		{
+			resultList.add( new ProtocoloFestival( APP, festival.getId( ), festival.getNombre( ), festival.getCiudad( ), SQLUtils.DateUtils.timeToString( festival.getFechaInicio( ) ), SQLUtils.DateUtils
+					.timeToString( festival.getFechaFin( ) ) ) );
+		}
+		return resultList;
 	}
 }

@@ -99,6 +99,26 @@ public class DAOLocalidad extends DAO
 		s.close( );
 	}
 	
+	public Localidad searchLocalidad( String name ) throws SQLException
+	{
+		Localidad localidad = null;
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT * " );
+		sql.append( "  FROM LOCALIDADES " );
+		sql.append( String.format( "WHERE NOMBRE = '%s' ", name ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		if( rs.next( ) )
+		{
+			localidad = resultToBasicLocalidad( rs );
+		}
+		rs.close( );
+		s.close( );
+		return localidad;
+	}
+	
 	private static Localidad resultToBasicLocalidad( ResultSet rs ) throws SQLException
 	{
 		Localidad l = new Localidad( );

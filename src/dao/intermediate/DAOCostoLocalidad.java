@@ -4,6 +4,7 @@ import dao.DAO;
 import dao.DAOFuncion;
 import dao.DAOLocalidad;
 import dao.DAOSilla;
+import utilities.SQLUtils;
 import vos.Funcion;
 import vos.Localidad;
 import vos.Silla;
@@ -233,6 +234,28 @@ public class DAOCostoLocalidad extends DAO
 		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
 		s.execute( );
 		s.close( );
+	}
+	
+	public CostoLocalidad search( Date fecha, Long idLugar, Long idLocalidad ) throws SQLException
+	{
+		CostoLocalidad costoLocalidad = null;
+		
+		StringBuilder sql = new StringBuilder( );
+		sql.append( "SELECT * " );
+		sql.append( "FROM COSTO_LOCALIDAD " );
+		sql.append( String.format( "WHERE FECHA = %s ", SQLUtils.DateUtils.toDateTime( fecha ) ) );
+		sql.append( String.format( "AND ID_LOCALIDAD = %s ", idLocalidad ) );
+		sql.append( String.format( "AND ID_LUGAR = %s ", idLocalidad ) );
+		
+		PreparedStatement s = connection.prepareStatement( sql.toString( ) );
+		ResultSet rs = s.executeQuery( );
+		if( rs.next( ) )
+		{
+			costoLocalidad = resultToCostoLocalidad( rs );
+		}
+		rs.close( );
+		s.close( );
+		return costoLocalidad;
 	}
 	
 	public static CostoLocalidad resultToCostoLocalidad( ResultSet rs ) throws SQLException

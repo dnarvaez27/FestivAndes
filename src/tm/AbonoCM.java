@@ -1,16 +1,21 @@
 package tm;
 
-import dao.DAOAbono;
-import dao.DAOFestival;
-import dao.DAOFuncion;
+import dao.*;
 import dao.intermediate.DAOAbonoFuncion;
+import dao.intermediate.DAOCostoLocalidad;
+import exceptions.IncompleteReplyException;
+import exceptions.NonReplyException;
+import jms.AbonoJMS;
+import protocolos.ProtocoloAbono;
 import utilities.SQLUtils;
 import vos.Abono;
 import vos.Festival;
+import vos.Funcion;
 import vos.intermediate.CostoLocalidad;
 
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -92,6 +97,125 @@ public class AbonoCM extends TransactionManager
 			closeDAO( dao );
 		}
 		return abono;
+	}
+	
+	public ProtocoloAbono createAbono( ProtocoloAbono abono ) throws Exception
+	{
+		ProtocoloAbono retAbono = null;
+		
+		DAOFestival daoFestival = new DAOFestival( );
+		DAOFuncion daoFuncion = new DAOFuncion( );
+		DAOLocalidad daoLocalidad = new DAOLocalidad( );
+		DAOCostoLocalidad daoCostoLocalidad = new DAOCostoLocalidad( );
+		DAOEspectaculo daoEspectaculo = new DAOEspectaculo( );
+		
+		try
+		{
+			try
+			{
+				this.connection = getConnection( );
+				daoFestival.setConnection( this.connection );
+				daoFuncion.setConnection( this.connection );
+				daoLocalidad.setConnection( this.connection );
+				daoCostoLocalidad.setConnection( this.connection );
+				daoEspectaculo.setConnection( this.connection );
+				
+				retAbono = abonoToProtocol( createAbono( protocolToAbono( abono, daoFestival, daoLocalidad, daoFuncion, daoCostoLocalidad ) ), daoFestival, daoFuncion, daoEspectaculo, daoLocalidad );
+			}
+			catch( SQLException e )
+			{
+				System.out.println( "La aplicacion no pudo crear el abono" );
+				System.err.println( "SQLException: " + e.getMessage( ) );
+				connection.rollback( );
+				e.printStackTrace( );
+			}
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( daoFestival );
+			closeDAO( daoFuncion );
+			closeDAO( daoLocalidad );
+			closeDAO( daoCostoLocalidad );
+			closeDAO( daoEspectaculo );
+		}
+		return retAbono;
+	}
+	
+	@SuppressWarnings( "unchecked" )
+	public List<ProtocoloAbono> createAbonoRemote( ProtocoloAbono abono ) throws Exception
+	{
+		List<ProtocoloAbono> list = new LinkedList<>( );
+		
+		DAOFestival daoFestival = new DAOFestival( );
+		DAOFuncion daoFuncion = new DAOFuncion( );
+		DAOLocalidad daoLocalidad = new DAOLocalidad( );
+		DAOCostoLocalidad daoCostoLocalidad = new DAOCostoLocalidad( );
+		DAOEspectaculo daoEspectaculo = new DAOEspectaculo( );
+		
+		try
+		{
+			try
+			{
+				this.connection = getConnection( );
+				daoFestival.setConnection( this.connection );
+				daoFuncion.setConnection( this.connection );
+				daoLocalidad.setConnection( this.connection );
+				daoCostoLocalidad.setConnection( this.connection );
+				daoEspectaculo.setConnection( this.connection );
+				
+				list.add( createAbono( abono ) );
+			}
+			catch( SQLException e )
+			{
+				System.out.println( "La aplicacion no pudo crear el abono" );
+				System.err.println( "SQLException: " + e.getMessage( ) );
+				connection.rollback( );
+				e.printStackTrace( );
+			}
+			
+			AbonoJMS jms = AbonoJMS.getInstance( this );
+			jms.setUpJMSManager( NUMBER_APPS, QUEUE_ABONO, AbonoJMS.TOPIC_ABONOS_GLOBAL );
+			jms.setAbono( abono );
+			list.addAll( jms.getResponse( ) );
+		}
+		catch( NonReplyException e )
+		{
+			throw new IncompleteReplyException( "No Reply from apps", list );
+		}
+		catch( IncompleteReplyException e )
+		{
+			List<ProtocoloAbono> partialResponse = ( List<ProtocoloAbono> ) e.getPartialResponse( );
+			list.addAll( partialResponse );
+			throw new IncompleteReplyException( "Incomplete Reply:", partialResponse );
+		}
+		catch( Exception e )
+		{
+			System.err.println( "GeneralException: " + e.getMessage( ) );
+			connection.rollback( );
+			e.printStackTrace( );
+			throw e;
+		}
+		finally
+		{
+			closeDAO( daoFestival );
+			closeDAO( daoFuncion );
+			closeDAO( daoLocalidad );
+			closeDAO( daoCostoLocalidad );
+			closeDAO( daoEspectaculo );
+			
+			if( connection != null )
+			{
+				connection.close( );
+			}
+		}
+		return list;
 	}
 	
 	public List<Abono> getAbonos( ) throws SQLException
@@ -297,5 +421,67 @@ public class AbonoCM extends TransactionManager
 		{
 			closeDAO( dao );
 		}
+	}
+	
+	private static ProtocoloAbono abonoToProtocol( Abono abono, DAOFestival daoFestival, DAOFuncion daoFuncion, DAOEspectaculo daoEspectaculo, DAOLocalidad daoLocalidad ) throws SQLException
+	{
+		ProtocoloAbono prot = null;
+		Festival festival = daoFestival.getFestival( abono.getIdFestival( ) );
+		if( festival != null )
+		{
+			prot = new ProtocoloAbono( );
+			prot.setNombreFestival( festival.getNombre( ) );
+			prot.setDescuento( abono.getDescuento( ) );
+			prot.setIdUsuario( abono.getIdUsuario( ) );
+			prot.setTipoId( abono.getTipoId( ) );
+			prot.setFunciones( funcionAbonoToProtocol( abono.getFunciones( ), daoFuncion, daoEspectaculo, daoLocalidad ) );
+			prot.setAppName( APP );
+		}
+		return prot;
+	}
+	
+	private static List<ProtocoloAbono.FuncionAbono> funcionAbonoToProtocol( List<CostoLocalidad> funciones, DAOFuncion daoFuncion, DAOEspectaculo daoEspectaculo, DAOLocalidad daoLocalidad ) throws SQLException
+	{
+		List<ProtocoloAbono.FuncionAbono> list = new LinkedList<>( );
+		for( CostoLocalidad costoLocalidad : funciones )
+		{
+			ProtocoloAbono.FuncionAbono fa = new ProtocoloAbono.FuncionAbono( );
+			
+			Funcion funcion = daoFuncion.getFuncion( costoLocalidad.getFecha( ), costoLocalidad.getIdLugar( ) );
+			
+			fa.setFecha( SQLUtils.DateUtils.timeToString( costoLocalidad.getFecha( ) ) );
+			fa.setNombreEspectaculo( daoEspectaculo.getEspectaculo( funcion.getIdEspectaculo( ) ).getNombre( ) );
+			fa.setNombreLocalidad( daoLocalidad.getLocalidad( costoLocalidad.getIdLocalidad( ) ).getNombre( ) );
+			
+			list.add( fa );
+		}
+		return list;
+	}
+	
+	private static List<CostoLocalidad> protocolFuncionesToCostoLocalidad( List<ProtocoloAbono.FuncionAbono> funciones, DAOLocalidad daoLocalidad, DAOFuncion daoFuncion, DAOCostoLocalidad daoCostoLocalidad ) throws SQLException
+	{
+		List<CostoLocalidad> list = new LinkedList<>( );
+		for( ProtocoloAbono.FuncionAbono funcion : funciones )
+		{
+			CostoLocalidad cl = new CostoLocalidad( );
+			cl.setFecha( SQLUtils.DateUtils.parseDateTime( funcion.getFecha( ) ) );
+			cl.setIdLocalidad( daoLocalidad.searchLocalidad( funcion.getNombreLocalidad( ) ).getId( ) );
+			cl.setIdLugar( daoFuncion.search( funcion.getNombreEspectaculo( ), cl.getFecha( ) ).getIdLugar( ) );
+			cl.setCosto( daoCostoLocalidad.search( cl.getFecha( ), cl.getIdLugar( ), cl.getIdLocalidad( ) ).getCosto( ) );
+			
+			list.add( cl );
+		}
+		return list;
+	}
+	
+	private static Abono protocolToAbono( ProtocoloAbono protocoloAbono, DAOFestival daoFestival, DAOLocalidad daoLocalidad, DAOFuncion daoFuncion, DAOCostoLocalidad daoCostoLocalidad ) throws SQLException
+	{
+		Abono abono = new Abono( );
+		abono.setTipoId( protocoloAbono.getTipoId( ) );
+		abono.setIdUsuario( protocoloAbono.getIdUsuario( ) );
+		abono.setDescuento( Float.parseFloat( String.valueOf( protocoloAbono.getDescuento( ) ) ) );
+		abono.setFunciones( protocolFuncionesToCostoLocalidad( protocoloAbono.getFunciones( ), daoLocalidad, daoFuncion, daoCostoLocalidad ) );
+		abono.setIdFestival( daoFestival.searchFestival( protocoloAbono.getNombreFestival( ) ).getId( ) );
+		return abono;
 	}
 }

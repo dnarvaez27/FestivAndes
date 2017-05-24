@@ -1,5 +1,7 @@
 package rest;
 
+import exceptions.IncompleteReplyException;
+import protocolos.ProtocoloFuncion;
 import tm.FuncionCM;
 import tm.intermediate.CostoLocalidadTM;
 import utilities.SQLUtils;
@@ -237,6 +239,41 @@ public class FuncionServices extends Services
 			list = tm.generarReporte1( nombreGenero, nombreCompania, ciudad, pais, nombreEspectaculo, idioma, fechaInicio, fechaFin, duracionInicio, duracionFin, lugar, accesoEspecial, publicoObjetivo, order, asc == null || asc == 1 );
 		}
 		catch( SQLException e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		return Response.status( 200 ).entity( list ).build( );
+	}
+	
+	@GET
+	@Path( "/remote/src" )
+	public Response generarReporte1Remote(
+			@QueryParam( "genero" ) String nombreGenero,
+			@QueryParam( "compania" ) String nombreCompania,
+			@QueryParam( "ciudad" ) String ciudad,
+			@QueryParam( "pais" ) String pais,
+			@QueryParam( "espectaculo" ) String nombreEspectaculo,
+			@QueryParam( "idioma" ) String idioma,
+			@QueryParam( "fecha_inicio" ) String fechaInicio,
+			@QueryParam( "fecha_fin" ) String fechaFin,
+			@QueryParam( "duracion_inicio" ) Integer duracionInicio,
+			@QueryParam( "duracion_fin" ) Integer duracionFin,
+			@QueryParam( "lugar" ) String lugar,
+			@QueryParam( "accesibilidad" ) String accesoEspecial,
+			@QueryParam( "clasificacion" ) String publicoObjetivo, @QueryParam( "orderBy" ) List<String> order, @QueryParam( "asc" ) Integer asc )
+	{
+		List<ProtocoloFuncion> list;
+		FuncionCM tm = new FuncionCM( getPath( ) );
+		
+		try
+		{
+			list = tm.generarReporte1Remoto( nombreGenero, nombreCompania, ciudad, pais, nombreEspectaculo, idioma, fechaInicio, fechaFin, duracionInicio, duracionFin, lugar, accesoEspecial, publicoObjetivo, order, asc == null || asc == 1 );
+		}
+		catch( IncompleteReplyException e )
+		{
+			return Response.status( Response.Status.OK ).entity( e.getPartialResponse( ) ).build( );
+		}
+		catch( Exception e )
 		{
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 		}
