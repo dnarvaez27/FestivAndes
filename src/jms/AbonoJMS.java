@@ -84,6 +84,7 @@ public class AbonoJMS extends JMSManager<ProtocoloAbono>
 	@Override
 	void sendMessage( ) throws NamingException, JMSException
 	{
+		
 		sendMessageSetUp( CREAR_ABONOS_ASK, abono.toString( ) );
 	}
 	
