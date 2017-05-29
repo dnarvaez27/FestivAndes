@@ -398,6 +398,7 @@ public class FuncionCM extends TransactionManager
 		}
 		catch( Exception e )
 		{
+			e.printStackTrace( );
 			System.err.println( "GeneralException:" + e.getMessage( ) );
 			connection.rollback( );
 			e.printStackTrace( );

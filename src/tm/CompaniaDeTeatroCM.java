@@ -201,6 +201,8 @@ public class CompaniaDeTeatroCM extends TransactionManager
 			
 			daoUsuario.setConnection( this.connection );
 			dao.setConnection( this.connection );
+			daoOfrecen.setConnection( this.connection );
+			daoFuncion.setConnection( this.connection );
 			
 			if( dao.getCompaniaDeTeatro( id ) != null )
 			{
@@ -585,5 +587,4 @@ public class CompaniaDeTeatroCM extends TransactionManager
 		}
 		return rta;
 	}
-	
 }

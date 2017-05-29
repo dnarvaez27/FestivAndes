@@ -156,7 +156,7 @@ public class FuncionJMS extends JMSManager<ProtocoloFuncion>
 		sBuilder.append( lugar ).append( Protocolo.SEPARADOR_PARAMS );
 		sBuilder.append( accesoEspecial ).append( Protocolo.SEPARADOR_PARAMS );
 		sBuilder.append( publicoObjetivo ).append( Protocolo.SEPARADOR_PARAMS );
-		sBuilder.append( order == null ? null : order.get( 0 ) ).append( Protocolo.SEPARADOR_PARAMS );
+		sBuilder.append( order == null || order.isEmpty( ) ? null : order.get( 0 ) ).append( Protocolo.SEPARADOR_PARAMS );
 		sBuilder.append( asc );
 		
 		return sBuilder.toString( );

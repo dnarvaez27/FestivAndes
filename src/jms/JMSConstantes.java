@@ -70,7 +70,7 @@ public interface JMSConstantes
 	/**
 	 *
 	 */
-	String TOPIC_COMPANIA_LOCAL = "global/global/RMQTopicRetirarCompLocal";
+	String TOPIC_COMPANIA_LOCAL = "global/RMQTopicRetirarCompLocal";
 	
 	/**
 	 *

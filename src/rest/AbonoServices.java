@@ -46,6 +46,7 @@ public class AbonoServices extends Services
 	}
 	
 	@POST
+	@Path( "/remote/" )
 	public Response createAbonoRemote( ProtocoloAbono abono )
 	{
 		List<ProtocoloAbono> list;

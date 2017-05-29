@@ -67,7 +67,7 @@ public class FestivalCM extends TransactionManager
 			
 			list = dao.getFestivales( );
 			
-			connection.commit( );
+			// connection.commit( );
 		}
 		catch( SQLException e )
 		{
@@ -104,7 +104,14 @@ public class FestivalCM extends TransactionManager
 			jms.setUpJMSManager( NUMBER_APPS, QUEUE_FESTIVAL, QUEUE_FESTIVAL_RESPONSE, FestivalJMS.TOPIC_ALL_FESTIVALES_GLOBAL );
 			list.addAll( jms.getResponse( ) );
 			
-			connection.commit( );
+			if( !connection.isClosed( ) )
+			{
+				this.connection.commit( );
+			}
+			else
+			{
+				System.out.println( "Why is closed??" );
+			}
 		}
 		catch( NonReplyException e )
 		{
@@ -118,6 +125,8 @@ public class FestivalCM extends TransactionManager
 		}
 		catch( SQLException e )
 		{
+			System.out.println( "------------------------------------------------" );
+			e.printStackTrace( );
 			System.err.println( "SQLException: " + e.getMessage( ) );
 			connection.rollback( );
 			e.printStackTrace( );

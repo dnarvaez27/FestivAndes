@@ -62,6 +62,8 @@ public abstract class JMSManager<T> implements MessageListener, ExceptionListene
 	// PROTOCOL
 	// ----------------------------------------
 	
+	private boolean isSuscribed;
+	
 	/**
 	 * Maximum time for application to respond to some request
 	 */
@@ -154,22 +156,27 @@ public abstract class JMSManager<T> implements MessageListener, ExceptionListene
 	 */
 	private void setupSubscriptions( String topicTheme )
 	{
-		// Init Topic para consumir donde llegan las peticiones
-		try
+		if( !isSuscribed )
 		{
-			InitialContext ctx = new InitialContext( );
-			this.topic = ( Topic ) ctx.lookup( topicTheme );
-			TopicConnectionFactory connFactory = ( TopicConnectionFactory ) ctx.lookup( REMOTE_CONNECTION_FACTORY );
-			TopicConnection topicConn = connFactory.createTopicConnection( );
-			this.topicSession = topicConn.createTopicSession( false, Session.AUTO_ACKNOWLEDGE );
-			TopicSubscriber topicSubscriber = topicSession.createSubscriber( topic );
-			topicSubscriber.setMessageListener( this );
-			topicConn.setExceptionListener( this );
-			topicConn.start( );
-		}
-		catch( NamingException | JMSException e )
-		{
-			e.printStackTrace( );
+			// Init Topic para consumir donde llegan las peticiones
+			try
+			{
+				InitialContext ctx = new InitialContext( );
+				this.topic = ( Topic ) ctx.lookup( topicTheme );
+				TopicConnectionFactory connFactory = ( TopicConnectionFactory ) ctx.lookup( REMOTE_CONNECTION_FACTORY );
+				TopicConnection topicConn = connFactory.createTopicConnection( );
+				this.topicSession = topicConn.createTopicSession( false, Session.AUTO_ACKNOWLEDGE );
+				TopicSubscriber topicSubscriber = topicSession.createSubscriber( topic );
+				topicSubscriber.setMessageListener( this );
+				topicConn.setExceptionListener( this );
+				topicConn.start( );
+				
+				isSuscribed = true;
+			}
+			catch( NamingException | JMSException e )
+			{
+				e.printStackTrace( );
+			}
 		}
 	}
 	
@@ -340,7 +347,7 @@ public abstract class JMSManager<T> implements MessageListener, ExceptionListene
 		
 		verifyResponse( count );
 		
-		List<T> res = this.respuesta;
+		List<T> res = new LinkedList<>( this.respuesta );
 		respuesta.clear( );
 		
 		// Retorna con la respuesta completa de todas las aplicaciones
