@@ -1,0 +1,23 @@
+<div class="container-fluid">
+    <h1 class="center-block text-center">{{'Iteración '+currentIteracion.numero}}</h1>
+
+    <div class="col-lg-12 req-box">
+        <div>
+            <div class="col-lg-6" style="margin-right: -50px">
+                <h3>Requerimientos de Modificación</h3>
+                <button class="thumbnail col-lg-3 center-block text-center requerimiento-box"
+                        ng-repeat="requerimiento in currentIteracion.requerimientos_modificacion"
+                        ng-click="setRequerimientoMod(requerimiento)">
+                    <strong><span>{{requerimiento.codigo}}</span></strong>
+                    <span class="h-rule" style="margin-top: 0; margin-bottom: 0;"></span>
+                    <span>{{requerimiento.titulo}}</span>
+                </button>
+            </div>
+            <div ng-show="currentReqMod !== undefined" class="col-lg-6 req-box-inner" id="descripcion_box">
+                <h3>{{currentReqMod.codigo}}</h3>
+                <h4>{{currentReqMod.titulo}}</h4>
+                {{currentReqMod.descripcion}}
+            </div>
+        </div>
+    </div>
+</div>

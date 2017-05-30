@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Iteracion - dnarvaez27</title>
+
+    <link rel="stylesheet" href="assets/styles/style.css">
+    <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+
+    <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+    <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="assets/js/home/home.mod.js"></script>
+    <script src="assets/js/iteracion/iteracion.mod.js"></script>
+
+    <script src="assets/js/app.js" type="text/javascript"></script>
+</head>
+<body ng-app="mainApp">
+    <div class="row" style="width: 100%; margin: 0">
+        <div class="container-fluid" style="padding-right: 0; padding-left: 0">
+            <div class="center-block text-center title-block">
+                <div class="title-page">
+                    FestivAndes
+                </div>
+                <div class="title-description">
+                    Proyecto del curso Sistemas Transaccionales - Universidad de Los Andes
+                </div>
+                <div>
+                    <a class="btn title-button" href="https://github.com/dnarvaez27/FestivAndes" target="_blank">
+                        <i class="fa fa-github" aria-hidden="true"></i> View on GitHub
+                    </a>
+                    <a class="btn title-button" href="https://github.com/dnarvaez27" target="_blank">
+                        <i class="fa fa-user" aria-hidden="true"></i> dnarvaez27
+                    </a>
+                </div>
+            </div>
+
+            <div ui-view="bodyView" class="main-content"></div>
+
+            <div ng-controller="mainController">
+                <div class="containter-fluid">
+                    <div class="center-block text-center footer-block">
+                        <button class="btn footer-button" ng-click="goHome()"><span class="fa fa-home"></span></button>
+                        <button class="btn footer-button" ng-click="goIteracion(1)">1</button>
+                        <button class="btn footer-button" ng-click="goIteracion(2)">2</button>
+                        <button class="btn footer-button" ng-click="goIteracion(3)">3</button>
+                        <button class="btn footer-button" ng-click="goIteracion(4)">4</button>
+                        <button class="btn footer-button" ng-click="goIteracion(5)">5</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

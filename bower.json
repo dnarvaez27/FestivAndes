@@ -1,0 +1,16 @@
+{
+  "name": "FestivAndes",
+  "version": "1.0.0",
+  "main": "index.html",
+  "devDependencies": {},
+  "homepage": "https://github.com/dnarvaez27/FestivAndes",
+  "description": "",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "^1.5.8",
+    "bootstrap": "^3.3.7",
+    "angular-ui-router": "~0.2.14",
+    "angular-bootstrap": "^0.13.4"
+  }
+}
