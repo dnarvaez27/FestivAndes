@@ -1,5 +1,5 @@
 (function (ng) {
-  var app = ng.module('mainApp', [
+  let app = ng.module('mainApp', [
     'ngSanitize',
     'ui.router',
 

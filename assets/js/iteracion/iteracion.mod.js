@@ -1,5 +1,5 @@
 (function (ng) {
-  var mod = ng.module('iteracionModule', ['ui.router']);
+  let mod = ng.module('iteracionModule', ['ui.router']);
 
   mod.config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
@@ -19,7 +19,7 @@
                 function ($scope, $stateParams) {
 
                   $scope.showModal = false;
-                  var iteraciones = [
+                  let iteraciones = [
                     {
                       numero: 1,
                       requerimientos_modificacion: [
@@ -374,7 +374,7 @@
                   $scope.currentReq = undefined;
                   $scope.setRequerimientoMod = function (req) {
                     $scope.currentReq = req;
-                    var nn = $('#nextButMod');
+                    let nn = $('#nextButMod');
                     nn.focus();
                     $scope.showModal = true;
                     nn.focus();
@@ -386,18 +386,18 @@
                   };
 
                   $scope.nextReq = function () {
-                    var reqs = $scope.currentIteracion.requerimientos_modificacion
+                    let reqs = $scope.currentIteracion.requerimientos_modificacion
                       .concat($scope.currentIteracion.requerimientos_consulta)
                       .concat($scope.currentIteracion.requerimientos_no_funcionales);
-                    var index = reqs.indexOf($scope.currentReq);
+                    let index = reqs.indexOf($scope.currentReq);
                     $scope.currentReq = reqs[( index + 1 ) % ( reqs.length )];
                   };
                   $scope.prevReq = function () {
-                    var reqs = $scope.currentIteracion.requerimientos_modificacion
+                    let reqs = $scope.currentIteracion.requerimientos_modificacion
                       .concat($scope.currentIteracion.requerimientos_consulta)
                       .concat($scope.currentIteracion.requerimientos_no_funcionales);
-                    var index = reqs.indexOf($scope.currentReq);
-                    var i = (index - 1) < 0 ? reqs.length - 1 : (index - 1);
+                    let index = reqs.indexOf($scope.currentReq);
+                    let i = (index - 1) < 0 ? reqs.length - 1 : (index - 1);
                     $scope.currentReq = reqs[i % ( reqs.length )];
                   };
 
@@ -417,7 +417,7 @@
                     console.log('searching...' + codigo);
                     iteraciones.forEach(function (item) {
 
-                      var reqs = item.requerimientos_modificacion
+                      let reqs = item.requerimientos_modificacion
                         .concat(item.requerimientos_consulta)
                         .concat(item.requerimientos_no_funcionales);
 
@@ -439,7 +439,7 @@
 
                   $scope.validar = function (string) {
                     if (string !== undefined) {
-                      var urlRegEx = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-]*)?\??(?:[\-\+=&;%@\.\w]*)#?(?:[\.\!\/\\\w]*))?)/g;
+                      let urlRegEx = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-]*)?\??(?:[\-\+=&;%@\.\w]*)#?(?:[\.\!\/\\\w]*))?)/g;
                       return string.replace(urlRegEx, string);
                     }
                     return '';

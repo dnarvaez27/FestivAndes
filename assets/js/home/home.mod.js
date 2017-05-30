@@ -1,5 +1,5 @@
 (function (ng) {
-  var mod = ng.module('homeModule', ['ui.router']);
+  let mod = ng.module('homeModule', ['ui.router']);
 
   mod.config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
