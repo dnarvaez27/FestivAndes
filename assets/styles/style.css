@@ -139,9 +139,9 @@
     position: absolute;
     background-color: white;
     display: block;
-    top: 170px;
-    left: 32%;
-    width: 500px;
+    top: 20%;
+    left: 25%;
+    width: 50%;
     /*border-radius: 30px;*/
 }
 
@@ -212,8 +212,8 @@
     text-align: center;
     top: -22px;
     position: absolute;
-    left: 40%;
-    width: 100px;
+    left: 45%;
+    width: 10%;
 }
 
 .pre-scrollable {
@@ -294,4 +294,34 @@
     position: relative;
     top: -20px;
     left: 10px;
+}
+
+@media screen and (max-width: 500px) {
+    .my-modal-content {
+        position: absolute;
+        background-color: white;
+        display: block;
+        top: 20%;
+        left: 5%;
+        width: 90%;
+    }
+
+    .box-about-5,
+    .box-about-1 {
+        width: 90%;
+    }
+
+    .book-box {
+        padding-bottom: 60px;
+    }
+
+    .autores {
+        top: -40px;
+        word-wrap: break-word
+    }
+
+    .code-badge {
+        left: 40%;
+        width: 20%;
+    }
 }

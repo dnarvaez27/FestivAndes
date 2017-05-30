@@ -1,10 +1,10 @@
 <div class="container-fluid">
     <h1 class="center-block text-center">{{'Iteración ' + currentIteracion.numero}}</h1>
-    <div class="col-lg-12 req-box">
+    <div class="col-lg-12 col-xs-12 col-sm-12 req-box">
         <div>
-            <div class="col-sm-12 col-lg-6">
+            <div class="col-sm-12 col-xs-12 col-lg-6">
                 <h3>Requerimientos de Modificación</h3>
-                <button class="thumbnail col-lg-3 col-sm-2 center-block text-center requerimiento-box"
+                <button class="thumbnail col-lg-3 col-sm-2 col-xs-12 center-block text-center requerimiento-box"
                         ng-repeat="requerimiento in currentIteracion.requerimientos_modificacion"
                         ng-click="setRequerimientoMod(requerimiento)">
                     <strong><span>{{requerimiento.codigo}}</span></strong>
@@ -12,9 +12,9 @@
                     <span>{{requerimiento.titulo}}</span>
                 </button>
             </div>
-            <div class="col-sm-12 col-lg-6">
+            <div class="col-sm-12 col-xs-12 col-lg-6">
                 <h3>Requerimientos de Consulta</h3>
-                <button class="thumbnail col-lg-3  col-sm-2  center-block text-center requerimiento-box"
+                <button class="thumbnail col-lg-3 col-xs-12 col-sm-2  center-block text-center requerimiento-box"
                         ng-repeat="requerimiento in currentIteracion.requerimientos_consulta"
                         ng-click="setRequerimientoMod(requerimiento)">
                     <strong><span>{{requerimiento.codigo}}</span></strong>
@@ -22,9 +22,9 @@
                     <span>{{requerimiento.titulo}}</span>
                 </button>
             </div>
-            <div class="col-sm-12 col-lg-6">
+            <div class="col-sm-12 col-xs-12 col-lg-6">
                 <h3>Requerimientos No Funcionales</h3>
-                <button class="thumbnail col-lg-3 col-sm-2  center-block text-center requerimiento-box"
+                <button class="thumbnail col-lg-3 col-xs-12 col-sm-2 center-block text-center requerimiento-box"
                         ng-repeat="requerimiento in currentIteracion.requerimientos_no_funcionales"
                         ng-click="setRequerimientoMod(requerimiento)">
                     <strong><span>{{requerimiento.codigo}}</span></strong>
@@ -35,7 +35,7 @@
         </div>
     </div>
 
-    <div class="col-lg-12 col-sm-12 req-box">
+    <div class="col-lg-12 col-xs-12 col-sm-12 req-box">
         <h3>Lo aprendido</h3>
         <span class="h-rule"></span>
         <ul class="fa-ul">
