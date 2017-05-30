@@ -101,3 +101,110 @@
     margin-bottom: 20px;
     padding: 10px;
 }
+
+#modalRequerimiento {
+    background-color: rgba(0, 96, 96, 0.8) !important;
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1500;
+    /*-webkit-filter: blur(10px) grayscale(50%);*/
+}
+
+#modalRequerimiento > div > .modal-content {
+    box-shadow: none;
+    border: 0;
+    border-radius: 0;
+}
+
+.my-modal-content {
+    position: absolute;
+    background-color: white;
+    display: block;
+    top: 170px;
+    left: 32%;
+    width: 500px;
+    /*border-radius: 30px;*/
+}
+
+.modal-button {
+    position: absolute;
+    background: #960a14;
+    top: -15px;
+    right: -16px;
+    border-radius: 50px !important;
+    color: white;
+}
+
+.modal-button-up-left {
+    position: absolute;
+    background: dodgerblue;
+    top: -15px;
+    left: -16px;
+    border-radius: 50px !important;
+    color: white;
+}
+
+.my-modal-head {
+    padding: 10px;
+}
+
+.my-modal-body {
+    text-align: justify;
+    padding-right: 30px;
+    padding-left: 30px;
+    padding-bottom: 15px;
+}
+
+.modal-button-arr {
+    background-color: transparent;
+    border: 0;
+    position: absolute;
+    top: 55%;
+}
+
+.modal-button-left {
+    left: 0;
+}
+
+.modal-button-right {
+    right: 0;
+}
+
+.code-badge {
+    background-color: #212121;
+    color: white;
+    height: 40px;
+    padding-top: 8px;
+    text-align: center;
+    top: -22px;
+    position: absolute;
+    left: 40%;
+    width: 100px;
+}
+
+.pre-scrollable {
+    float: left;
+    overflow-y: scroll;
+    margin-bottom: 25px;
+    background-color: transparent;
+    margin-right: 5px;
+    max-height: 250px !important;
+}
+
+.style-2::-webkit-scrollbar {
+    width: 2px;
+    background-color: transparent;
+}
+
+.style-2::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #212121;
+}
+
+.style-2::-webkit-scrollbar-track {
+    background-color: transparent;
+}

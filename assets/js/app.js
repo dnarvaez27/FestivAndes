@@ -1,5 +1,6 @@
 (function (ng) {
   var app = ng.module('mainApp', [
+    'ngSanitize',
     'ui.router',
     'iteracionModule',
     'homeModule'
@@ -8,12 +9,9 @@
   app.controller('mainController', function ($scope, $state) {
 
     $scope.goHome = function () {
-      console.log('Im home');
       $state.go('home', {});
     };
-
     $scope.goIteracion = function (index) {
-      console.log('Iteracion ' + index);
       $state.go('iteracion', {iteracionNumber: index});
     };
   });
