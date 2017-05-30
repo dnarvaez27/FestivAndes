@@ -19,6 +19,7 @@
     <script src="https://code.angularjs.org/1.6.4/angular-sanitize.min.js"></script>
 
     <script src="assets/js/home/home.mod.js"></script>
+    <script src="assets/js/about/about.mod.js"></script>
     <script src="assets/js/iteracion/iteracion.mod.js"></script>
 
     <script src="assets/js/app.js" type="text/javascript"></script>
@@ -48,12 +49,13 @@
             <div ng-controller="mainController">
                 <div class="containter-fluid">
                     <div class="center-block text-center footer-block">
-                        <button class="btn footer-button" ng-click="goHome()"><span class="fa fa-home"></span></button>
-                        <button class="btn footer-button" ng-click="goIteracion(1)">1</button>
-                        <button class="btn footer-button" ng-click="goIteracion(2)">2</button>
-                        <button class="btn footer-button" ng-click="goIteracion(3)">3</button>
-                        <button class="btn footer-button" ng-click="goIteracion(4)">4</button>
-                        <button class="btn footer-button" ng-click="goIteracion(5)">5</button>
+                        <button id="menu0" class="btn footer-button" ng-click="goHome()"><span class="fa fa-home"></span></button>
+                        <button id="menu1" class="btn footer-button" ng-click="goIteracion(1)">1</button>
+                        <button id="menu2" class="btn footer-button" ng-click="goIteracion(2)">2</button>
+                        <button id="menu3" class="btn footer-button" ng-click="goIteracion(3)">3</button>
+                        <button id="menu4" class="btn footer-button" ng-click="goIteracion(4)">4</button>
+                        <button id="menu5" class="btn footer-button" ng-click="goIteracion(5)">5</button>
+                        <button id="menu6" class="btn footer-button" ng-click="goAbout()"><span class="fa fa-question-circle"></span></button>
                     </div>
                 </div>
             </div>

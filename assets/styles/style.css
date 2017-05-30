@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url('https://fonts.googleapis.com/css?family=Bubbler+One');
+
 .main-content {
-    margin-bottom: 80px;
+    margin-bottom: 50px;
 }
 
 .title-block {
@@ -65,8 +68,17 @@
 .footer-button {
     background-color: transparent;
     color: white;
-    border: 1px solid white;
     font-size: 15px;
+    border-radius: 50px !important;
+    border: none;
+    outline: none !important;
+}
+
+.footer-button:hover,
+.footer-button:focus,
+.footer-button-active {
+    background-color: white !important;
+    color: #1EAFB4 !important;
 }
 
 .requerimiento-box {
@@ -76,6 +88,8 @@
     color: #212121;
     min-height: 150px !important;
     max-height: 150px !important;
+    border-radius: 100px !important;
+    outline: none;
 }
 
 .requerimiento-box:hover,
@@ -88,6 +102,7 @@
     border: transparent;
     border-radius: 10px;
     box-shadow: 0 1px 5px 1px rgba(33, 33, 33, 0.2);
+    margin-bottom: 25px;
 }
 
 .req-box-inner {
@@ -130,22 +145,36 @@
     /*border-radius: 30px;*/
 }
 
-.modal-button {
+.modal-close-button {
     position: absolute;
     background: #960a14;
     top: -15px;
     right: -16px;
     border-radius: 50px !important;
-    color: white;
+    color: white !important;
+    border: 2px solid #960a14 !important;
+    font-weight: bold !important;
 }
 
-.modal-button-up-left {
+.modal-close-button:hover {
+    background-color: white;
+    color: #960a14 !important;
+}
+
+.modal-back-button {
     position: absolute;
     background: dodgerblue;
     top: -15px;
     left: -16px;
     border-radius: 50px !important;
-    color: white;
+    color: white !important;
+    border: 2px solid dodgerblue !important;
+    font-weight: bold !important;
+}
+
+.modal-back-button:hover {
+    background-color: white;
+    color: dodgerblue !important;
 }
 
 .my-modal-head {
@@ -164,6 +193,7 @@
     border: 0;
     position: absolute;
     top: 55%;
+    padding: 10px 5px;
 }
 
 .modal-button-left {
@@ -207,4 +237,61 @@
 
 .style-2::-webkit-scrollbar-track {
     background-color: transparent;
+}
+
+.about {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to left, turquoise 0%, #212121 100%);
+    top: 0;
+    z-index: -100;
+}
+
+.carrera {
+    font-size: 13px;
+    margin-top: -4px;
+    display: block;
+}
+
+.box-about {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    margin: 10px;
+    padding: 10px;
+}
+
+.box-about-5 {
+    width: 40%;
+}
+
+.box-about-1 {
+    width: 82%;
+}
+
+.autor {
+    font-size: 10px;
+    background-color: #212121;
+    color: white;
+    border-radius: 12px;
+    margin-right: 5px;
+    padding: 3px 5px;
+    box-shadow: 0 1px 1px 0px black;
+}
+
+.book-box {
+    background-color: white;
+    color: #212121;
+    box-shadow: 0 5px 3px -2px black;
+    padding: 10px 10px 30px;
+    margin-bottom: -9px;
+    border-radius: 5px;
+}
+
+.autores {
+    text-align: left;
+    position: relative;
+    top: -20px;
+    left: 10px;
 }

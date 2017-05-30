@@ -3,6 +3,7 @@
 
   mod.config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
+
       $urlRouterProvider.otherwise('/iteracion');
 
       $stateProvider
@@ -95,6 +96,12 @@
                           titulo: 'Devolver un Abono',
                           descripcion: 'Devolver un abonamiento. La cancelación del abonamiento sólo puede hacerse antes de tres semanas del comienzo del festival. Las boletas correspondientes quedan otra vez disponibles para la venta. Se genera una nota débito con la cual el cliente puede ir a recuperar su dinero en la entidad financiera de FestivAndes.'
                         }
+                      ],
+                      aprendido: [
+                        'Modelado de Datos',
+                        'Modelo Conceptual y Relacional',
+                        'Álgebra Relacional',
+                        'SQL'
                       ]
                     },
                     {
@@ -197,9 +204,14 @@
                         },
                         {
                           codigo: 'RNF4',
-                          titulo: 'Distrobución',
+                          titulo: 'Distribución',
                           descripcion: 'La base de datos de la aplicación está centralizada.'
                         }
+                      ],
+                      aprendido: [
+                        'SQL',
+                        'Cálculo & Álgebra Relacional',
+                        'Normalización'
                       ]
                     },
                     {
@@ -251,6 +263,13 @@
                           titulo: 'Transaccionalidad',
                           descripcion: 'Debe tenerse en cuenta que en el funcionamiento diario de FestivAndes puede haber solicitudes simultáneas, que pueden comprometer los planes de los clientes. FestivAndes debe asegurar la transaccionalidad en el proceso de registro de compras y devolución de boletas de los espectáculos. '
                         }
+                      ],
+                      aprendido: [
+                        'Manejo Transaccional Centralizado',
+                        'Control de Concurrencia',
+                        'Atomicidad - Recuperación ante fallas',
+                        'Jerarquía de Memoria - Funcionamiento y Tiempos de Disco',
+                        'Ordenamiento Externo'
                       ]
                     },
                     {
@@ -294,6 +313,11 @@
                           titulo: 'Esquema Físico de la Base de Datos',
                           descripcion: 'El diseño físico de la base de datos debe reflejar un balance global de eficiencia de la aplicación'
                         }
+                      ],
+                      aprendido: [
+                        'Afinamiento de Bases de Datos',
+                        'Índices: Tipos y Selección',
+                        'Joins: Tipos y Selección'
                       ]
                     },
                     {
@@ -333,6 +357,13 @@
                           titulo: 'Disponibilidad',
                           descripcion: 'FestivAndes debe funcionar hacia sus usuarios, aunque alguno de los sistemas de los puertos tenga fallas puntuales de disponibilidad o pueda estar congestionado y su tiempo de respuesta pueda estar degradado.'
                         }
+                      ],
+                      aprendido: [
+                        'Manejo Transaccional Distribuido',
+                        'Atomicidad con Bases de Datos Distribuidas',
+                        'Control de Concurrencia con Bases de Datos Distribuidas',
+                        'Arquitectura de Sistemas Transaccionales con Bases de Datos Distribuidas',
+                        'Two Phase Commit & Colas de Mensajes'
                       ]
                     }
                   ];
@@ -351,6 +382,7 @@
                   $scope.hideModal = function () {
                     $scope.currentReq = undefined;
                     $scope.showModal = false;
+                    $scope.stackTrace = [];
                   };
 
                   $scope.nextReq = function () {

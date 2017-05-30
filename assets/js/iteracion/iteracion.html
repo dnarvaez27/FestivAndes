@@ -35,13 +35,24 @@
         </div>
     </div>
 
+    <div class="col-lg-12 req-box">
+        <h3>Lo aprendido</h3>
+        <span class="h-rule"></span>
+        <ul class="fa-ul">
+            <li ng-repeat="topic in currentIteracion.aprendido">
+                <i class="fa-li fa fa-check"></i>
+                {{topic}}
+            </li>
+        </ul>
+    </div>
+
     <div id="modalRequerimiento" ng-show="showModal" ng-keydown="keyPress($event);" tabindex="0">
         <div class="my-modal-content">
             <div class="my-modal-head">
-                <button class="btn pull-right modal-button" ng-click="hideModal()">
+                <button class="btn pull-right modal-close-button" ng-click="hideModal()">
                     &times;
                 </button>
-                <button class="btn pull-right modal-button-up-left" ng-click="goBack()" ng-show="stackTrace.length > 0">
+                <button class="btn pull-right modal-back-button" ng-click="goBack()" ng-show="stackTrace.length > 0">
                     <i class="fa fa-undo" aria-hidden="true"></i>
                 </button>
 
@@ -50,11 +61,12 @@
                 <span class="h-rule"></span>
             </div>
             <div class="my-modal-body">
-                <button id="prevButMod" class="modal-button-arr modal-button-left" ng-click="prevReq()"><span class="fa fa-arrow-circle-left"></span>
+                <button id="prevButMod" class="modal-button-arr modal-button-left" ng-click="prevReq()">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
                 </button>
                 <p class=" pre-scrollable style-2" compile="validar(currentReq.descripcion)"></p>
-                <button id="nextButMod" class="modal-button-arr modal-button-right" ng-click="nextReq()"><span
-                        class="fa fa-arrow-circle-right"></span></button>
+                <button id="nextButMod" class="modal-button-arr modal-button-right" ng-click="nextReq()">
+                    <span class="glyphicon glyphicon-chevron-right"></span></button>
                 <div>
                     <strong compile="validar(currentReq.nota)"></strong>
                 </div>

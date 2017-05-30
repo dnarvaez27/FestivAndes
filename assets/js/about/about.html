@@ -1,0 +1,58 @@
+<!--<div class="about"></div>-->
+<div class="container-fluid">
+    <div style="text-align: center">
+        <h1 style="font-family: 'Bubbler One', sans-serif;">Acerca de Festivandes</h1>
+        <div>
+            <span>Este es un proyecto realizado con fines de aprendizaje en Bases de Datos y procesos transaccionales</span><br>
+            <span>Hace parte del curso Sistemas Transaccionales (2017) de la Universidad de Los Andes </span><br><br>
+        </div>
+        <div style="color: white;">
+            <div style="background-color: crimson" class="box-about box-about-5">
+                <h1><i class="fa fa-graduation-cap" aria-hidden="true"></i></h1>
+                <h3>Curso dirigido por</h3>
+                <span>{{profesor}}</span>
+            </div>
+            <div style="background-color: goldenrod" class="box-about box-about-5">
+                <h1><i class="fa fa-calendar" aria-hidden="true"></i></h1>
+                <h3>Realizado en</h3>
+                <span>{{periodo}}</span>
+            </div>
+            <div style="background-color:#54697A" class="box-about box-about-1">
+                <div class="col-lg-6">
+                    <h1><i class="fa fa-users" aria-hidden="true"></i></h1>
+                    <h3>Integrantes</h3>
+                </div>
+                <div class="col-lg-6" style="padding-top: 15px">
+                    <div ng-repeat="integrante in integrantes">
+                        <span class="fa fa-user"></span> {{integrante.nombre}}<br>
+                        <div class="carrera">
+                            <small ng-repeat="des in integrante.desempeno">
+                                {{des}}<br>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="background-color: #212121" class="box-about box-about-1">
+                <div class="col-lg-7" style="margin-top: 10px;">
+                    <div ng-repeat="libro in bibliography">
+                        <div>
+                            <div class="book-box">
+                                <strong>{{libro.titulo}}</strong>
+                            </div>
+                            <div class="autores">
+                                <small ng-repeat="autor in libro.autores" class="autor">
+                                    {{autor}}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5" style="padding: 40px">
+                    <h1><i class="fa fa-book" aria-hidden="true"></i></h1>
+                    <h3>Bibliografía</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
